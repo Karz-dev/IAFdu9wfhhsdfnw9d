@@ -18,140 +18,191 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: #050609;
+
+            background: #050608;
+
             font-family: Arial, sans-serif;
+
             user-select: none;
         }
 
         canvas {
             display: block;
+
             width: 100vw;
             height: 100vh;
+
+            cursor: crosshair;
         }
+
+        /* =====================================================
+           HUD
+        ===================================================== */
 
         #hud {
             position: fixed;
+
             inset: 0;
+
             pointer-events: none;
+
             color: white;
+
+            z-index: 5;
         }
 
         #timer {
             position: absolute;
+
             top: 20px;
             left: 24px;
 
             font-size: 28px;
             font-weight: bold;
 
-            text-shadow: 0 2px 8px black;
+            text-shadow:
+                0 2px 8px black;
         }
 
         #loopCounter {
             position: absolute;
-            top: 56px;
-            left: 25px;
+
+            top: 58px;
+            left: 26px;
+
+            color: #9ca3af;
 
             font-size: 14px;
-            color: #aeb5c2;
 
-            text-shadow: 0 2px 5px black;
+            text-shadow:
+                0 2px 5px black;
         }
 
         #flashlightStatus {
             position: absolute;
+
             top: 82px;
-            left: 25px;
+            left: 26px;
+
+            color: #bfc5ce;
 
             font-size: 14px;
-            color: #cbd5e1;
 
-            text-shadow: 0 2px 5px black;
+            text-shadow:
+                0 2px 5px black;
         }
 
         #crosshair {
             position: absolute;
+
             left: 50%;
             top: 50%;
 
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
 
-            transform: translate(-50%, -50%);
+            transform:
+                translate(-50%, -50%);
 
-            border: 1px solid rgba(255,255,255,0.8);
+            border:
+                1px solid rgba(255,255,255,0.75);
+
             border-radius: 50%;
         }
 
         #prompt {
             position: absolute;
+
             left: 50%;
-            bottom: 90px;
+            bottom: 100px;
 
-            transform: translateX(-50%);
+            transform:
+                translateX(-50%);
 
-            padding: 8px 14px;
+            padding:
+                8px 14px;
 
             border-radius: 8px;
 
-            background: rgba(0,0,0,0.55);
+            background:
+                rgba(0,0,0,0.6);
 
-            font-size: 15px;
+            font-size: 14px;
 
             opacity: 0;
-            transition: opacity 0.15s;
+
+            transition:
+                opacity 0.15s;
         }
 
         #message {
             position: absolute;
-            left: 50%;
-            top: 70%;
 
-            transform: translateX(-50%);
+            left: 50%;
+            top: 72%;
+
+            transform:
+                translateX(-50%);
+
+            color: #d1d5db;
 
             font-size: 18px;
-            color: #e5e7eb;
 
-            text-shadow: 0 2px 8px black;
+            text-shadow:
+                0 2px 10px black;
 
             opacity: 0;
-            transition: opacity 0.3s;
+
+            transition:
+                opacity 0.3s;
         }
 
         #controls {
             position: absolute;
-            bottom: 20px;
+
+            bottom: 18px;
             left: 50%;
 
-            transform: translateX(-50%);
+            transform:
+                translateX(-50%);
 
-            padding: 8px 14px;
+            padding:
+                7px 13px;
 
             border-radius: 8px;
 
-            background: rgba(0,0,0,0.4);
+            background:
+                rgba(0,0,0,0.35);
+
+            color: #89909b;
 
             font-size: 13px;
-            color: #9ca3af;
         }
+
+        /* =====================================================
+           SCREENS
+        ===================================================== */
 
         #startScreen,
         #endScreen {
             position: fixed;
+
             inset: 0;
 
+            z-index: 20;
+
             display: flex;
+
             align-items: center;
             justify-content: center;
 
             background:
                 radial-gradient(
                     circle at center,
-                    rgba(30,35,45,0.7),
-                    rgba(0,0,0,0.96)
+                    #171b23 0%,
+                    #08090c 45%,
+                    #020203 100%
                 );
-
-            z-index: 20;
         }
 
         #endScreen {
@@ -159,60 +210,102 @@
         }
 
         .panel {
-            width: min(520px, 90vw);
+            width:
+                min(520px, 90vw);
 
-            padding: 42px;
+            padding: 44px;
 
             text-align: center;
 
-            background: rgba(10,12,17,0.94);
+            background:
+                rgba(8,10,14,0.94);
 
-            border: 1px solid rgba(255,255,255,0.08);
+            border:
+                1px solid rgba(255,255,255,0.08);
 
-            border-radius: 16px;
+            border-radius: 18px;
 
             box-shadow:
-                0 20px 80px rgba(0,0,0,0.65);
+                0 25px 100px rgba(0,0,0,0.75);
         }
 
         h1 {
-            margin: 0 0 12px;
-
-            font-size: 64px;
-            letter-spacing: 8px;
+            margin:
+                0 0 12px;
 
             color: #f3f4f6;
+
+            font-size: 64px;
+
+            letter-spacing: 10px;
         }
 
         .subtitle {
-            margin-bottom: 30px;
+            margin-bottom: 32px;
 
-            color: #9ca3af;
-            line-height: 1.6;
+            color: #8d95a1;
+
+            line-height: 1.7;
+
+            font-size: 15px;
         }
 
-        button {
+        .gameButton {
+            padding:
+                14px 34px;
+
             border: 0;
+
             border-radius: 10px;
 
-            padding: 14px 30px;
+            background:
+                #e5e7eb;
 
-            background: #e5e7eb;
-            color: #090a0d;
+            color:
+                #08090b;
 
             font-size: 17px;
+
             font-weight: bold;
 
             cursor: pointer;
+
+            pointer-events: auto;
         }
 
-        button:hover {
-            background: white;
+        .gameButton:hover {
+            background:
+                white;
+
+            transform:
+                translateY(-1px);
         }
 
-        #deathText {
-            color: #9ca3af;
-            margin-bottom: 24px;
+        .gameButton:active {
+            transform:
+                translateY(1px);
+        }
+
+        /* =====================================================
+           DARKNESS EFFECT
+        ===================================================== */
+
+        #darkness {
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 4;
+
+            pointer-events: none;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    transparent 0%,
+                    rgba(0,0,0,0.12) 45%,
+                    rgba(0,0,0,0.55) 100%
+                );
         }
     </style>
 </head>
@@ -220,7 +313,9 @@
 <body>
 
     <div id="startScreen">
+
         <div class="panel">
+
             <h1>LOOP</h1>
 
             <div class="subtitle">
@@ -229,25 +324,46 @@
                 Find the way out.
             </div>
 
-            <button id="startButton">
+            <!--
+                IMPORTANT:
+                This uses an inline global function.
+                It cannot silently fail because of an
+                event-listener setup problem.
+            -->
+
+            <button
+                class="gameButton"
+                onclick="startGame()"
+            >
                 ENTER
             </button>
+
         </div>
+
     </div>
+
 
     <div id="endScreen">
+
         <div class="panel">
+
             <h1>LOOP</h1>
 
-            <div id="deathText">
-                The loop begins again.
+            <div class="subtitle">
+                The loop has ended.
             </div>
 
-            <button id="restartButton">
+            <button
+                class="gameButton"
+                onclick="restartGame()"
+            >
                 RESTART
             </button>
+
         </div>
+
     </div>
+
 
     <div id="hud">
 
@@ -275,90 +391,162 @@
 
     </div>
 
-    <!-- Three.js -->
+
+    <div id="darkness"></div>
+
+
+    <!-- =====================================================
+         THREE.JS
+    ===================================================== -->
+
     <script src="https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.min.js"></script>
+
 
     <script>
 
-        /* =========================================================
-           BASIC SETUP
-        ========================================================= */
+        /* =====================================================
+           CHECK THREE.JS
+        ===================================================== */
 
-        const scene = new THREE.Scene();
+        if (typeof THREE === "undefined") {
 
-        scene.background = new THREE.Color(0x080a0e);
+            alert(
+                "Three.js failed to load. Check your internet connection and reload the page."
+            );
 
-        scene.fog = new THREE.Fog(
-            0x080a0e,
-            8,
-            35
-        );
+        }
 
 
-        const camera = new THREE.PerspectiveCamera(
-            75,
-            window.innerWidth / window.innerHeight,
-            0.05,
-            100
-        );
+        /* =====================================================
+           SCENE
+        ===================================================== */
+
+        const scene =
+            new THREE.Scene();
 
 
-        const renderer = new THREE.WebGLRenderer({
-            antialias: true
-        });
+        scene.background =
+            new THREE.Color(
+                0x07090c
+            );
+
+
+        scene.fog =
+            new THREE.Fog(
+                0x07090c,
+                7,
+                32
+            );
+
+
+        /* =====================================================
+           CAMERA
+        ===================================================== */
+
+        const camera =
+            new THREE.PerspectiveCamera(
+                75,
+                window.innerWidth /
+                window.innerHeight,
+                0.05,
+                100
+            );
+
+
+        camera.rotation.order =
+            "YXZ";
+
+
+        /* =====================================================
+           RENDERER
+        ===================================================== */
+
+        const renderer =
+            new THREE.WebGLRenderer({
+                antialias: true
+            });
+
 
         renderer.setSize(
             window.innerWidth,
             window.innerHeight
         );
 
+
         renderer.setPixelRatio(
-            Math.min(window.devicePixelRatio, 2)
+            Math.min(
+                window.devicePixelRatio,
+                2
+            )
         );
 
-        renderer.shadowMap.enabled = true;
+
+        renderer.shadowMap.enabled =
+            true;
+
 
         renderer.shadowMap.type =
             THREE.PCFSoftShadowMap;
 
-        document.body.appendChild(renderer.domElement);
+
+        renderer.outputColorSpace =
+            THREE.SRGBColorSpace;
 
 
-        /* =========================================================
+        document.body.appendChild(
+            renderer.domElement
+        );
+
+
+        /* =====================================================
            UI
-        ========================================================= */
-
-        const timerElement =
-            document.getElementById("timer");
-
-        const loopElement =
-            document.getElementById("loopCounter");
-
-        const flashlightElement =
-            document.getElementById("flashlightStatus");
-
-        const promptElement =
-            document.getElementById("prompt");
-
-        const messageElement =
-            document.getElementById("message");
+        ===================================================== */
 
         const startScreen =
-            document.getElementById("startScreen");
+            document.getElementById(
+                "startScreen"
+            );
+
 
         const endScreen =
-            document.getElementById("endScreen");
-
-        const startButton =
-            document.getElementById("startButton");
-
-        const restartButton =
-            document.getElementById("restartButton");
+            document.getElementById(
+                "endScreen"
+            );
 
 
-        /* =========================================================
+        const timerElement =
+            document.getElementById(
+                "timer"
+            );
+
+
+        const loopElement =
+            document.getElementById(
+                "loopCounter"
+            );
+
+
+        const flashlightElement =
+            document.getElementById(
+                "flashlightStatus"
+            );
+
+
+        const promptElement =
+            document.getElementById(
+                "prompt"
+            );
+
+
+        const messageElement =
+            document.getElementById(
+                "message"
+            );
+
+
+        /* =====================================================
            GAME STATE
-        ========================================================= */
+        ===================================================== */
 
         let running = false;
 
@@ -368,22 +556,23 @@
 
         let lastTime = 0;
 
-        let messageTimeout = null;
-
         let pointerLocked = false;
 
+        let messageTimeout = null;
 
-        /* =========================================================
+
+        /* =====================================================
            PLAYER
-        ========================================================= */
+        ===================================================== */
 
         const player = {
 
-            position: new THREE.Vector3(
-                0,
-                1.65,
-                7
-            ),
+            position:
+                new THREE.Vector3(
+                    0,
+                    1.65,
+                    7
+                ),
 
             yaw: 0,
 
@@ -391,14 +580,14 @@
 
             radius: 0.28,
 
-            speed: 3.3
+            speed: 3.2
 
         };
 
 
-        /* =========================================================
-           CONTROLS
-        ========================================================= */
+        /* =====================================================
+           KEYS
+        ===================================================== */
 
         const keys = {
 
@@ -412,34 +601,73 @@
 
         document.addEventListener(
             "keydown",
-            event => {
+            function(event) {
 
-                if (event.code === "KeyW") {
+                if (
+                    event.code ===
+                    "KeyW"
+                ) {
+
                     keys.w = true;
+
                     event.preventDefault();
+
                 }
 
-                if (event.code === "KeyA") {
+
+                if (
+                    event.code ===
+                    "KeyA"
+                ) {
+
                     keys.a = true;
+
                     event.preventDefault();
+
                 }
 
-                if (event.code === "KeyS") {
+
+                if (
+                    event.code ===
+                    "KeyS"
+                ) {
+
                     keys.s = true;
+
                     event.preventDefault();
+
                 }
 
-                if (event.code === "KeyD") {
+
+                if (
+                    event.code ===
+                    "KeyD"
+                ) {
+
                     keys.d = true;
+
                     event.preventDefault();
+
                 }
 
-                if (event.code === "KeyF") {
+
+                if (
+                    event.code ===
+                    "KeyF"
+                ) {
+
                     toggleFlashlight();
+
                 }
 
-                if (event.code === "KeyE") {
+
+                if (
+                    event.code ===
+                    "KeyE"
+                ) {
+
                     interact();
+
                 }
 
             }
@@ -448,38 +676,66 @@
 
         document.addEventListener(
             "keyup",
-            event => {
+            function(event) {
 
-                if (event.code === "KeyW") {
+                if (
+                    event.code ===
+                    "KeyW"
+                ) {
+
                     keys.w = false;
+
                 }
 
-                if (event.code === "KeyA") {
+
+                if (
+                    event.code ===
+                    "KeyA"
+                ) {
+
                     keys.a = false;
+
                 }
 
-                if (event.code === "KeyS") {
+
+                if (
+                    event.code ===
+                    "KeyS"
+                ) {
+
                     keys.s = false;
+
                 }
 
-                if (event.code === "KeyD") {
+
+                if (
+                    event.code ===
+                    "KeyD"
+                ) {
+
                     keys.d = false;
+
                 }
 
             }
         );
 
 
-        /* =========================================================
+        /* =====================================================
            MOUSE LOOK
-        ========================================================= */
+        ===================================================== */
 
         renderer.domElement.addEventListener(
             "click",
-            () => {
+            function() {
 
-                if (running && !pointerLocked) {
+                if (
+                    running &&
+                    !pointerLocked
+                ) {
+
                     renderer.domElement.requestPointerLock();
+
                 }
 
             }
@@ -488,7 +744,7 @@
 
         document.addEventListener(
             "pointerlockchange",
-            () => {
+            function() {
 
                 pointerLocked =
                     document.pointerLockElement ===
@@ -500,17 +756,22 @@
 
         document.addEventListener(
             "mousemove",
-            event => {
+            function(event) {
 
                 if (!pointerLocked) {
                     return;
                 }
 
+
                 player.yaw -=
-                    event.movementX * 0.0022;
+                    event.movementX *
+                    0.0022;
+
 
                 player.pitch -=
-                    event.movementY * 0.0022;
+                    event.movementY *
+                    0.0022;
+
 
                 player.pitch =
                     Math.max(
@@ -525,63 +786,66 @@
         );
 
 
-        /* =========================================================
+        /* =====================================================
            MATERIALS
-        ========================================================= */
+        ===================================================== */
 
         const floorMaterial =
             new THREE.MeshStandardMaterial({
-                color: 0x22252a,
+                color: 0x25282d,
                 roughness: 0.95
             });
 
 
         const wallMaterial =
             new THREE.MeshStandardMaterial({
-                color: 0x303238,
+                color: 0x363940,
                 roughness: 0.9
             });
 
 
         const darkWallMaterial =
             new THREE.MeshStandardMaterial({
-                color: 0x181a1f,
+                color: 0x17191e,
                 roughness: 1
             });
 
 
         const woodMaterial =
             new THREE.MeshStandardMaterial({
-                color: 0x3a2b20,
+                color: 0x39291f,
                 roughness: 0.8
             });
 
 
         const metalMaterial =
             new THREE.MeshStandardMaterial({
-                color: 0x3e4248,
-                metalness: 0.55,
-                roughness: 0.55
+                color: 0x42464c,
+                metalness: 0.5,
+                roughness: 0.6
             });
 
 
         const blackMaterial =
             new THREE.MeshStandardMaterial({
-                color: 0x090a0c,
+                color: 0x08090b,
                 roughness: 1
             });
 
 
         const whiteMaterial =
             new THREE.MeshStandardMaterial({
-                color: 0xbfc3c9,
+                color: 0xb8bdc5,
                 roughness: 0.65
             });
 
 
-        /* =========================================================
-           HELPERS
-        ========================================================= */
+        /* =====================================================
+           COLLISION
+        ===================================================== */
+
+        const colliders = [];
+
 
         function addBox(
             x,
@@ -604,74 +868,46 @@
                     material
                 );
 
+
             mesh.position.set(
                 x,
                 y,
                 z
             );
 
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
+
+            mesh.castShadow =
+                true;
+
+            mesh.receiveShadow =
+                true;
+
 
             scene.add(mesh);
+
 
             if (collision) {
 
                 colliders.push({
+
                     x: x,
+
                     z: z,
-                    halfX: width / 2,
-                    halfZ: depth / 2
+
+                    halfX:
+                        width / 2,
+
+                    halfZ:
+                        depth / 2
+
                 });
 
             }
 
-            return mesh;
-
-        }
-
-
-        function addCylinder(
-            x,
-            y,
-            z,
-            radius,
-            height,
-            material
-        ) {
-
-            const mesh =
-                new THREE.Mesh(
-                    new THREE.CylinderGeometry(
-                        radius,
-                        radius,
-                        height,
-                        16
-                    ),
-                    material
-                );
-
-            mesh.position.set(
-                x,
-                y,
-                z
-            );
-
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-
-            scene.add(mesh);
 
             return mesh;
 
         }
-
-
-        /* =========================================================
-           COLLISION
-        ========================================================= */
-
-        let colliders = [];
 
 
         function circleIntersectsBox(
@@ -704,6 +940,7 @@
             const dx =
                 px - closestX;
 
+
             const dz =
                 pz - closestZ;
 
@@ -711,14 +948,20 @@
             return (
                 dx * dx +
                 dz * dz
-            ) < radius * radius;
+            ) <
+            radius * radius;
 
         }
 
 
-        function canMoveTo(x, z) {
+        function canMoveTo(
+            x,
+            z
+        ) {
 
-            for (const box of colliders) {
+            for (
+                const box of colliders
+            ) {
 
                 if (
                     circleIntersectsBox(
@@ -728,26 +971,26 @@
                         box
                     )
                 ) {
+
                     return false;
+
                 }
 
             }
+
 
             return true;
 
         }
 
 
-        /* =========================================================
+        /* =====================================================
            OFFICE
-        ========================================================= */
+        ===================================================== */
 
         function buildOffice() {
 
-            /*
-                Office occupies the area around z = 7.
-                Maze entrance is behind the office.
-            */
+            /* Floor */
 
             addBox(
                 0,
@@ -802,24 +1045,25 @@
             );
 
 
-            /* Front wall with entrance */
+            /* Front wall */
 
             addBox(
-                -4.8,
+                -5,
                 2,
                 1,
-                4.4,
+                4,
                 4,
                 0.3,
                 wallMaterial,
                 true
             );
 
+
             addBox(
-                4.8,
+                5,
                 2,
                 1,
-                4.4,
+                4,
                 4,
                 0.3,
                 wallMaterial,
@@ -844,29 +1088,29 @@
 
             buildChair();
 
-            buildBookshelves();
+            buildShelves();
 
             buildCabinets();
 
-            buildOfficeLights();
+            buildOfficeLighting();
 
         }
 
 
-        /* =========================================================
+        /* =====================================================
            DESK
-        ========================================================= */
+        ===================================================== */
 
         function buildDesk() {
 
-            const deskX = -1.5;
-            const deskZ = 6;
+            const x = -1.5;
+            const z = 6;
 
 
             addBox(
-                deskX,
+                x,
                 1.05,
-                deskZ,
+                z,
                 3.4,
                 0.18,
                 1.5,
@@ -875,10 +1119,12 @@
             );
 
 
+            /* Legs */
+
             addBox(
-                deskX - 1.35,
+                x - 1.35,
                 0.5,
-                deskZ,
+                z,
                 0.18,
                 1,
                 1.3,
@@ -888,9 +1134,9 @@
 
 
             addBox(
-                deskX + 1.35,
+                x + 1.35,
                 0.5,
-                deskZ,
+                z,
                 0.18,
                 1,
                 1.3,
@@ -902,9 +1148,9 @@
             /* Monitor */
 
             addBox(
-                deskX,
+                x,
                 1.65,
-                deskZ - 0.2,
+                z - 0.2,
                 1.35,
                 0.85,
                 0.12,
@@ -913,9 +1159,9 @@
 
 
             addBox(
-                deskX,
+                x,
                 1.22,
-                deskZ - 0.2,
+                z - 0.2,
                 0.12,
                 0.35,
                 0.12,
@@ -924,9 +1170,9 @@
 
 
             addBox(
-                deskX,
+                x,
                 1.08,
-                deskZ - 0.2,
+                z - 0.2,
                 0.55,
                 0.08,
                 0.3,
@@ -934,30 +1180,12 @@
             );
 
 
-            /* Monitor glow */
-
-            const screenLight =
-                new THREE.PointLight(
-                    0x4b6bff,
-                    0.8,
-                    3
-                );
-
-            screenLight.position.set(
-                deskX,
-                1.65,
-                deskZ - 0.4
-            );
-
-            scene.add(screenLight);
-
-
             /* Keyboard */
 
             addBox(
-                deskX,
+                x,
                 1.17,
-                deskZ - 0.65,
+                z - 0.65,
                 1.1,
                 0.05,
                 0.35,
@@ -965,23 +1193,61 @@
             );
 
 
-            /* Coffee mug */
+            /* Mug */
 
-            addCylinder(
-                deskX + 1.05,
-                1.28,
-                deskZ - 0.35,
-                0.13,
-                0.25,
-                whiteMaterial
+            const mug =
+                new THREE.Mesh(
+                    new THREE.CylinderGeometry(
+                        0.13,
+                        0.13,
+                        0.25,
+                        16
+                    ),
+                    whiteMaterial
+                );
+
+
+            mug.position.set(
+                x + 1.05,
+                1.27,
+                z - 0.35
+            );
+
+
+            mug.castShadow =
+                true;
+
+
+            scene.add(mug);
+
+
+            /* Monitor glow */
+
+            const monitorLight =
+                new THREE.PointLight(
+                    0x526dff,
+                    0.65,
+                    3
+                );
+
+
+            monitorLight.position.set(
+                x,
+                1.65,
+                z - 0.5
+            );
+
+
+            scene.add(
+                monitorLight
             );
 
         }
 
 
-        /* =========================================================
+        /* =====================================================
            CHAIR
-        ========================================================= */
+        ===================================================== */
 
         function buildChair() {
 
@@ -1013,28 +1279,30 @@
             );
 
 
-            addCylinder(
+            addBox(
                 x,
                 0.35,
                 z,
-                0.08,
-                0.8,
+                0.12,
+                0.7,
+                0.12,
                 metalMaterial
             );
 
         }
 
 
-        /* =========================================================
-           BOOKSHELVES
-        ========================================================= */
+        /* =====================================================
+           SHELVES
+        ===================================================== */
 
-        function buildBookshelves() {
+        function buildShelves() {
 
             createShelf(
                 -5.8,
                 10.8
             );
+
 
             createShelf(
                 5.8,
@@ -1044,7 +1312,10 @@
         }
 
 
-        function createShelf(x, z) {
+        function createShelf(
+            x,
+            z
+        ) {
 
             addBox(
                 x,
@@ -1058,11 +1329,16 @@
             );
 
 
-            for (let row = 0; row < 4; row++) {
+            for (
+                let row = 0;
+                row < 4;
+                row++
+            ) {
 
                 addBox(
                     x,
-                    0.55 + row * 0.85,
+                    0.55 +
+                    row * 0.85,
                     z - 0.27,
                     1.55,
                     0.08,
@@ -1071,27 +1347,39 @@
                 );
 
 
-                for (let i = 0; i < 5; i++) {
+                for (
+                    let i = 0;
+                    i < 5;
+                    i++
+                ) {
 
                     const bookHeight =
-                        0.45 +
-                        Math.random() * 0.25;
+                        0.42 +
+                        Math.random() *
+                        0.25;
+
+
+                    const bookMaterial =
+                        new THREE.MeshStandardMaterial({
+                            color:
+                                0x202328 +
+                                Math.floor(
+                                    Math.random() *
+                                    0x101010
+                                )
+                        });
+
 
                     addBox(
-                        x - 0.6 + i * 0.3,
-                        0.8 + row * 0.85,
+                        x - 0.6 +
+                        i * 0.3,
+                        0.8 +
+                        row * 0.85,
                         z - 0.3,
                         0.18,
                         bookHeight,
                         0.15,
-                        new THREE.MeshStandardMaterial({
-                            color:
-                                new THREE.Color(
-                                    Math.random() * 0.15 + 0.08,
-                                    Math.random() * 0.15 + 0.08,
-                                    Math.random() * 0.15 + 0.08
-                                )
-                        })
+                        bookMaterial
                     );
 
                 }
@@ -1101,13 +1389,13 @@
         }
 
 
-        /* =========================================================
-           FILING CABINETS
-        ========================================================= */
+        /* =====================================================
+           CABINETS
+        ===================================================== */
 
-        let importantDrawer = null;
+        let keyDrawer = null;
 
-        let drawerOpen = false;
+        let keyDrawerOpen = false;
 
         let keyCollected = false;
 
@@ -1136,25 +1424,29 @@
             containsKey
         ) {
 
-            const cabinet =
-                addBox(
-                    x,
-                    1.05,
-                    z,
-                    1.25,
-                    2.1,
-                    0.8,
-                    metalMaterial,
-                    true
-                );
+            addBox(
+                x,
+                1.05,
+                z,
+                1.25,
+                2.1,
+                0.8,
+                metalMaterial,
+                true
+            );
 
 
-            for (let i = 0; i < 3; i++) {
+            for (
+                let i = 0;
+                i < 3;
+                i++
+            ) {
 
                 const drawer =
                     addBox(
                         x,
-                        1.6 - i * 0.55,
+                        1.6 -
+                        i * 0.55,
                         z - 0.43,
                         1.0,
                         0.38,
@@ -1165,7 +1457,8 @@
 
                 addBox(
                     x,
-                    1.6 - i * 0.55,
+                    1.6 -
+                    i * 0.55,
                     z - 0.49,
                     0.15,
                     0.04,
@@ -1174,9 +1467,13 @@
                 );
 
 
-                if (containsKey && i === 1) {
+                if (
+                    containsKey &&
+                    i === 1
+                ) {
 
-                    importantDrawer = drawer;
+                    keyDrawer =
+                        drawer;
 
                 }
 
@@ -1185,11 +1482,20 @@
         }
 
 
-        /* =========================================================
+        /* =====================================================
            KEY
-        ========================================================= */
+        ===================================================== */
 
-        const key = new THREE.Group();
+        const key =
+            new THREE.Group();
+
+
+        const keyMaterial =
+            new THREE.MeshStandardMaterial({
+                color: 0xd7b94d,
+                metalness: 0.85,
+                roughness: 0.25
+            });
 
 
         const keyRing =
@@ -1200,15 +1506,13 @@
                     8,
                     16
                 ),
-                new THREE.MeshStandardMaterial({
-                    color: 0xd7b94d,
-                    metalness: 0.8,
-                    roughness: 0.3
-                })
+                keyMaterial
             );
 
 
-        key.add(keyRing);
+        key.add(
+            keyRing
+        );
 
 
         const keyStem =
@@ -1218,22 +1522,22 @@
                     0.06,
                     0.45
                 ),
-                new THREE.MeshStandardMaterial({
-                    color: 0xd7b94d,
-                    metalness: 0.8,
-                    roughness: 0.3
-                })
+                keyMaterial
             );
 
 
-        keyStem.position.z = 0.25;
+        keyStem.position.z =
+            0.25;
 
-        key.add(keyStem);
+
+        key.add(
+            keyStem
+        );
 
 
         key.position.set(
             5.8,
-            1.2,
+            1.18,
             5.85
         );
 
@@ -1242,40 +1546,55 @@
             Math.PI / 2;
 
 
-        scene.add(key);
+        key.visible = false;
 
 
-        /* =========================================================
+        scene.add(
+            key
+        );
+
+
+        /* =====================================================
            OFFICE LIGHTING
-        ========================================================= */
+        ===================================================== */
 
-        function buildOfficeLights() {
+        function buildOfficeLighting() {
 
             const ambient =
                 new THREE.HemisphereLight(
-                    0x75809a,
-                    0x08090b,
-                    0.28
+                    0x6e7890,
+                    0x07080a,
+                    0.3
                 );
 
-            scene.add(ambient);
+
+            scene.add(
+                ambient
+            );
 
 
-            const lightPositions = [
-                [-4, 3.5, 4],
-                [0, 3.5, 7],
-                [4, 3.5, 10]
+            const positions = [
+
+                [-4, 3.4, 4],
+
+                [0, 3.4, 7],
+
+                [4, 3.4, 10]
+
             ];
 
 
-            for (const position of lightPositions) {
+            for (
+                const position of positions
+            ) {
 
                 const light =
                     new THREE.PointLight(
-                        0xb8c4d8,
-                        0.55,
+                        0xaeb8ca,
+                        0.48,
                         7
                     );
+
 
                 light.position.set(
                     position[0],
@@ -1283,18 +1602,23 @@
                     position[2]
                 );
 
-                light.castShadow = true;
 
-                scene.add(light);
+                light.castShadow =
+                    true;
+
+
+                scene.add(
+                    light
+                );
 
             }
 
         }
 
 
-        /* =========================================================
+        /* =====================================================
            MAZE
-        ========================================================= */
+        ===================================================== */
 
         const maze = [
 
@@ -1317,11 +1641,14 @@
 
         const mazeCell = 1;
 
+
         const mazeWidth =
             maze[0].length *
             mazeCell;
 
-        const mazeStartZ = -1;
+
+        const mazeStartZ =
+            -1;
 
 
         const mazeOriginX =
@@ -1352,122 +1679,89 @@
                         maze[row][col];
 
 
+                    if (
+                        tile !== "#"
+                    ) {
+
+                        continue;
+
+                    }
+
+
                     const x =
                         mazeOriginX +
-                        col * mazeCell;
+                        col *
+                        mazeCell;
 
 
                     const z =
                         mazeOriginZ +
-                        row * mazeCell;
+                        row *
+                        mazeCell;
 
 
-                    if (tile === "#") {
-
-                        addBox(
-                            x,
-                            1.5,
-                            z,
-                            1,
-                            3,
-                            1,
-                            darkWallMaterial,
-                            true
-                        );
-
-                    }
+                    addBox(
+                        x,
+                        1.5,
+                        z,
+                        1,
+                        3,
+                        1,
+                        darkWallMaterial,
+                        true
+                    );
 
                 }
 
             }
 
 
-            /* Maze floor */
-
-            const floorWidth =
-                maze[0].length;
-
-            const floorDepth =
-                maze.length;
-
-
             addBox(
                 0,
                 -0.1,
                 mazeStartZ +
-                floorDepth / 2,
-                floorWidth,
+                maze.length / 2,
+                maze[0].length,
                 0.2,
-                floorDepth,
+                maze.length,
                 floorMaterial
-            );
-
-
-            /* Entrance marker */
-
-            addBox(
-                0,
-                0.03,
-                0.1,
-                1.2,
-                0.04,
-                0.15,
-                new THREE.MeshStandardMaterial({
-                    color: 0x343944,
-                    emissive: 0x101217
-                })
             );
 
         }
 
+
+        /* =====================================================
+           BUILD WORLD
+        ===================================================== */
 
         buildOffice();
 
         buildMaze();
 
 
-        /* =========================================================
-           MAZE EXIT
-        ========================================================= */
-
-        const exitGroup =
-            new THREE.Group();
-
-
-        const exitFrameMaterial =
-            new THREE.MeshStandardMaterial({
-                color: 0x20242a,
-                roughness: 0.8
-            });
-
-
-        const exitGlowMaterial =
-            new THREE.MeshStandardMaterial({
-                color: 0x304020,
-                emissive: 0x18220f,
-                emissiveIntensity: 0.8
-            });
-
+        /* =====================================================
+           EXIT
+        ===================================================== */
 
         addBox(
-            -0.6,
+            -0.65,
             1.4,
             -7.2,
             0.15,
             2.8,
             0.2,
-            exitFrameMaterial
+            metalMaterial
         );
 
 
         addBox(
-            0.6,
+            0.65,
             1.4,
             -7.2,
             0.15,
             2.8,
             0.2,
-            exitFrameMaterial
+            metalMaterial
         );
 
 
@@ -1475,19 +1769,20 @@
             0,
             2.75,
             -7.2,
-            1.4,
+            1.45,
             0.15,
             0.2,
-            exitFrameMaterial
+            metalMaterial
         );
 
 
         const exitLight =
             new THREE.PointLight(
-                0x88aa66,
-                0.25,
+                0x78945d,
+                0.2,
                 3
             );
+
 
         exitLight.position.set(
             0,
@@ -1495,16 +1790,15 @@
             -7
         );
 
-        scene.add(exitLight);
+
+        scene.add(
+            exitLight
+        );
 
 
-        /* =========================================================
+        /* =====================================================
            FLASHLIGHT
-        ========================================================= */
-
-        /*
-            You start with this.
-        */
+        ===================================================== */
 
         let flashlightOn = false;
 
@@ -1520,51 +1814,43 @@
             );
 
 
-        flashlight.castShadow = true;
+        flashlight.castShadow =
+            true;
 
-        flashlight.shadow.mapSize.width = 1024;
-        flashlight.shadow.mapSize.height = 1024;
 
-        camera.add(flashlight);
+        flashlight.shadow.mapSize.width =
+            1024;
+
+
+        flashlight.shadow.mapSize.height =
+            1024;
+
+
+        camera.add(
+            flashlight
+        );
 
 
         const flashlightTarget =
             new THREE.Object3D();
 
 
-        scene.add(flashlightTarget);
+        scene.add(
+            flashlightTarget
+        );
+
 
         flashlight.target =
             flashlightTarget;
 
 
-        function toggleFlashlight() {
-
-            flashlightOn =
-                !flashlightOn;
-
-            flashlightElement.textContent =
-                flashlightOn
-                    ? "Flashlight: ON"
-                    : "Flashlight: OFF";
+        function updateFlashlight() {
 
             flashlight.intensity =
                 flashlightOn
                     ? 7
                     : 0;
 
-            if (audioReady) {
-                shortTone(
-                    flashlightOn ? 520 : 260,
-                    0.07,
-                    0.035
-                );
-            }
-
-        }
-
-
-        function updateFlashlight() {
 
             flashlightTarget.position.copy(
                 camera.position
@@ -1585,23 +1871,43 @@
 
 
             flashlightTarget.position.add(
-                direction.multiplyScalar(10)
+                direction.multiplyScalar(
+                    10
+                )
             );
 
         }
 
 
-        /* =========================================================
+        function toggleFlashlight() {
+
+            flashlightOn =
+                !flashlightOn;
+
+
+            flashlightElement.textContent =
+                flashlightOn
+                    ? "Flashlight: ON"
+                    : "Flashlight: OFF";
+
+
+            updateFlashlight();
+
+
+            playClickSound();
+
+        }
+
+
+        /* =====================================================
            AUDIO
-        ========================================================= */
+        ===================================================== */
 
         let audioContext = null;
 
         let masterGain = null;
 
-        let ambientGain = null;
-
-        let audioReady = false;
+        let audioStarted = false;
 
         let stepTimer = 0;
 
@@ -1610,13 +1916,17 @@
 
         function startAudio() {
 
-            if (audioReady) {
+            if (
+                audioStarted
+            ) {
 
                 if (
                     audioContext.state ===
                     "suspended"
                 ) {
+
                     audioContext.resume();
+
                 }
 
                 return;
@@ -1634,66 +1944,68 @@
             masterGain =
                 audioContext.createGain();
 
+
             masterGain.gain.value =
-                0.5;
+                0.45;
+
 
             masterGain.connect(
                 audioContext.destination
             );
 
 
-            ambientGain =
+            const oscillator =
+                audioContext.createOscillator();
+
+
+            const gain =
                 audioContext.createGain();
 
-            ambientGain.gain.value =
-                0.025;
 
-            ambientGain.connect(
+            oscillator.type =
+                "sine";
+
+
+            oscillator.frequency.value =
+                42;
+
+
+            gain.gain.value =
+                0.045;
+
+
+            oscillator.connect(
+                gain
+            );
+
+
+            gain.connect(
                 masterGain
             );
 
 
-            const hum =
-                audioContext.createOscillator();
-
-            const humGain =
-                audioContext.createGain();
+            oscillator.start();
 
 
-            hum.type = "sine";
-
-            hum.frequency.value =
-                45;
-
-            humGain.gain.value =
-                0.08;
-
-
-            hum.connect(
-                humGain
-            );
-
-            humGain.connect(
-                ambientGain
-            );
-
-            hum.start();
-
-
-            audioReady = true;
+            audioStarted =
+                true;
 
         }
 
 
-        function shortTone(
+        function tone(
             frequency,
             duration,
             volume,
             type = "sine"
         ) {
 
-            if (!audioReady) {
+            if (
+                !audioStarted
+            ) {
+
                 return;
+
             }
 
 
@@ -1735,17 +2047,25 @@
             );
 
 
-            oscillator.connect(gain);
+            oscillator.connect(
+                gain
+            );
 
-            gain.connect(masterGain);
+
+            gain.connect(
+                masterGain
+            );
 
 
-            oscillator.start(now);
+            oscillator.start(
+                now
+            );
+
 
             oscillator.stop(
                 now +
                 duration +
-                0.02
+                0.03
             );
 
         }
@@ -1753,11 +2073,23 @@
 
         function footstep() {
 
-            shortTone(
-                70 + Math.random() * 25,
-                0.09,
-                0.055,
+            tone(
+                65 +
+                Math.random() * 25,
+                0.11,
+                0.05,
                 "triangle"
+            );
+
+        }
+
+
+        function playClickSound() {
+
+            tone(
+                420,
+                0.06,
+                0.025
             );
 
         }
@@ -1765,10 +2097,10 @@
 
         function drawerSound() {
 
-            shortTone(
+            tone(
                 90,
                 0.25,
-                0.08,
+                0.06,
                 "sawtooth"
             );
 
@@ -1777,20 +2109,22 @@
 
         function keySound() {
 
-            shortTone(
+            tone(
                 650,
-                0.15,
-                0.07
+                0.14,
+                0.06
             );
 
 
             setTimeout(
-                () => {
-                    shortTone(
+                function() {
+
+                    tone(
                         900,
-                        0.2,
-                        0.06
+                        0.18,
+                        0.05
                     );
+
                 },
                 100
             );
@@ -1798,225 +2132,29 @@
         }
 
 
-        function doorSound() {
+        function ambientSound() {
 
-            shortTone(
-                55,
-                0.7,
-                0.09,
-                "sawtooth"
+            tone(
+                120,
+                               1.8,
+                0.018
             );
 
         }
 
 
-        function strangeAmbient() {
-
-            shortTone(
-                125,
-                2.1,
-                0.025
-            );
-
-        }
-
-
-        /* =========================================================
-           HORROR SURPRISE
-           ========================================================= */
-
-        const watcher =
-            new THREE.Group();
-
-
-        const watcherBody =
-            new THREE.Mesh(
-                new THREE.CylinderGeometry(
-                    0.2,
-                    0.3,
-                    1.7,
-                    8
-                ),
-                new THREE.MeshStandardMaterial({
-                    color: 0x020203,
-                    roughness: 1
-                })
-            );
-
-
-        watcherBody.position.y =
-            0.9;
-
-
-        watcher.add(
-            watcherBody
-        );
-
-
-        const watcherHead =
-            new THREE.Mesh(
-                new THREE.SphereGeometry(
-                    0.21,
-                    12,
-                    12
-                ),
-                new THREE.MeshStandardMaterial({
-                    color: 0x010101,
-                    roughness: 1
-                })
-            );
-
-
-        watcherHead.position.y =
-            1.9;
-
-
-        watcher.add(
-            watcherHead
-        );
-
-
-        watcher.visible = false;
-
-        scene.add(watcher);
-
-
-        const watcherSpots = [
-
-            {
-                x: -1.5,
-                z: 10.1
-            },
-
-            {
-                x: 2.5,
-                z: 12.1
-            },
-
-            {
-                x: -2.5,
-                z: 15.1
-            },
-
-            {
-                x: 3.5,
-                z: 17.1
-            },
-
-            {
-                x: -3.5,
-                z: 20.1
-            }
-
-        ];
-
-
-        let watcherTimer = 8;
-
-        let watcherActive = false;
-
-
-        function updateWatcher(dt) {
-
-            if (
-                !keyCollected ||
-                player.position.z >
-                mazeStartZ + 1
-            ) {
-
-                watcher.visible =
-                    false;
-
-                watcherActive =
-                    false;
-
-                return;
-
-            }
-
-
-            watcherTimer -= dt;
-
-
-            if (
-                watcherTimer <= 0 &&
-                !watcherActive
-            ) {
-
-                watcherTimer =
-                    7 +
-                    Math.random() * 11;
-
-
-                if (
-                    Math.random() <
-                    0.42
-                ) {
-
-                    const spot =
-                        watcherSpots[
-                            Math.floor(
-                                Math.random() *
-                                watcherSpots.length
-                            )
-                        ];
-
-
-                    watcher.position.set(
-                        spot.x,
-                        0,
-                        spot.z
-                    );
-
-
-                    watcher.lookAt(
-                        player.position.x,
-                        1.2,
-                        player.position.z
-                    );
-
-
-                    watcher.visible =
-                        true;
-
-                    watcherActive =
-                        true;
-
-
-                    if (audioReady) {
-                        strangeAmbient();
-                    }
-
-
-                    setTimeout(
-                        () => {
-
-                            watcher.visible =
-                                false;
-
-                            watcherActive =
-                                false;
-
-                        },
-                        700 +
-                        Math.random() * 1000
-                    );
-
-                }
-
-            }
-
-        }
-
-
-        /* =========================================================
-           INTERACTION
-        ========================================================= */
-
-        function showMessage(text) {
+        /* =====================================================
+           MESSAGE
+        ===================================================== */
+
+        function showMessage(
+            text,
+            duration = 2200
+        ) {
 
             messageElement.textContent =
                 text;
+
 
             messageElement.style.opacity =
                 "1";
@@ -2029,124 +2167,166 @@
 
             messageTimeout =
                 setTimeout(
-                    () => {
+                    function() {
 
                         messageElement.style.opacity =
                             "0";
 
                     },
-                    2200
+                    duration
                 );
 
         }
 
 
+        /* =====================================================
+           INTERACTION
+        ===================================================== */
+
         function interact() {
 
-            if (!running) {
+            if (
+                !running
+            ) {
+
                 return;
+
             }
 
 
-            const distanceToDrawer =
-                player.position.distanceTo(
-                    new THREE.Vector3(
-                        5.8,
-                        1.5,
-                        5.5
-                    )
+            /* Drawer */
+
+            const drawerDistance =
+                Math.hypot(
+                    player.position.x -
+                    5.8,
+
+                    player.position.z -
+                    5.5
                 );
 
 
             if (
-                distanceToDrawer < 1.8 &&
+                drawerDistance < 1.7 &&
                 !keyCollected
             ) {
 
-                drawerOpen =
-                    !drawerOpen;
+                keyDrawerOpen =
+                    !keyDrawerOpen;
 
 
-                if (drawerOpen) {
+                if (
+                    keyDrawerOpen
+                ) {
 
-                    importantDrawer.position.z =
+                    keyDrawer.position.z =
                         5.55;
+
 
                     key.visible =
                         true;
 
+
                     showMessage(
-                        "You found something."
+                        "The drawer is open."
                     );
+
+
+                    drawerSound();
+
+                }
+                else {
+
+                    keyDrawer.position.z =
+                        5.07;
+
+
+                    key.visible =
+                        false;
+
 
                     drawerSound();
 
                 }
 
+
                 return;
 
             }
 
+
+            /* Pick up key */
 
             if (
                 key.visible &&
                 !keyCollected &&
                 player.position.distanceTo(
                     key.position
-                ) < 1.4
+                ) < 1.2
             ) {
 
                 keyCollected =
                     true;
 
+
                 key.visible =
                     false;
 
+
                 showMessage(
-                    "A key."
+                    "You found a key."
                 );
 
+
                 keySound();
+
 
                 return;
 
             }
 
 
+            /* Exit */
+
             if (
                 keyCollected &&
                 player.position.z <
-                -6.3 &&
+                -6.2 &&
                 Math.abs(
                     player.position.x
-                ) < 1.5
+                ) < 1.6
             ) {
 
                 showMessage(
-                    "The door opens."
+                    "The door opens..."
                 );
 
-                doorSound();
+
+                tone(
+                    55,
+                    0.7,
+                    0.08,
+                    "sawtooth"
+                );
+
 
                 setTimeout(
-                    () => {
+                    function() {
 
                         completeLoop();
 
                     },
-                    700
+                    900
                 );
-
-                return;
 
             }
 
         }
 
 
-        /* =========================================================
-           PROMPT
-        ========================================================= */
+        /* =====================================================
+           PROMPTS
+        ===================================================== */
 
         function updatePrompt() {
 
@@ -2154,30 +2334,39 @@
                 "0";
 
 
-            if (!running) {
+            if (
+                !running
+            ) {
+
                 return;
+
             }
 
 
             const drawerDistance =
                 Math.hypot(
-                    player.position.x - 5.8,
-                    player.position.z - 5.5
+                    player.position.x -
+                    5.8,
+
+                    player.position.z -
+                    5.5
                 );
 
 
             if (
-                drawerDistance < 1.8 &&
+                drawerDistance < 1.7 &&
                 !keyCollected
             ) {
 
                 promptElement.textContent =
-                    drawerOpen
+                    keyDrawerOpen
                         ? "E  Close drawer"
                         : "E  Open drawer";
 
+
                 promptElement.style.opacity =
                     "1";
+
 
                 return;
 
@@ -2189,14 +2378,16 @@
                 !keyCollected &&
                 player.position.distanceTo(
                     key.position
-                ) < 1.4
+                ) < 1.2
             ) {
 
                 promptElement.textContent =
                     "E  Take key";
 
+
                 promptElement.style.opacity =
                     "1";
+
 
                 return;
 
@@ -2206,14 +2397,15 @@
             if (
                 keyCollected &&
                 player.position.z <
-                -6.3 &&
+                -6.2 &&
                 Math.abs(
                     player.position.x
-                ) < 1.5
+                ) < 1.6
             ) {
 
                 promptElement.textContent =
                     "E  Enter";
+
 
                 promptElement.style.opacity =
                     "1";
@@ -2223,40 +2415,55 @@
         }
 
 
-        /* =========================================================
+        /* =====================================================
            MOVEMENT
-        ========================================================= */
+        ===================================================== */
 
-        function updateMovement(dt) {
+        function updateMovement(
+            dt
+        ) {
 
-            let moveForward = 0;
+            let forward = 0;
 
-            let moveSide = 0;
+            let side = 0;
 
 
             if (keys.w) {
-                moveForward += 1;
+
+                forward += 1;
+
             }
+
 
             if (keys.s) {
-                moveForward -= 1;
+
+                forward -= 1;
+
             }
+
 
             if (keys.d) {
-                moveSide += 1;
+
+                side += 1;
+
             }
 
+
             if (keys.a) {
-                moveSide -= 1;
+
+                side -= 1;
+
             }
 
 
             const moving =
-                moveForward !== 0 ||
-                moveSide !== 0;
+                forward !== 0 ||
+                side !== 0;
 
 
-            if (!moving) {
+            if (
+                !moving
+            ) {
 
                 stepTimer = 0;
 
@@ -2267,26 +2474,30 @@
 
             const length =
                 Math.hypot(
-                    moveForward,
-                    moveSide
+                    forward,
+                    side
                 );
 
 
-            moveForward /= length;
-            moveSide /= length;
+            forward /=
+                length;
+
+
+            side /=
+                length;
 
 
             /*
-                IMPORTANT:
+                Correct FPS movement.
 
-                W = forward
-                S = backward
-                A = left
-                D = right
+                yaw = 0
 
-                This is based directly on
-                the camera's yaw.
+                W -> -Z
+                S -> +Z
+                A -> -X
+                D -> +X
             */
+
 
             const forwardX =
                 -Math.sin(
@@ -2313,25 +2524,13 @@
 
 
             const velocityX =
-                (
-                    forwardX *
-                    moveForward
-                ) +
-                (
-                    rightX *
-                    moveSide
-                );
+                forwardX * forward +
+                rightX * side;
 
 
             const velocityZ =
-                (
-                    forwardZ *
-                    moveForward
-                ) +
-                (
-                    rightZ *
-                    moveSide
-                );
+                forwardZ * forward +
+                rightZ * side;
 
 
             const distance =
@@ -2350,11 +2549,6 @@
                 velocityZ *
                 distance;
 
-
-            /*
-                Check X and Z separately so
-                you can slide along walls.
-            */
 
             if (
                 canMoveTo(
@@ -2387,11 +2581,14 @@
             stepTimer -= dt;
 
 
-            if (stepTimer <= 0) {
+            if (
+                stepTimer <= 0
+            ) {
 
                 footstep();
 
-                stepTimer = 0.42;
+                stepTimer =
+                    0.42;
 
             }
 
@@ -2401,9 +2598,9 @@
         }
 
 
-        /* =========================================================
+        /* =====================================================
            CAMERA
-        ========================================================= */
+        ===================================================== */
 
         function updateCamera() {
 
@@ -2429,9 +2626,204 @@
         }
 
 
-        /* =========================================================
-           LOOP RESET
-        ========================================================= */
+        /* =====================================================
+           HIDDEN HORROR SYSTEM
+        ===================================================== */
+
+        const hiddenThing =
+            new THREE.Group();
+
+
+        const hiddenBody =
+            new THREE.Mesh(
+                new THREE.CylinderGeometry(
+                    0.2,
+                    0.29,
+                    1.7,
+                    8
+                ),
+                new THREE.MeshStandardMaterial({
+                    color: 0x010101,
+                    roughness: 1
+                })
+            );
+
+
+        hiddenBody.position.y =
+            0.9;
+
+
+        hiddenThing.add(
+            hiddenBody
+        );
+
+
+        const hiddenHead =
+            new THREE.Mesh(
+                new THREE.SphereGeometry(
+                    0.22,
+                    12,
+                    12
+                ),
+                new THREE.MeshStandardMaterial({
+                    color: 0x010101,
+                    roughness: 1
+                })
+            );
+
+
+        hiddenHead.position.y =
+            1.9;
+
+
+        hiddenThing.add(
+            hiddenHead
+        );
+
+
+        hiddenThing.visible =
+            false;
+
+
+        scene.add(
+            hiddenThing
+        );
+
+
+        const hiddenSpots = [
+
+            {
+                x: -1.5,
+                z: 10
+            },
+
+            {
+                x: 2.5,
+                z: 12
+            },
+
+            {
+                x: -2.5,
+                z: 15
+            },
+
+            {
+                x: 3.5,
+                z: 17
+            },
+
+            {
+                x: -3.5,
+                z: 20
+            }
+
+        ];
+
+
+        let hiddenTimer =
+            8;
+
+
+        let hiddenActive =
+            false;
+
+
+        function updateHiddenThing(
+            dt
+        ) {
+
+            if (
+                !keyCollected ||
+                player.position.z >
+                0
+            ) {
+
+                hiddenThing.visible =
+                    false;
+
+                hiddenActive =
+                    false;
+
+                return;
+
+            }
+
+
+            hiddenTimer -= dt;
+
+
+            if (
+                hiddenTimer <= 0 &&
+                !hiddenActive
+            ) {
+
+                hiddenTimer =
+                    7 +
+                    Math.random() *
+                    11;
+
+
+                if (
+                    Math.random() <
+                    0.45
+                ) {
+
+                    const spot =
+                        hiddenSpots[
+                            Math.floor(
+                                Math.random() *
+                                hiddenSpots.length
+                            )
+                        ];
+
+
+                    hiddenThing.position.set(
+                        spot.x,
+                        0,
+                        spot.z
+                    );
+
+
+                    hiddenThing.lookAt(
+                        player.position.x,
+                        1.2,
+                        player.position.z
+                    );
+
+
+                    hiddenThing.visible =
+                        true;
+
+
+                    hiddenActive =
+                        true;
+
+
+                    setTimeout(
+                        function() {
+
+                            hiddenThing.visible =
+                                false;
+
+                            hiddenActive =
+                                false;
+
+                        },
+                        650 +
+                        Math.random() *
+                        1100
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        /* =====================================================
+           RESET
+        ===================================================== */
 
         function resetLoop() {
 
@@ -2442,37 +2834,49 @@
             );
 
 
-            player.yaw = 0;
+            player.yaw =
+                0;
 
-            player.pitch = 0;
+
+            player.pitch =
+                0;
 
 
-            timeLeft = 60;
+            timeLeft =
+                60;
 
 
             keyCollected =
                 false;
 
 
-            drawerOpen =
+            keyDrawerOpen =
                 false;
-
-
-            importantDrawer.position.z =
-                5.5;
 
 
             key.visible =
                 false;
 
 
-            watcher.visible =
+            if (
+                keyDrawer
+            ) {
+
+                keyDrawer.position.z =
+                    5.07;
+
+            }
+
+
+            hiddenThing.visible =
                 false;
 
-            watcherActive =
+
+            hiddenActive =
                 false;
 
-            watcherTimer =
+
+            hiddenTimer =
                 8;
 
 
@@ -2490,14 +2894,18 @@
         }
 
 
-        /* =========================================================
+        /* =====================================================
            COMPLETE LOOP
-        ========================================================= */
+        ===================================================== */
 
         function completeLoop() {
 
-            if (!running) {
+            if (
+                !running
+            ) {
+
                 return;
+
             }
 
 
@@ -2510,7 +2918,7 @@
 
 
             setTimeout(
-                () => {
+                function() {
 
                     resetLoop();
 
@@ -2521,9 +2929,9 @@
         }
 
 
-        /* =========================================================
+        /* =====================================================
            GAME OVER
-        ========================================================= */
+        ===================================================== */
 
         function gameOver() {
 
@@ -2546,87 +2954,85 @@
         }
 
 
-        /* =========================================================
+        /* =====================================================
            START GAME
-        ========================================================= */
+        ===================================================== */
 
-        function startGame() {
+        window.startGame =
+            function() {
 
-            startAudio();
+                /*
+                    Audio starts from a real user click,
+                    so browsers allow it.
+                */
 
-
-            loopNumber =
-                1;
-
-
-            resetLoop();
-
-
-            running =
-                true;
+                startAudio();
 
 
-            startScreen.style.display =
-                "none";
+                loopNumber =
+                    1;
 
 
-            endScreen.style.display =
-                "none";
+                resetLoop();
 
 
-            renderer.domElement.requestPointerLock();
+                running =
+                    true;
 
 
-            lastTime =
-                performance.now();
+                startScreen.style.display =
+                    "none";
 
 
-            requestAnimationFrame(
-                gameLoop
-            );
-
-        }
+                endScreen.style.display =
+                    "none";
 
 
-        startButton.addEventListener(
-            "click",
-            event => {
-
-                event.stopPropagation();
-
-                startGame();
-
-            }
-        );
+                renderer.domElement.requestPointerLock();
 
 
-        restartButton.addEventListener(
-            "click",
-            event => {
+                lastTime =
+                    performance.now();
 
-                event.stopPropagation();
+
+                requestAnimationFrame(
+                    gameLoop
+                );
+
+            };
+
+
+        window.restartGame =
+            function() {
 
                 startGame();
 
-            }
-        );
+            };
 
 
-        /* =========================================================
+        /* =====================================================
            GAME LOOP
-        ========================================================= */
+        ===================================================== */
 
-        function gameLoop(time) {
+        function gameLoop(
+            time
+        ) {
 
-            if (!running) {
+            if (
+                !running
+            ) {
+
                 return;
+
             }
 
 
             const dt =
                 Math.min(
-                    (time - lastTime) /
-                    1000,
+                    (
+                        time -
+                        lastTime
+                    ) / 1000,
                     0.05
                 );
 
@@ -2638,14 +3044,20 @@
             timeLeft -= dt;
 
 
-            if (timeLeft <= 0) {
+            if (
+                timeLeft <= 0
+            ) {
 
-                timeLeft = 0;
+                timeLeft =
+                    0;
+
 
                 timerElement.textContent =
                     "0.0";
 
+
                 gameOver();
+
 
                 return;
 
@@ -2653,30 +3065,42 @@
 
 
             timerElement.textContent =
-                timeLeft.toFixed(1);
+                timeLeft.toFixed(
+                    1
+                );
 
 
-            updateMovement(dt);
+            updateMovement(
+                dt
+            );
+
 
             updateCamera();
 
+
             updatePrompt();
 
-            updateWatcher(dt);
+
+            updateHiddenThing(
+                dt
+            );
 
 
-            /* Ambient sounds */
+            ambientTimer -=
+                dt;
 
-            ambientTimer -= dt;
 
+            if (
+                ambientTimer <= 0
+            ) {
 
-            if (ambientTimer <= 0) {
+                ambientSound();
 
-                strangeAmbient();
 
                 ambientTimer =
-                    7 +
-                    Math.random() * 12;
+                    8 +
+                    Math.random() *
+                    12;
 
             }
 
@@ -2694,13 +3118,13 @@
         }
 
 
-        /* =========================================================
+        /* =====================================================
            RESIZE
-        ========================================================= */
+        ===================================================== */
 
         window.addEventListener(
             "resize",
-            () => {
+            function() {
 
                 camera.aspect =
                     window.innerWidth /
@@ -2719,11 +3143,12 @@
         );
 
 
-        /* =========================================================
-           INITIAL STATE
-        ========================================================= */
+        /* =====================================================
+           INITIAL DRAW
+        ===================================================== */
 
         resetLoop();
+
 
         renderer.render(
             scene,
