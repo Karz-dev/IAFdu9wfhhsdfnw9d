@@ -1,14 +1,14 @@
-```html
 <!DOCTYPE html>
-<html lang="en">
 
+<html lang="en">
 <head>
 
 <meta charset="UTF-8">
 
 <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+
 >
 
 <title>LOOP</title>
@@ -29,14 +29,12 @@ body {
 
     overflow: hidden;
 
-    background: #05070b;
+    background: #080b12;
 
     font-family:
         Arial,
         Helvetica,
         sans-serif;
-
-    color: white;
 
     user-select: none;
 }
@@ -51,13 +49,17 @@ canvas {
     cursor: crosshair;
 }
 
-#ui {
+#hud {
 
     position: fixed;
 
     inset: 0;
 
     pointer-events: none;
+
+    color: white;
+
+    z-index: 10;
 }
 
 #timer {
@@ -65,7 +67,7 @@ canvas {
     position: absolute;
 
     top: 18px;
-    left: 22px;
+    left: 20px;
 
     font-size: 28px;
 
@@ -79,49 +81,15 @@ canvas {
 
     position: absolute;
 
-    top: 55px;
-    left: 24px;
+    top: 54px;
+    left: 20px;
 
-    font-size: 14px;
+    font-size: 15px;
 
-    color: #aeb8c9;
-
-    text-shadow:
-        0 2px 7px black;
-}
-
-#flashlightStatus {
-
-    position: absolute;
-
-    top: 78px;
-    left: 24px;
-
-    font-size: 14px;
-
-    color: #8995a8;
+    color: #cbd5e1;
 
     text-shadow:
-        0 2px 7px black;
-}
-
-#objective {
-
-    position: absolute;
-
-    top: 20px;
-    right: 24px;
-
-    max-width: 380px;
-
-    text-align: right;
-
-    font-size: 16px;
-
-    color: #dbe4f0;
-
-    text-shadow:
-        0 2px 7px black;
+        0 2px 5px black;
 }
 
 #crosshair {
@@ -131,18 +99,18 @@ canvas {
     left: 50%;
     top: 50%;
 
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
 
-    transform:
-        translate(-50%, -50%);
+    margin-left: -4px;
+    margin-top: -4px;
 
     border-radius: 50%;
 
     background: white;
 
     box-shadow:
-        0 0 6px black;
+        0 0 8px black;
 }
 
 #prompt {
@@ -150,22 +118,27 @@ canvas {
     position: absolute;
 
     left: 50%;
-    bottom: 20%;
+    bottom: 90px;
 
     transform:
         translateX(-50%);
 
     padding:
-        9px 17px;
+        10px 18px;
 
-    border-radius: 8px;
+    border-radius: 10px;
 
     background:
-        rgba(0, 0, 0, 0.72);
+        rgba(0,0,0,.65);
 
-    font-size: 15px;
+    color: white;
 
-    display: none;
+    font-size: 16px;
+
+    opacity: 0;
+
+    transition:
+        opacity .15s;
 }
 
 #message {
@@ -173,20 +146,45 @@ canvas {
     position: absolute;
 
     left: 50%;
-    bottom: 12%;
+    bottom: 40px;
 
     transform:
         translateX(-50%);
 
     padding:
-        9px 18px;
+        9px 16px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(0,0,0,.55);
+
+    color: #dbeafe;
+
+    font-size: 14px;
+
+    opacity: 0;
+
+    transition:
+        opacity .2s;
+}
+
+#flashlightHud {
+
+    position: absolute;
+
+    top: 20px;
+    right: 20px;
+
+    padding:
+        8px 13px;
 
     border-radius: 8px;
 
     background:
-        rgba(0, 0, 0, 0.75);
+        rgba(0,0,0,.5);
 
-    color: #dbeafe;
+    font-size: 14px;
 
     display: none;
 }
@@ -207,63 +205,75 @@ canvas {
     background:
         radial-gradient(
             circle at center,
-            rgba(30, 45, 70, 0.48),
-            rgba(2, 4, 8, 0.98)
+            rgba(30,41,59,.75),
+            rgba(2,6,23,.96)
         );
 
-    pointer-events: auto;
+    color: white;
+
+    z-index: 50;
 }
 
 .screen h1 {
 
-    margin: 0 0 12px;
+    margin:
+        0 0 8px;
 
-    font-size: 72px;
+    font-size: 70px;
 
-    letter-spacing: 12px;
-
-    text-shadow:
-        0 0 30px
-        rgba(80, 150, 255, 0.4);
+    letter-spacing: 8px;
 }
 
 .screen p {
 
-    margin: 5px 0;
+    margin:
+        0 0 25px;
 
-    color: #aeb8c9;
+    color: #cbd5e1;
+
+    font-size: 17px;
+
+    text-align: center;
+
+    max-width: 600px;
+
+    line-height: 1.6;
 }
 
-button {
-
-    margin-top: 28px;
+.screen button {
 
     padding:
-        14px 38px;
+        15px 35px;
 
     border: 0;
 
-    border-radius: 9px;
+    border-radius: 12px;
 
-    background: #2563eb;
+    background:
+        #2563eb;
 
     color: white;
 
-    font-size: 18px;
+    font-size: 20px;
 
     font-weight: bold;
 
     cursor: pointer;
+
+    box-shadow:
+        0 10px 35px
+        rgba(37,99,235,.3);
 }
 
-button:hover {
+.screen button:hover {
 
-    background: #3b82f6;
+    background:
+        #3b82f6;
 }
 
-#winScreen {
+.hidden {
 
-    display: none;
+    display: none !important;
 }
 
 </style>
@@ -274,84 +284,101 @@ button:hover {
 
 <canvas id="game"></canvas>
 
-<div id="ui">
+<div id="hud">
 
-    <div id="timer">
-        60.0
-    </div>
-
-    <div id="loopCounter">
-        Loop 1
-    </div>
-
-    <div id="flashlightStatus">
-        Flashlight: NOT FOUND
-    </div>
-
-    <div id="objective">
-        Search the office for the key.
-    </div>
-
-    <div id="crosshair"></div>
-
-    <div id="prompt"></div>
-
-    <div id="message"></div>
-
+```
+<div id="timer">
+    60.0
 </div>
 
+<div id="loopCounter">
+    Loop 1
+</div>
+
+<div id="crosshair"></div>
+
+<div id="prompt"></div>
+
+<div id="message"></div>
+
+<div id="flashlightHud">
+    🔦 Flashlight: OFF
+</div>
+```
+
+</div>
 
 <div
     id="startScreen"
     class="screen"
 >
 
-    <h1>
-        LOOP
-    </h1>
+```
+<h1>LOOP</h1>
 
-    <p>
-        You have 60 seconds.
-    </p>
+<p>
 
-    <p>
-        Search the office. Find the key.
-    </p>
+    You have 60 seconds.<br>
 
-    <p>
-        WASD to move • Mouse to look • E to interact
-    </p>
+    Explore the office,
+    find the key,
+    enter the maze,
+    and find the exit.
 
-    <p>
-        Find the flashlight • F to toggle it
-    </p>
+    <br><br>
 
-    <button id="startButton">
-        START
-    </button>
+    <b>WASD</b> — Move<br>
+    <b>Mouse</b> — Look<br>
+    <b>E</b> — Interact<br>
+    <b>F</b> — Flashlight
+
+</p>
+
+<button id="startButton">
+    ENTER
+</button>
+```
 
 </div>
 
+<div
+    id="gameOverScreen"
+    class="screen hidden"
+>
+
+```
+<h1>LOOP RESET</h1>
+
+<p>
+    The 60 seconds are over.
+    Your discoveries remain...
+</p>
+
+<button id="restartButton">
+    TRY AGAIN
+</button>
+```
+
+</div>
 
 <div
     id="winScreen"
-    class="screen"
+    class="screen hidden"
 >
 
-    <h1>
-        ESCAPED
-    </h1>
+```
+<h1>ESCAPED</h1>
 
-    <p>
-        You broke the loop.
-    </p>
+<p>
+    You found the exit.
+</p>
 
-    <button id="restartButton">
-        PLAY AGAIN
-    </button>
+<button id="winRestartButton">
+    PLAY AGAIN
+</button>
+```
 
 </div>
-
 
 <script type="module">
 
@@ -360,11 +387,13 @@ import * as THREE from
 
 
 /* =========================================================
-   RENDERER
+   BASIC SETUP
 ========================================================= */
 
 const canvas =
-    document.getElementById("game");
+    document.getElementById(
+        "game"
+    );
 
 const renderer =
     new THREE.WebGLRenderer({
@@ -375,16 +404,16 @@ const renderer =
 
     });
 
-renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-);
-
 renderer.setPixelRatio(
     Math.min(
         window.devicePixelRatio,
         2
     )
+);
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
 );
 
 renderer.shadowMap.enabled = true;
@@ -393,29 +422,14 @@ renderer.shadowMap.type =
     THREE.PCFSoftShadowMap;
 
 
-/* =========================================================
-   SCENE
-========================================================= */
-
 const scene =
     new THREE.Scene();
 
 scene.background =
     new THREE.Color(
-        0x080b10
+        0x080b12
     );
 
-scene.fog =
-    new THREE.Fog(
-        0x080b10,
-        3,
-        55
-    );
-
-
-/* =========================================================
-   CAMERA
-========================================================= */
 
 const camera =
     new THREE.PerspectiveCamera(
@@ -427,7 +441,7 @@ const camera =
 
         0.05,
 
-        100
+        300
 
     );
 
@@ -439,11 +453,11 @@ const camera =
 const ambientLight =
     new THREE.HemisphereLight(
 
-        0x9db5d8,
+        0x8da2c8,
 
-        0x16110d,
+        0x111111,
 
-        1.25
+        0.75
 
     );
 
@@ -452,373 +466,161 @@ scene.add(
 );
 
 
-const ceilingLight =
+const officeLight =
     new THREE.PointLight(
 
-        0xffe8bd,
+        0xffe9c4,
 
-        13,
+        18,
 
-        20
+        25
 
     );
 
-ceilingLight.position.set(
+officeLight.position.set(
     0,
-    3.5,
-    -1
+    3.8,
+    0
 );
 
-ceilingLight.castShadow = true;
-
-ceilingLight.shadow.mapSize.width =
-    1024;
-
-ceilingLight.shadow.mapSize.height =
-    1024;
+officeLight.castShadow = true;
 
 scene.add(
-    ceilingLight
-);
-
-
-const ceilingLight2 =
-    new THREE.PointLight(
-
-        0xffe8bd,
-
-        9,
-
-        18
-
-    );
-
-ceilingLight2.position.set(
-    5,
-    3.3,
-    4
-);
-
-scene.add(
-    ceilingLight2
-);
-
-
-const mazeLight =
-    new THREE.PointLight(
-
-        0x8fb4ff,
-
-        10,
-
-        24
-
-    );
-
-mazeLight.position.set(
-    0,
-    3,
-    24
-);
-
-scene.add(
-    mazeLight
+    officeLight
 );
 
 
 /* =========================================================
-   GAME STATE
+   MATERIALS
 ========================================================= */
 
-let running = false;
+const floorMaterial =
+    new THREE.MeshStandardMaterial({
 
-let won = false;
+        color: 0x292d34,
 
-let timeLeft = 60;
-
-let loopNumber = 1;
-
-let lastTime = 0;
-
-let pointerLocked = false;
-
-
-/* =========================================================
-   PLAYER
-========================================================= */
-
-const player = {
-
-    position:
-        new THREE.Vector3(
-            0,
-            1.65,
-            6
-        ),
-
-    yaw: 0,
-
-    pitch: 0,
-
-    speed: 4.5,
-
-    radius: 0.32
-
-};
-
-
-/* =========================================================
-   INPUT
-========================================================= */
-
-const keys = {
-
-    w: false,
-    a: false,
-    s: false,
-    d: false
-
-};
-
-
-window.addEventListener(
-    "keydown",
-    event => {
-
-        if (
-            event.code ===
-            "KeyW"
-        ) {
-
-            keys.w = true;
-
-            event.preventDefault();
-
-        }
-
-        if (
-            event.code ===
-            "KeyA"
-        ) {
-
-            keys.a = true;
-
-            event.preventDefault();
-
-        }
-
-        if (
-            event.code ===
-            "KeyS"
-        ) {
-
-            keys.s = true;
-
-            event.preventDefault();
-
-        }
-
-        if (
-            event.code ===
-            "KeyD"
-        ) {
-
-            keys.d = true;
-
-            event.preventDefault();
-
-        }
-
-        if (
-            event.code ===
-            "KeyE"
-        ) {
-
-            interact();
-
-        }
-
-        if (
-            event.code ===
-            "KeyF"
-        ) {
-
-            toggleFlashlight();
-
-            event.preventDefault();
-
-        }
-
-    }
-);
-
-
-window.addEventListener(
-    "keyup",
-    event => {
-
-        if (
-            event.code ===
-            "KeyW"
-        ) {
-
-            keys.w = false;
-
-        }
-
-        if (
-            event.code ===
-            "KeyA"
-        ) {
-
-            keys.a = false;
-
-        }
-
-        if (
-            event.code ===
-            "KeyS"
-        ) {
-
-            keys.s = false;
-
-        }
-
-        if (
-            event.code ===
-            "KeyD"
-        ) {
-
-            keys.d = false;
-
-        }
-
-    }
-);
-
-
-window.addEventListener(
-    "blur",
-    () => {
-
-        keys.w = false;
-        keys.a = false;
-        keys.s = false;
-        keys.d = false;
-
-    }
-);
-
-
-/* =========================================================
-   MOUSE LOOK
-========================================================= */
-
-canvas.addEventListener(
-    "click",
-    () => {
-
-        if (
-            !pointerLocked
-        ) {
-
-            canvas.requestPointerLock();
-
-        }
-
-    }
-);
-
-
-document.addEventListener(
-    "pointerlockchange",
-    () => {
-
-        pointerLocked =
-            document.pointerLockElement ===
-            canvas;
-
-    }
-);
-
-
-document.addEventListener(
-    "mousemove",
-    event => {
-
-        if (
-            !pointerLocked
-        ) {
-
-            return;
-
-        }
-
-        player.yaw -=
-            event.movementX *
-            0.0022;
-
-        player.pitch -=
-            event.movementY *
-            0.0022;
-
-        player.pitch =
-            THREE.MathUtils.clamp(
-
-                player.pitch,
-
-                -1.45,
-
-                1.45
-
-            );
-
-    }
-);
-
-
-/* =========================================================
-   MATERIAL / BOX HELPERS
-========================================================= */
-
-function mat(
-    color,
-    roughness = 0.7
-) {
-
-    return new THREE.MeshStandardMaterial({
-
-        color,
-
-        roughness
+        roughness: .8
 
     });
 
-}
+
+const wallMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x3c424b,
+
+        roughness: .75
+
+    });
 
 
-function createBox(
+const ceilingMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x171a20,
+
+        roughness: .9
+
+    });
+
+
+const woodMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x5a3826,
+
+        roughness: .65
+
+    });
+
+
+const darkWoodMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x302016,
+
+        roughness: .7
+
+    });
+
+
+const metalMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x525963,
+
+        metalness: .55,
+
+        roughness: .45
+
+    });
+
+
+const blackMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x101217,
+
+        roughness: .4
+
+    });
+
+
+const paperMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0xd8d3c5,
+
+        roughness: .9
+
+    });
+
+
+const blueMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x2563eb,
+
+        roughness: .45
+
+    });
+
+
+const redMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0xb91c1c,
+
+        roughness: .5
+
+    });
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function box(
     x,
     y,
     z,
-    width,
-    height,
-    depth,
-    color
+    sx,
+    sy,
+    sz,
+    material,
+    parent = scene
 ) {
 
     const mesh =
         new THREE.Mesh(
 
             new THREE.BoxGeometry(
-
-                width,
-                height,
-                depth
-
+                sx,
+                sy,
+                sz
             ),
 
-            mat(color)
+            material
 
         );
 
@@ -832,268 +634,423 @@ function createBox(
 
     mesh.receiveShadow = true;
 
-    scene.add(mesh);
+    parent.add(
+        mesh
+    );
 
     return mesh;
+}
 
+
+function cylinder(
+    x,
+    y,
+    z,
+    radius,
+    height,
+    material,
+    parent = scene
+) {
+
+    const mesh =
+        new THREE.Mesh(
+
+            new THREE.CylinderGeometry(
+                radius,
+                radius,
+                height,
+                24
+            ),
+
+            material
+
+        );
+
+    mesh.position.set(
+        x,
+        y,
+        z
+    );
+
+    mesh.castShadow = true;
+
+    mesh.receiveShadow = true;
+
+    parent.add(
+        mesh
+    );
+
+    return mesh;
 }
 
 
 /* =========================================================
-   OFFICE FLOOR
+   WORLD
 ========================================================= */
 
-createBox(
-    0,
-    -0.1,
-    0,
-    18,
-    0.2,
-    18,
-    0x302c28
-);
+const officeWidth = 18;
 
+const officeDepth = 16;
 
-/* ceiling */
+const officeHalfW =
+    officeWidth / 2;
 
-createBox(
-    0,
-    4,
-    0,
-    18,
-    0.2,
-    18,
-    0x17191d
-);
-
-
-/* left wall */
-
-createBox(
-    -9,
-    2,
-    0,
-    0.3,
-    4,
-    18,
-    0x282b30
-);
-
-
-/* right wall */
-
-createBox(
-    9,
-    2,
-    0,
-    0.3,
-    4,
-    18,
-    0x282b30
-);
-
-
-/* front wall */
-
-createBox(
-    0,
-    2,
-    -9,
-    18,
-    4,
-    0.3,
-    0x282b30
-);
-
-
-/* =========================================================
-   BACK WALL
-   DOORWAY IS IN THE CENTRE
-========================================================= */
+const officeHalfD =
+    officeDepth / 2;
 
 
 /*
-   The old version had a complete wall here.
+    The office ends at z = 8.
 
-   That meant the player could never properly
-   reach the maze.
-
-   Now the wall is split around the doorway.
+    The maze begins immediately
+    behind the visible entrance.
 */
 
-
-/* left side */
-
-createBox(
-    -5.8,
-    2,
-    9,
-    6.4,
-    4,
-    0.3,
-    0x282b30
-);
+const mazeStartZ = 9;
 
 
-/* right side */
+/* =========================================================
+   FLOOR
+========================================================= */
 
-createBox(
-    5.8,
-    2,
-    9,
-    6.4,
-    4,
-    0.3,
-    0x282b30
-);
-
-
-/* above doorway */
-
-createBox(
+box(
     0,
-    3.5,
-    9,
-    5.2,
-    1,
+    -0.15,
+    0,
+    officeWidth,
     0.3,
-    0x282b30
+    officeDepth,
+    floorMaterial
 );
 
 
 /* =========================================================
-   WINDOW
+   OFFICE WALLS
 ========================================================= */
 
-createBox(
-    -8.78,
-    2.35,
-    -3.5,
-    0.08,
-    2.3,
-    4.4,
-    0x18283d
-);
+/*
+    FRONT WALL
+*/
 
-createBox(
-    -8.72,
-    2.35,
-    -3.5,
-    0.03,
-    1.95,
-    3.9,
-    0x557799
+box(
+    0,
+    2.5,
+    -officeHalfD,
+    officeWidth,
+    5,
+    .4,
+    wallMaterial
 );
 
 
-/* window frame */
+/*
+    LEFT WALL
+*/
 
-createBox(
-    -8.65,
-    2.35,
-    -5.55,
-    0.1,
-    2.4,
-    0.12,
-    0x202328
+box(
+    -officeHalfW,
+    2.5,
+    0,
+    .4,
+    5,
+    officeDepth,
+    wallMaterial
 );
 
-createBox(
-    -8.65,
-    2.35,
+
+/*
+    RIGHT WALL
+*/
+
+box(
+    officeHalfW,
+    2.5,
+    0,
+    .4,
+    5,
+    officeDepth,
+    wallMaterial
+);
+
+
+/*
+    BACK WALL
+
+    IMPORTANT:
+
+    There is ONLY one doorway.
+
+    No giant rectangles are placed
+    across the centre of the room.
+*/
+
+
+box(
+    -6.65,
+    2.5,
+    8,
+    4.7,
+    5,
+    .4,
+    wallMaterial
+);
+
+
+box(
+    6.65,
+    2.5,
+    8,
+    4.7,
+    5,
+    .4,
+    wallMaterial
+);
+
+
+/*
+    Small wall sections above doorway.
+*/
+
+box(
+    0,
+    4.35,
+    8,
+    8.1,
+    1.3,
+    .4,
+    wallMaterial
+);
+
+
+/* =========================================================
+   CEILING
+========================================================= */
+
+box(
+    0,
+    5,
+    0,
+    officeWidth,
+    .25,
+    officeDepth,
+    ceilingMaterial
+);
+
+
+/* =========================================================
+   VISIBLE MAZE ENTRANCE
+========================================================= */
+
+const entranceFrameMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x202733,
+
+        metalness: .5,
+
+        roughness: .4
+
+    });
+
+
+/*
+    Door frame sides.
+*/
+
+box(
     -1.45,
-    0.1,
-    2.4,
-    0.12,
-    0x202328
+    2.2,
+    8.15,
+    .3,
+    4.4,
+    .45,
+    entranceFrameMaterial
 );
 
 
-/* blinds */
+box(
+    1.45,
+    2.2,
+    8.15,
+    .3,
+    4.4,
+    .45,
+    entranceFrameMaterial
+);
 
-for (
-    let i = 0;
-    i < 8;
-    i++
-) {
 
-    createBox(
+/*
+    Door frame top.
+*/
 
-        -8.60,
+box(
+    0,
+    4.25,
+    8.15,
+    3.2,
+    .3,
+    .45,
+    entranceFrameMaterial
+);
 
-        1.55 +
-        i * 0.27,
 
-        -3.5,
+/*
+    Glowing entrance strips.
+*/
 
-        0.05,
+const entranceGlowMaterial =
+    new THREE.MeshBasicMaterial({
 
-        0.07,
+        color: 0x22c55e
 
-        3.8,
+    });
 
-        0xd2d0c8
+
+box(
+    -1.25,
+    2.2,
+    7.92,
+    .08,
+    3.7,
+    .08,
+    entranceGlowMaterial
+);
+
+
+box(
+    1.25,
+    2.2,
+    7.92,
+    .08,
+    3.7,
+    .08,
+    entranceGlowMaterial
+);
+
+
+/*
+    ENTRANCE SIGN
+*/
+
+const signCanvas =
+    document.createElement(
+        "canvas"
+    );
+
+signCanvas.width = 512;
+
+signCanvas.height = 128;
+
+const signCtx =
+    signCanvas.getContext(
+        "2d"
+    );
+
+signCtx.fillStyle =
+    "#07110b";
+
+signCtx.fillRect(
+    0,
+    0,
+    512,
+    128
+);
+
+signCtx.fillStyle =
+    "#4ade80";
+
+signCtx.font =
+    "bold 62px Arial";
+
+signCtx.textAlign =
+    "center";
+
+signCtx.textBaseline =
+    "middle";
+
+signCtx.fillText(
+    "MAZE",
+    256,
+    64
+);
+
+const entranceTexture =
+    new THREE.CanvasTexture(
+        signCanvas
+    );
+
+const entranceSign =
+    new THREE.Mesh(
+
+        new THREE.PlaneGeometry(
+            2.8,
+            .7
+        ),
+
+        new THREE.MeshBasicMaterial({
+
+            map: entranceTexture
+
+        })
 
     );
 
-}
+entranceSign.position.set(
+    0,
+    4.55,
+    7.9
+);
+
+scene.add(
+    entranceSign
+);
 
 
 /* =========================================================
    DESK
 ========================================================= */
 
-createBox(
-    -1.8,
-    1.05,
-    -2.7,
-    5.2,
-    0.25,
-    2,
-    0x4b3426
+const desk =
+    new THREE.Group();
+
+scene.add(
+    desk
 );
 
 
-/* legs */
-
-createBox(
-    -3.9,
-    0.52,
-    -3.35,
-    0.25,
-    1,
-    0.25,
-    0x242424
+box(
+    -3.8,
+    2.1,
+    -2.0,
+    5.8,
+    .35,
+    2.1,
+    woodMaterial,
+    desk
 );
 
-createBox(
-    0.3,
-    0.52,
-    -3.35,
-    0.25,
-    1,
-    0.25,
-    0x242424
+
+box(
+    -6.0,
+    1.0,
+    -2.0,
+    .45,
+    2.0,
+    1.8,
+    darkWoodMaterial,
+    desk
 );
 
-createBox(
-    -3.9,
-    0.52,
-    -2.05,
-    0.25,
-    1,
-    0.25,
-    0x242424
-);
 
-createBox(
-    0.3,
-    0.52,
-    -2.05,
-    0.25,
-    1,
-    0.25,
-    0x242424
+box(
+    -1.6,
+    1.0,
+    -2.0,
+    .45,
+    2.0,
+    1.8,
+    darkWoodMaterial,
+    desk
 );
 
 
@@ -1101,44 +1058,47 @@ createBox(
    MONITOR
 ========================================================= */
 
-createBox(
-    -1.8,
-    1.82,
-    -3.13,
-    2.15,
+box(
+    -3.8,
+    3.25,
+    -2.0,
+    2.8,
+    1.55,
+    .18,
+    blackMaterial
+);
+
+
+box(
+    -3.8,
+    3.25,
+    -1.87,
+    2.5,
     1.25,
-    0.14,
-    0x111318
+    .04,
+    blueMaterial
 );
 
-createBox(
-    -1.8,
-    1.82,
-    -3.215,
-    1.82,
-    0.92,
-    0.025,
-    0x203c5b
+
+box(
+    -3.8,
+    2.35,
+    -2.0,
+    .22,
+    .7,
+    .22,
+    metalMaterial
 );
 
-createBox(
-    -1.8,
-    1.27,
-    -3.12,
-    0.12,
-    0.65,
-    0.12,
-    0x18191b
-);
 
-createBox(
-    -1.8,
-    1.15,
-    -3.12,
-    0.8,
-    0.07,
-    0.35,
-    0x18191b
+box(
+    -3.8,
+    2.05,
+    -2.0,
+    1.1,
+    .12,
+    .55,
+    blackMaterial
 );
 
 
@@ -1146,64 +1106,14 @@ createBox(
    KEYBOARD
 ========================================================= */
 
-createBox(
-    -1.7,
-    1.20,
-    -2.28,
-    1.45,
-    0.08,
-    0.48,
-    0x1d2025
-);
-
-
-for (
-    let row = 0;
-    row < 3;
-    row++
-) {
-
-    for (
-        let i = 0;
-        i < 9;
-        i++
-    ) {
-
-        createBox(
-
-            -2.25 +
-            i * 0.13,
-
-            1.255,
-
-            -2.48 +
-            row * 0.12,
-
-            0.09,
-
-            0.025,
-
-            0.07,
-
-            0x45484c
-
-        );
-
-    }
-
-}
-
-
-/* mouse */
-
-createBox(
-    -0.35,
-    1.20,
-    -2.3,
-    0.3,
-    0.08,
-    0.42,
-    0x191b1e
+box(
+    -3.8,
+    2.34,
+    -3.0,
+    1.9,
+    .08,
+    .7,
+    blackMaterial
 );
 
 
@@ -1211,42 +1121,55 @@ createBox(
    DESK LAMP
 ========================================================= */
 
-createBox(
-    0.35,
-    1.42,
-    -2.7,
-    0.1,
-    0.7,
-    0.1,
-    0x292929
-);
+const lamp =
+    new THREE.Group();
 
-createBox(
-    0.35,
-    1.82,
-    -2.7,
-    0.7,
-    0.12,
-    0.55,
-    0xbca26d
-);
-
-
-const deskLamp =
-    new THREE.PointLight(
-        0xffd48a,
-        3,
-        5
-    );
-
-deskLamp.position.set(
-    0.35,
-    1.75,
-    -2.7
+lamp.position.set(
+    -1.6,
+    2.35,
+    -2.8
 );
 
 scene.add(
-    deskLamp
+    lamp
+);
+
+cylinder(
+    0,
+    .08,
+    0,
+    .3,
+    .12,
+    metalMaterial,
+    lamp
+);
+
+box(
+    0,
+    .8,
+    0,
+    .1,
+    1.4,
+    .1,
+    metalMaterial,
+    lamp
+);
+
+const lampLight =
+    new THREE.PointLight(
+        0xffdca8,
+        6,
+        7
+    );
+
+lampLight.position.set(
+    0,
+    1.35,
+    0
+);
+
+lamp.add(
+    lampLight
 );
 
 
@@ -1254,34 +1177,49 @@ scene.add(
    OFFICE CHAIR
 ========================================================= */
 
-createBox(
-    -1.8,
-    0.68,
-    -1.0,
-    1.35,
-    0.18,
-    1.2,
-    0x17191c
+const chair =
+    new THREE.Group();
+
+chair.position.set(
+    -3.8,
+    0,
+    -5
 );
 
-createBox(
-    -1.8,
-    1.38,
-    -1.55,
-    1.35,
-    1.45,
-    0.18,
-    0x17191c
+scene.add(
+    chair
 );
 
-createBox(
-    -1.8,
-    0.34,
-    -1.0,
-    0.12,
-    0.65,
-    0.12,
-    0x252525
+box(
+    0,
+    1.6,
+    0,
+    2,
+    2.4,
+    .35,
+    blackMaterial,
+    chair
+);
+
+box(
+    0,
+    .8,
+    0,
+    2.1,
+    .25,
+    2.1,
+    blackMaterial,
+    chair
+);
+
+cylinder(
+    0,
+    .25,
+    0,
+    .14,
+    1,
+    metalMaterial,
+    chair
 );
 
 
@@ -1289,55 +1227,51 @@ createBox(
    BOOKSHELF
 ========================================================= */
 
-createBox(
-    6.8,
-    2,
-    -5.8,
+box(
+    5.7,
     2.5,
-    4,
-    0.45,
-    0x3a2920
+    -4.7,
+    3.8,
+    5,
+    .55,
+    darkWoodMaterial
 );
 
 
+/*
+    Shelves.
+*/
+
 for (
-    let shelf = 0;
-    shelf < 4;
-    shelf++
+    let i = 0;
+    i < 5;
+    i++
 ) {
 
-    createBox(
-
-        6.8,
-
-        0.65 +
-        shelf * 0.85,
-
-        -5.5,
-
-        2.15,
-
-        0.10,
-
-        0.35,
-
-        0x211812
-
+    box(
+        5.7,
+        .7 + i * .9,
+        -4.3,
+        3.5,
+        .12,
+        .8,
+        woodMaterial
     );
 
 }
 
+
+/*
+    Books.
+*/
 
 const bookColors = [
-
-    0x71352f,
-    0x31506e,
-    0x776633,
-    0x543b61,
-    0x35523e
-
+    0x7f1d1d,
+    0x1d4ed8,
+    0x166534,
+    0x7c2d12,
+    0x581c87
 ];
-
 
 for (
     let shelf = 0;
@@ -1346,36 +1280,44 @@ for (
 ) {
 
     for (
-        let i = 0;
-        i < 7;
-        i++
+        let b = 0;
+        b < 6;
+        b++
     ) {
 
-        createBox(
+        const book =
+            box(
 
-            5.92 +
-            i * 0.28,
+                4.35 +
+                b * .48,
 
-            1.02 +
-            shelf * 0.85,
+                1.15 +
+                shelf * .9,
 
-            -5.27,
+                -4.15,
 
-            0.20,
+                .34,
 
-            0.55,
+                .7,
 
-            0.22,
+                .5,
 
-            bookColors[
-                (
-                    i +
-                    shelf
-                ) %
-                bookColors.length
-            ]
+                new THREE.MeshStandardMaterial({
 
-        );
+                    color:
+                        bookColors[
+                            (b + shelf) %
+                            bookColors.length
+                        ]
+
+                })
+
+            );
+
+        book.rotation.z =
+            b % 3 === 0
+                ? -.04
+                : .02;
 
     }
 
@@ -1383,352 +1325,424 @@ for (
 
 
 /* =========================================================
-   FILING CABINETS
+   FILING CABINET SYSTEM
 ========================================================= */
 
-const drawers = [];
+const drawerObjects = [];
 
 
-function createCabinet(
-    x,
-    z,
-    name
-) {
+/*
+    Three cabinets.
 
-    createBox(
+    EVERY DRAWER gets its own
+    interactive front panel.
+*/
 
-        x,
-        1.35,
-        z,
-
-        1.45,
-        2.7,
-        0.9,
-
-        0x4b5057
-
-    );
+const cabinetX =
+    [
+        -6.0,
+        -3.9,
+        -1.8
+    ];
 
 
-    createBox(
+/*
+    We deliberately place the cabinets
+    against the LEFT side of the office.
 
-        x,
-        2.73,
-        z,
+    Nothing large sits in the centre.
+*/
 
-        1.58,
-        0.10,
-        0.98,
+cabinetX.forEach(
+    (x, cabinetIndex) => {
 
-        0x373b40
+        /*
+            Cabinet body
+        */
 
-    );
-
-
-    for (
-        let i = 0;
-        i < 3;
-        i++
-    ) {
-
-        const drawer =
-            createBox(
-
-                x,
-
-                2.15 -
-                i * 0.72,
-
-                z - 0.49,
-
-                1.25,
-
-                0.58,
-
-                0.12,
-
-                0x656a70
-
-            );
-
-
-        const handle =
-            createBox(
-
-                x,
-
-                2.15 -
-                i * 0.72,
-
-                z - 0.58,
-
-                0.45,
-
-                0.07,
-
-                0.08,
-
-                0x22252a
-
-            );
-
-
-        drawers.push({
-
-            id:
-                name +
-                "_" +
-                i,
-
-            drawer,
-
-            handle,
-
-            open: false,
-
-            closedZ:
-                z - 0.49,
-
-            openZ:
-                z - 1.05
-
-        });
-
-    }
-
-}
-
-
-createCabinet(
-    5.2,
-    -2.7,
-    "cabinetA"
-);
-
-createCabinet(
-    7.0,
-    -2.7,
-    "cabinetB"
-);
-
-createCabinet(
-    5.2,
-    0.7,
-    "cabinetC"
-);
-
-
-/* =========================================================
-   PAPERS
-========================================================= */
-
-function createPaper(
-    x,
-    y,
-    z,
-    rotation
-) {
-
-    const paper =
-        new THREE.Mesh(
-
-            new THREE.BoxGeometry(
-                0.7,
-                0.025,
-                0.5
-            ),
-
-            mat(
-                0xd7d1c4
-            )
-
+        box(
+            x,
+            2.0,
+            3.8,
+            1.55,
+            4,
+            1.4,
+            metalMaterial
         );
 
 
-    paper.position.set(
-        x,
-        y,
-        z
-    );
+        for (
+            let row = 0;
+            row < 4;
+            row++
+        ) {
+
+            const drawer =
+                new THREE.Group();
+
+            drawer.position.set(
+                x,
+                3.35 -
+                row * .9,
+                3.05
+            );
+
+            scene.add(
+                drawer
+            );
 
 
-    paper.rotation.y =
-        rotation;
+            /*
+                Drawer front
+            */
+
+            const front =
+                box(
+                    0,
+                    0,
+                    0,
+                    1.25,
+                    .7,
+                    .12,
+                    darkWoodMaterial,
+                    drawer
+                );
 
 
-    paper.castShadow = true;
+            /*
+                Handle
+            */
+
+            box(
+                0,
+                0,
+                -.1,
+                .35,
+                .08,
+                .08,
+                metalMaterial,
+                drawer
+            );
 
 
-    scene.add(
-        paper
-    );
+            /*
+                Interior tray.
 
-}
+                This is visible when the
+                drawer opens.
+            */
+
+            const inside =
+                box(
+                    0,
+                    0,
+                    .28,
+                    1.12,
+                    .55,
+                    .65,
+                    blackMaterial,
+                    drawer
+                );
 
 
-createPaper(
-    -2.7,
-    1.19,
-    -2.45,
-    0.2
-);
+            const drawerData = {
 
-createPaper(
-    -0.5,
-    1.19,
-    -2.75,
-    -0.3
-);
+                group: drawer,
 
-createPaper(
-    1.5,
-    1.19,
-    -2.55,
-    0.1
+                front,
+
+                inside,
+
+                cabinetIndex,
+
+                row,
+
+                open: false,
+
+                locked: false,
+
+                hasKey: false,
+
+                hasFlashlight: false
+
+            };
+
+
+            drawer.userData =
+                drawerData;
+
+
+            drawerObjects.push(
+                drawerData
+            );
+
+        }
+
+    }
 );
 
 
 /* =========================================================
-   BOXES
+   RANDOMIZED BUT GUARANTEED ITEMS
 ========================================================= */
 
-createBox(
-    3.1,
-    0.55,
-    5.7,
-    1.15,
-    1.1,
-    1.1,
-    0x765637
-);
 
-createBox(
-    4.2,
-    0.38,
-    6.3,
-    0.75,
-    0.75,
-    0.75,
-    0x65472e
-);
+/*
+    Key goes in one drawer.
+*/
+
+const keyDrawerIndex =
+    3;
+
+
+/*
+    Flashlight goes in another.
+*/
+
+const flashlightDrawerIndex =
+    8;
 
 
 /* =========================================================
-   BIN
+   KEY
 ========================================================= */
 
-const bin =
+const keyGroup =
+    new THREE.Group();
+
+const keyBody =
+    cylinder(
+        0,
+        0,
+        0,
+        .11,
+        .65,
+        new THREE.MeshStandardMaterial({
+
+            color: 0xfacc15,
+
+            metalness: .8,
+
+            roughness: .25
+
+        }),
+        keyGroup
+    );
+
+keyBody.rotation.z =
+    Math.PI / 2;
+
+
+const keyRing =
     new THREE.Mesh(
 
-        new THREE.CylinderGeometry(
-
-            0.42,
-            0.35,
-            0.75,
-            16
-
+        new THREE.TorusGeometry(
+            .2,
+            .055,
+            12,
+            24
         ),
 
-        mat(
-            0x303338
-        )
+        new THREE.MeshStandardMaterial({
+
+            color: 0xfacc15,
+
+            metalness: .8,
+
+            roughness: .25
+
+        })
 
     );
 
+keyRing.position.x =
+    -.34;
 
-bin.position.set(
-    1.8,
-    0.38,
-    -1.9
+keyGroup.add(
+    keyRing
 );
 
+keyGroup.scale.set(
+    .75,
+    .75,
+    .75
+);
 
-bin.castShadow = true;
-
+keyGroup.visible =
+    false;
 
 scene.add(
-    bin
+    keyGroup
 );
+
+
+drawerObjects[
+    keyDrawerIndex
+].hasKey = true;
 
 
 /* =========================================================
-   WALL PICTURE
+   FLASHLIGHT
 ========================================================= */
 
-createBox(
-    3.8,
-    2.65,
-    -8.82,
-    2.4,
-    1.55,
-    0.10,
-    0x16181c
+const flashlightPickup =
+    new THREE.Group();
+
+
+const flashlightBody =
+    cylinder(
+        0,
+        0,
+        0,
+        .14,
+        .75,
+        blackMaterial,
+        flashlightPickup
+    );
+
+flashlightBody.rotation.z =
+    Math.PI / 2;
+
+
+const flashlightLens =
+    cylinder(
+        .39,
+        0,
+        0,
+        .16,
+        .08,
+        new THREE.MeshStandardMaterial({
+
+            color: 0xfef3c7,
+
+            emissive: 0xfef3c7,
+
+            emissiveIntensity: .7
+
+        }),
+        flashlightPickup
+    );
+
+flashlightLens.rotation.z =
+    Math.PI / 2;
+
+
+flashlightPickup.scale.set(
+    .9,
+    .9,
+    .9
 );
 
-createBox(
-    3.8,
-    2.65,
-    -8.75,
-    2.05,
-    1.2,
-    0.03,
-    0x596778
+flashlightPickup.visible =
+    false;
+
+scene.add(
+    flashlightPickup
 );
+
+
+drawerObjects[
+    flashlightDrawerIndex
+].hasFlashlight = true;
 
 
 /* =========================================================
-   MAIN DOOR
+   PLAYER FLASHLIGHT
 ========================================================= */
 
-const mainDoor =
-    createBox(
+let hasFlashlight =
+    false;
+
+let flashlightOn =
+    false;
+
+
+const playerFlashlight =
+    new THREE.SpotLight(
+
+        0xffffff,
 
         0,
-        2,
-        9,
 
-        2.6,
-        4,
-        0.18,
+        30,
 
-        0x20252b
+        Math.PI / 7,
 
+        .45,
+
+        1.2
+
+    );
+
+playerFlashlight.castShadow =
+    true;
+
+camera.add(
+    playerFlashlight
+);
+
+
+const flashlightTarget =
+    new THREE.Object3D();
+
+flashlightTarget.position.set(
+    0,
+    0,
+    -10
+);
+
+camera.add(
+    flashlightTarget
+);
+
+playerFlashlight.target =
+    flashlightTarget;
+
+
+const flashlightHUD =
+    document.getElementById(
+        "flashlightHud"
     );
 
 
-const doorHandle =
-    createBox(
+function toggleFlashlight() {
 
-        0.85,
-        2,
-        9.15,
+    if (!hasFlashlight) {
 
-        0.12,
-        0.12,
-        0.08,
+        showMessage(
+            "You don't have a flashlight."
+        );
 
-        0xbca96f
+        return;
 
-    );
+    }
+
+
+    flashlightOn =
+        !flashlightOn;
+
+
+    playerFlashlight.intensity =
+        flashlightOn
+            ? 25
+            : 0;
+
+
+    flashlightHUD.style.display =
+        "block";
+
+
+    flashlightHUD.textContent =
+        flashlightOn
+            ? "🔦 Flashlight: ON"
+            : "🔦 Flashlight: OFF";
+
+}
 
 
 /* =========================================================
    MAZE
 ========================================================= */
-
-
-/*
-   Important:
-
-   The maze now begins directly behind
-   the office doorway.
-
-   Row 0 contains an opening in the centre.
-
-   The far row also contains an opening
-   for the final door.
-*/
-
 
 const maze = [
 
@@ -1765,33 +1779,58 @@ const mazeCell =
     2;
 
 
+const mazeRows =
+    maze.length;
+
+
+const mazeCols =
+    maze[0].length;
+
+
 const mazeWidth =
-    maze[0].length *
+    mazeCols *
     mazeCell;
 
 
 const mazeHeight =
-    maze.length *
+    mazeRows *
     mazeCell;
 
-
-/*
-   Row 0 starts immediately behind
-   the office back wall.
-*/
-
-const room2OffsetZ =
-    9;
-
-
-/*
-   Centre the maze so column 7
-   lines up exactly with x = 0.
-*/
 
 const mazeOriginX =
     -mazeWidth / 2 +
     mazeCell / 2;
+
+
+const mazeOriginZ =
+    mazeStartZ +
+    mazeCell / 2;
+
+
+const mazeWallObjects =
+    [];
+
+
+/* =========================================================
+   MAZE FLOOR
+========================================================= */
+
+box(
+    0,
+    -.15,
+    mazeStartZ +
+    mazeHeight / 2,
+    mazeWidth,
+    .3,
+    mazeHeight,
+    new THREE.MeshStandardMaterial({
+
+        color: 0x181c23,
+
+        roughness: .9
+
+    })
+);
 
 
 /* =========================================================
@@ -1800,22 +1839,20 @@ const mazeOriginX =
 
 for (
     let row = 0;
-    row < maze.length;
+    row < mazeRows;
     row++
 ) {
 
     for (
         let col = 0;
-        col < maze[row].length;
+        col < mazeCols;
         col++
     ) {
 
         if (
             maze[row][col] !== "#"
         ) {
-
             continue;
-
         }
 
 
@@ -1826,28 +1863,36 @@ for (
 
 
         const z =
-            room2OffsetZ +
+            mazeOriginZ +
             row *
             mazeCell;
 
 
-        createBox(
+        const wall =
+            box(
+                x,
+                2,
+                z,
+                mazeCell,
+                4,
+                mazeCell,
+                wallMaterial
+            );
+
+
+        mazeWallObjects.push({
 
             x,
 
-            1.5,
-
             z,
 
-            mazeCell,
+            halfWidth:
+                mazeCell / 2,
 
-            3,
+            halfDepth:
+                mazeCell / 2
 
-            mazeCell,
-
-            0x252a33
-
-        );
+        });
 
     }
 
@@ -1855,459 +1900,495 @@ for (
 
 
 /* =========================================================
-   MAZE FLOOR
+   MAZE ENTRANCE GLOW
 ========================================================= */
 
-createBox(
+const mazeEntranceZ =
+    mazeOriginZ;
 
-    0,
 
-    -0.1,
+const mazeEntranceX =
+    mazeOriginX +
+    7 *
+    mazeCell;
 
-    room2OffsetZ +
-    mazeHeight / 2,
 
-    mazeWidth,
+const mazeGlow =
+    new THREE.PointLight(
+        0x22c55e,
+        7,
+        10
+    );
 
-    0.2,
+mazeGlow.position.set(
+    mazeEntranceX,
+    2.5,
+    mazeEntranceZ + 1
+);
 
-    mazeHeight,
-
-    0x171c24
-
+scene.add(
+    mazeGlow
 );
 
 
 /* =========================================================
-   MAZE KEY
+   MAZE EXIT
 ========================================================= */
 
-const mazeKey =
+const exitRow =
+    mazeRows - 1;
+
+const exitCol =
+    7;
+
+
+const exitX =
+    mazeOriginX +
+    exitCol *
+    mazeCell;
+
+
+const exitZ =
+    mazeOriginZ +
+    exitRow *
+    mazeCell;
+
+
+/*
+    EXIT structure
+*/
+
+const exitFrame =
+    new THREE.Group();
+
+scene.add(
+    exitFrame
+);
+
+
+box(
+    exitX - 1.45,
+    2.2,
+    exitZ + .35,
+    .3,
+    4.4,
+    .5,
+    entranceFrameMaterial,
+    exitFrame
+);
+
+
+box(
+    exitX + 1.45,
+    2.2,
+    exitZ + .35,
+    .3,
+    4.4,
+    .5,
+    entranceFrameMaterial,
+    exitFrame
+);
+
+
+box(
+    exitX,
+    4.25,
+    exitZ + .35,
+    3.2,
+    .3,
+    .5,
+    entranceFrameMaterial,
+    exitFrame
+);
+
+
+/*
+    Exit door.
+*/
+
+const exitDoor =
+    box(
+        exitX,
+        2.1,
+        exitZ + .15,
+        2.5,
+        4.1,
+        .18,
+        redMaterial,
+        exitFrame
+    );
+
+
+/*
+    EXIT sign.
+*/
+
+const exitCanvas =
+    document.createElement(
+        "canvas"
+    );
+
+exitCanvas.width =
+    512;
+
+exitCanvas.height =
+    128;
+
+const exitCtx =
+    exitCanvas.getContext(
+        "2d"
+    );
+
+exitCtx.fillStyle =
+    "#250606";
+
+exitCtx.fillRect(
+    0,
+    0,
+    512,
+    128
+);
+
+exitCtx.fillStyle =
+    "#ff4d4d";
+
+exitCtx.font =
+    "bold 58px Arial";
+
+exitCtx.textAlign =
+    "center";
+
+exitCtx.textBaseline =
+    "middle";
+
+exitCtx.fillText(
+    "EXIT",
+    256,
+    64
+);
+
+const exitTexture =
+    new THREE.CanvasTexture(
+        exitCanvas
+    );
+
+
+const exitSign =
     new THREE.Mesh(
 
-        new THREE.BoxGeometry(
-            0.30,
-            0.08,
-            0.08
+        new THREE.PlaneGeometry(
+            2.8,
+            .7
         ),
 
-        new THREE.MeshStandardMaterial({
+        new THREE.MeshBasicMaterial({
 
-            color:
-                0xf5c542,
-
-            emissive:
-                0x8a6400,
-
-            emissiveIntensity:
-                0.35,
-
-            roughness:
-                0.35
+            map: exitTexture
 
         })
 
     );
 
-
-/*
-   K is row 11, column 12.
-*/
-
-const mazeKeyRow = 11;
-
-const mazeKeyCol = 12;
-
-
-mazeKey.position.set(
-
-    mazeOriginX +
-    mazeKeyCol *
-    mazeCell,
-
-    0.4,
-
-    room2OffsetZ +
-    mazeKeyRow *
-    mazeCell
-
+exitSign.position.set(
+    exitX,
+    4.6,
+    exitZ + .05
 );
 
-
-mazeKey.rotation.z =
-    Math.PI / 2;
-
-
-mazeKey.castShadow = true;
-
+exitSign.rotation.y =
+    Math.PI;
 
 scene.add(
-    mazeKey
+    exitSign
+);
+
+
+/*
+    Exit light.
+*/
+
+const exitLight =
+    new THREE.PointLight(
+        0xff2222,
+        12,
+        12
+    );
+
+exitLight.position.set(
+    exitX,
+    3.5,
+    exitZ
+);
+
+scene.add(
+    exitLight
 );
 
 
 /* =========================================================
-   FINAL DOOR
+   PLAYER
 ========================================================= */
 
+const player = {
 
-/*
-   The final door sits beyond
-   the opening at the end of the maze.
-*/
+    x: 0,
 
-const finalDoor =
-    createBox(
+    y: 1.7,
 
-        0,
+    z: -5.5,
 
-        2,
+    yaw: 0,
 
-        room2OffsetZ +
-        mazeHeight +
-        1.2,
+    pitch: 0,
 
-        2.5,
+    radius: .38,
 
-        4,
-
-        0x171b21
-
-    );
-
-
-/* =========================================================
-   MEMORY
-========================================================= */
-
-const memory = {
-
-    keyFound:
-        false,
-
-    flashlightFound:
-        false,
-
-    mazeEntered:
-        false,
-
-    mazeKeyFound:
-        false,
-
-    finalDoorOpened:
-        false,
-
-    keyDrawer:
-        null,
-
-    flashlightDrawer:
-        null
+    speed: 4.5
 
 };
 
 
 /* =========================================================
-   DRAWER LOCATIONS
+   CAMERA
 ========================================================= */
 
-const possibleDrawers = [
-
-    "cabinetA_0",
-    "cabinetA_1",
-    "cabinetA_2",
-
-    "cabinetB_0",
-    "cabinetB_1",
-    "cabinetB_2",
-
-    "cabinetC_0",
-    "cabinetC_1",
-    "cabinetC_2"
-
-];
-
-
-memory.keyDrawer =
-    possibleDrawers[
-        Math.floor(
-            Math.random() *
-            possibleDrawers.length
-        )
-    ];
-
-
-const flashlightChoices =
-    possibleDrawers.filter(
-
-        id =>
-            id !==
-            memory.keyDrawer
-
-    );
-
-
-memory.flashlightDrawer =
-    flashlightChoices[
-        Math.floor(
-            Math.random() *
-            flashlightChoices.length
-        )
-    ];
-
-
-/* =========================================================
-   FLASHLIGHT
-========================================================= */
-
-let flashlightOn =
-    false;
-
-
-const flashlight =
-    new THREE.SpotLight(
-
-        0xffffff,
-
-        0,
-
-        22,
-
-        Math.PI / 7,
-
-        0.42,
-
-        1.25
-
-    );
-
-
-flashlight.castShadow = true;
-
-
-flashlight.shadow.mapSize.width =
-    1024;
-
-flashlight.shadow.mapSize.height =
-    1024;
-
-
-camera.add(
-    flashlight
-);
-
-
-const flashlightTarget =
-    new THREE.Object3D();
-
-
-flashlightTarget.position.set(
-    0,
-    0,
-    -12
-);
-
-
-camera.add(
-    flashlightTarget
-);
-
-
-flashlight.target =
-    flashlightTarget;
-
-
-/* flashlight body */
-
-const flashlightBody =
-    new THREE.Mesh(
-
-        new THREE.CylinderGeometry(
-
-            0.07,
-            0.09,
-            0.42,
-            12
-
-        ),
-
-        mat(
-            0x181b20,
-            0.5
-        )
-
-    );
-
-
-flashlightBody.rotation.z =
-    Math.PI / 2;
-
-
-flashlightBody.position.set(
-
-    0.32,
-
-    -0.28,
-
-    -0.55
-
-);
-
-
-flashlightBody.visible =
-    false;
-
-
-camera.add(
-    flashlightBody
-);
-
-
-/* flashlight lens */
-
-const flashlightLens =
-    new THREE.Mesh(
-
-        new THREE.SphereGeometry(
-            0.045,
-            12,
-            12
-        ),
-
-        new THREE.MeshBasicMaterial({
-
-            color:
-                0xffffff
-
-        })
-
-    );
-
-
-flashlightLens.position.set(
-
-    0.52,
-
-    -0.28,
-
-    -0.55
-
-);
-
-
-flashlightLens.visible =
-    false;
-
-
-camera.add(
-    flashlightLens
+camera.position.set(
+    player.x,
+    player.y,
+    player.z
 );
 
 
 /* =========================================================
-   FLASHLIGHT TOGGLE
+   MOUSE LOOK
 ========================================================= */
 
-function toggleFlashlight() {
+let pointerLocked =
+    false;
 
-    if (
-        !memory.flashlightFound
-    ) {
 
-        showMessage(
-            "I don't have a flashlight."
-        );
+canvas.addEventListener(
+    "click",
+    () => {
 
-        return;
+        if (
+            document.pointerLockElement !==
+            canvas
+        ) {
+
+            canvas.requestPointerLock();
+
+        }
 
     }
+);
 
 
-    flashlightOn =
-        !flashlightOn;
+document.addEventListener(
+    "pointerlockchange",
+    () => {
+
+        pointerLocked =
+            document.pointerLockElement ===
+            canvas;
+
+    }
+);
 
 
-    flashlight.intensity =
-        flashlightOn
-            ? 30
-            : 0;
+document.addEventListener(
+    "mousemove",
+    event => {
+
+        if (!pointerLocked) {
+            return;
+        }
 
 
-    flashlightBody.visible =
-        flashlightOn;
+        player.yaw -=
+            event.movementX *
+            .0022;
 
 
-    flashlightLens.visible =
-        flashlightOn;
+        player.pitch -=
+            event.movementY *
+            .0022;
 
 
-    updateFlashlightHUD();
+        player.pitch =
+            THREE.MathUtils.clamp(
+                player.pitch,
+                -1.45,
+                1.45
+            );
 
-
-    showMessage(
-
-        flashlightOn
-
-            ? "Flashlight ON."
-
-            : "Flashlight OFF."
-
-    );
-
-}
-
-
-/* =========================================================
-   WORLD BOUNDS
-========================================================= */
-
-const worldMinX =
-    mazeOriginX -
-    mazeCell;
-
-
-const worldMaxX =
-    mazeOriginX +
-    mazeWidth;
-
-
-const worldMinZ =
-    -8.5;
-
-
-const worldMaxZ =
-    room2OffsetZ +
-    mazeHeight +
-    3;
+    }
+);
 
 
 /* =========================================================
-   MAZE COLLISION
+   KEYBOARD
 ========================================================= */
 
+const keys = {
 
-/*
-   Proper circle-vs-AABB collision.
+    w: false,
 
-   This is much better than checking which
-   grid square the player's centre is in.
+    a: false,
 
-   It prevents clipping through corners
-   and lets the player move smoothly.
-*/
+    s: false,
+
+    d: false
+
+};
+
+
+window.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.code ===
+            "KeyW"
+        ) {
+
+            keys.w = true;
+
+            event.preventDefault();
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyA"
+        ) {
+
+            keys.a = true;
+
+            event.preventDefault();
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyS"
+        ) {
+
+            keys.s = true;
+
+            event.preventDefault();
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyD"
+        ) {
+
+            keys.d = true;
+
+            event.preventDefault();
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyE"
+        ) {
+
+            interact();
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyF"
+        ) {
+
+            toggleFlashlight();
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    event => {
+
+        if (
+            event.code ===
+            "KeyW"
+        ) {
+            keys.w = false;
+        }
+
+        if (
+            event.code ===
+            "KeyA"
+        ) {
+            keys.a = false;
+        }
+
+        if (
+            event.code ===
+            "KeyS"
+        ) {
+            keys.s = false;
+        }
+
+        if (
+            event.code ===
+            "KeyD"
+        ) {
+            keys.d = false;
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "blur",
+    () => {
+
+        keys.w = false;
+        keys.a = false;
+        keys.s = false;
+        keys.d = false;
+
+    }
+);
+
+
+/* =========================================================
+   COLLISION
+========================================================= */
 
 function circleIntersectsBox(
+
     px,
     pz,
     radius,
+
     cx,
     cz,
+
     halfWidth,
     halfDepth
+
 ) {
 
     const closestX =
         Math.max(
             cx - halfWidth,
+
             Math.min(
                 px,
                 cx + halfWidth
@@ -2318,6 +2399,7 @@ function circleIntersectsBox(
     const closestZ =
         Math.max(
             cz - halfDepth,
+
             Math.min(
                 pz,
                 cz + halfDepth
@@ -2338,9 +2420,8 @@ function circleIntersectsBox(
     return (
         dx * dx +
         dz * dz
-        <
-        radius * radius
-    );
+    ) <
+    radius * radius;
 
 }
 
@@ -2359,107 +2440,47 @@ function officeCollision(
 
 
     /*
-       Outer side walls.
+        Outer walls
     */
 
     if (
-        x - r < -9
-        ||
-        x + r > 9
+        x - r <
+        -officeHalfW
     ) {
-
         return true;
+    }
 
+
+    if (
+        x + r >
+        officeHalfW
+    ) {
+        return true;
+    }
+
+
+    if (
+        z - r <
+        -officeHalfD
+    ) {
+        return true;
     }
 
 
     /*
-       Front wall.
+        Back wall.
+
+        Central doorway is open.
     */
 
     if (
-        z - r < -9
-    ) {
-
-        return true;
-
-    }
-
-
-    /*
-       Back wall.
-
-       Centre is open for the maze entrance.
-    */
-
-    if (
-        z + r > 9
-        &&
-        Math.abs(x) > 1.35
-    ) {
-
-        return true;
-
-    }
-
-
-    /*
-       Desk collision.
-    */
-
-    if (
-        circleIntersectsBox(
-
-            x,
-            z,
-            r,
-
-            -1.8,
-            -2.7,
-
-            2.6,
-            1.0
-
-        )
-    ) {
-
-        return true;
-
-    }
-
-
-    /*
-       Filing cabinet collision.
-    */
-
-    const cabinetPositions = [
-
-        [5.2, -2.7],
-        [7.0, -2.7],
-        [5.2, 0.7]
-
-    ];
-
-
-    for (
-        const [cx, cz]
-        of cabinetPositions
+        z + r >
+        8
     ) {
 
         if (
-            circleIntersectsBox(
-
-                x,
-                z,
-                r,
-
-                cx,
-                cz,
-
-                0.75,
-                0.5
-
-            )
+            Math.abs(x) >
+            1.45
         ) {
 
             return true;
@@ -2470,22 +2491,18 @@ function officeCollision(
 
 
     /*
-       Bookshelf collision.
+        Desk collision
     */
 
     if (
         circleIntersectsBox(
-
             x,
             z,
             r,
-
-            6.8,
-            -5.8,
-
-            1.25,
-            0.3
-
+            -3.8,
+            -2,
+            2.9,
+            1.05
         )
     ) {
 
@@ -2495,22 +2512,18 @@ function officeCollision(
 
 
     /*
-       Boxes.
+        Bookshelf collision
     */
 
     if (
         circleIntersectsBox(
-
             x,
             z,
             r,
-
-            3.1,
             5.7,
-
-            0.58,
-            0.55
-
+            -4.7,
+            1.9,
+            .5
         )
     ) {
 
@@ -2519,23 +2532,29 @@ function officeCollision(
     }
 
 
-    if (
-        circleIntersectsBox(
+    /*
+        Filing cabinets
+    */
 
-            x,
-            z,
-            r,
-
-            4.2,
-            6.3,
-
-            0.38,
-            0.38
-
-        )
+    for (
+        const cx of cabinetX
     ) {
 
-        return true;
+        if (
+            circleIntersectsBox(
+                x,
+                z,
+                r,
+                cx,
+                3.8,
+                .8,
+                .75
+            )
+        ) {
+
+            return true;
+
+        }
 
     }
 
@@ -2558,65 +2577,27 @@ function mazeCollision(
         player.radius;
 
 
-    /*
-       Check every wall cell.
-
-       The maze is only 15 x 13,
-       so this is easily fast enough.
-    */
-
     for (
-        let row = 0;
-        row < maze.length;
-        row++
+        const wall of mazeWallObjects
     ) {
 
-        for (
-            let col = 0;
-            col < maze[row].length;
-            col++
+        if (
+            circleIntersectsBox(
+
+                x,
+                z,
+                r,
+
+                wall.x,
+                wall.z,
+
+                wall.halfWidth,
+                wall.halfDepth
+
+            )
         ) {
 
-            if (
-                maze[row][col] !== "#"
-            ) {
-
-                continue;
-
-            }
-
-
-            const wallX =
-                mazeOriginX +
-                col *
-                mazeCell;
-
-
-            const wallZ =
-                room2OffsetZ +
-                row *
-                mazeCell;
-
-
-            if (
-                circleIntersectsBox(
-
-                    x,
-                    z,
-                    r,
-
-                    wallX,
-                    wallZ,
-
-                    mazeCell / 2,
-                    mazeCell / 2
-
-                )
-            ) {
-
-                return true;
-
-            }
+            return true;
 
         }
 
@@ -2629,7 +2610,7 @@ function mazeCollision(
 
 
 /* =========================================================
-   MASTER COLLISION
+   WORLD COLLISION
 ========================================================= */
 
 function collidesAt(
@@ -2638,68 +2619,33 @@ function collidesAt(
 ) {
 
     /*
-       Office.
+        Office
     */
 
     if (
-        z < 9.2
+        z < mazeStartZ
     ) {
 
-        if (
-            officeCollision(
-                x,
-                z
-            )
-        ) {
-
-            return true;
-
-        }
+        return officeCollision(
+            x,
+            z
+        );
 
     }
 
 
     /*
-       Maze.
+        Maze
     */
 
     if (
-        z >= 9
+        z >= mazeStartZ
     ) {
 
-        if (
-            mazeCollision(
-                x,
-                z
-            )
-        ) {
-
-            return true;
-
-        }
-
-    }
-
-
-    /*
-       World limits.
-    */
-
-    if (
-        x <
-        worldMinX
-        ||
-        x >
-        worldMaxX
-        ||
-        z <
-        worldMinZ
-        ||
-        z >
-        worldMaxZ
-    ) {
-
-        return true;
+        return mazeCollision(
+            x,
+            z
+        );
 
     }
 
@@ -2723,39 +2669,25 @@ function updateMovement(
 
 
     if (keys.w) {
-
         forward += 1;
-
     }
-
 
     if (keys.s) {
-
         forward -= 1;
-
     }
-
 
     if (keys.d) {
-
         strafe += 1;
-
     }
 
-
     if (keys.a) {
-
         strafe -= 1;
-
     }
 
 
     if (
-
-        forward === 0
-        &&
+        forward === 0 &&
         strafe === 0
-
     ) {
 
         return;
@@ -2770,9 +2702,11 @@ function updateMovement(
         );
 
 
-    forward /= length;
+    forward /=
+        length;
 
-    strafe /= length;
+    strafe /=
+        length;
 
 
     const forwardX =
@@ -2800,129 +2734,96 @@ function updateMovement(
 
 
     const moveX =
-
         (
-
             forwardX *
-            forward
-
-            +
+            forward +
 
             rightX *
             strafe
-
-        )
-
-        *
-
-        player.speed
-
-        *
-
+        ) *
+        player.speed *
         delta;
 
 
     const moveZ =
-
         (
-
             forwardZ *
-            forward
-
-            +
+            forward +
 
             rightZ *
             strafe
-
-        )
-
-        *
-
-        player.speed
-
-        *
-
+        ) *
+        player.speed *
         delta;
 
 
-    /*
-       X collision.
-    */
-
     const nextX =
-        player.position.x +
+        player.x +
         moveX;
 
 
     if (
         !collidesAt(
-
             nextX,
-
-            player.position.z
-
+            player.z
         )
     ) {
 
-        player.position.x =
+        player.x =
             nextX;
 
     }
 
 
-    /*
-       Z collision.
-    */
-
     const nextZ =
-        player.position.z +
+        player.z +
         moveZ;
 
 
     if (
         !collidesAt(
-
-            player.position.x,
-
+            player.x,
             nextZ
-
         )
     ) {
 
-        player.position.z =
+        player.z =
             nextZ;
 
     }
 
 
     /*
-       Hard bounds.
+        World limits.
+
+        The maze is allowed to extend
+        all the way to its visible exit.
     */
 
-    player.position.x =
+    player.x =
         THREE.MathUtils.clamp(
 
-            player.position.x,
+            player.x,
 
-            worldMinX +
-            player.radius,
+            -mazeWidth / 2 -
+            1,
 
-            worldMaxX -
-            player.radius
+            mazeWidth / 2 +
+            1
 
         );
 
 
-    player.position.z =
+    player.z =
         THREE.MathUtils.clamp(
 
-            player.position.z,
+            player.z,
 
-            worldMinZ +
-            player.radius,
+            -7.2,
 
-            worldMaxZ -
-            player.radius
+            mazeStartZ +
+            mazeHeight +
+            2
 
         );
 
@@ -2930,183 +2831,205 @@ function updateMovement(
 
 
 /* =========================================================
-   DRAWER
+   DRAWER INTERACTION
 ========================================================= */
 
-function getClosestDrawer() {
+function drawerDistance(
+    drawer
+) {
 
-    let closest = null;
+    return Math.hypot(
 
-    let closestDistance =
+        player.x -
+        drawer.group.position.x,
+
+        player.z -
+        drawer.group.position.z
+
+    );
+
+}
+
+
+function updateDrawers(
+    delta
+) {
+
+    for (
+        const drawer of
+        drawerObjects
+    ) {
+
+        const target =
+            drawer.open
+                ? .65
+                : 0;
+
+
+        drawer.group.position.z =
+            THREE.MathUtils.lerp(
+
+                drawer.group.position.z,
+
+                3.05 +
+                target,
+
+                Math.min(
+                    1,
+                    delta * 10
+                )
+
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   FIND CLOSEST DRAWER
+========================================================= */
+
+function closestDrawer() {
+
+    let best =
+        null;
+
+    let bestDistance =
         Infinity;
 
 
     for (
-        const drawer
-        of drawers
+        const drawer of
+        drawerObjects
     ) {
 
         const distance =
-            player.position.distanceTo(
-
-                drawer.drawer.position
-
+            drawerDistance(
+                drawer
             );
 
 
         if (
-
-            distance < 2.1
-            &&
             distance <
-            closestDistance
-
+            bestDistance
         ) {
 
-            closest =
-                drawer;
-
-            closestDistance =
+            bestDistance =
                 distance;
+
+            best =
+                drawer;
 
         }
 
     }
 
 
-    return closest;
+    return {
+
+        drawer: best,
+
+        distance: bestDistance
+
+    };
 
 }
 
 
 /* =========================================================
-   INTERACT
+   ITEM POSITION
+========================================================= */
+
+function positionDrawerItem(
+    drawer,
+    item
+) {
+
+    item.position.set(
+
+        drawer.group.position.x,
+
+        drawer.group.position.y,
+
+        drawer.group.position.z +
+        .42
+
+    );
+
+}
+
+
+/* =========================================================
+   INTERACTION
 ========================================================= */
 
 function interact() {
 
-    if (
-        !running
-    ) {
+    /*
+        Check drawers.
+    */
 
-        return;
-
-    }
-
-
-    const drawer =
-        getClosestDrawer();
+    const result =
+        closestDrawer();
 
 
     if (
-        drawer
+        result.drawer &&
+        result.distance < 1.7
     ) {
+
+        const drawer =
+            result.drawer;
+
 
         drawer.open =
             !drawer.open;
 
 
-        drawer.drawer.position.z =
-
-            drawer.open
-
-                ? drawer.openZ
-
-                : drawer.closedZ;
-
-
-        drawer.handle.position.z =
-
-            drawer.open
-
-                ? drawer.openZ - 0.1
-
-                : drawer.closedZ - 0.1;
-
-
         /*
-           Key.
+            Key
         */
 
         if (
-
-            drawer.id ===
-            memory.keyDrawer
-
-            &&
+            drawer.hasKey &&
             drawer.open
-
-            &&
-            !memory.keyFound
-
         ) {
 
-            memory.keyFound =
+            keyGroup.visible =
                 true;
 
-
-            updateObjective();
-
+            positionDrawerItem(
+                drawer,
+                keyGroup
+            );
 
             showMessage(
-                "You found the key."
+                "You found a key."
             );
 
         }
 
 
         /*
-           Flashlight.
+            Flashlight
         */
 
         if (
-
-            drawer.id ===
-            memory.flashlightDrawer
-
-            &&
+            drawer.hasFlashlight &&
             drawer.open
-
-            &&
-            !memory.flashlightFound
-
         ) {
 
-            memory.flashlightFound =
+            flashlightPickup.visible =
                 true;
 
-
-            updateFlashlightHUD();
-
-
-            showMessage(
-
-                "You found a flashlight. Press F to use it."
-
+            positionDrawerItem(
+                drawer,
+                flashlightPickup
             );
 
-        }
-
-
-        if (
-
-            drawer.id !==
-            memory.keyDrawer
-
-            &&
-            drawer.id !==
-            memory.flashlightDrawer
-
-        ) {
-
             showMessage(
-
-                drawer.open
-
-                    ? "Drawer opened."
-
-                    : "Drawer closed."
-
+                "You found a flashlight. Press F."
             );
 
         }
@@ -3118,36 +3041,27 @@ function interact() {
 
 
     /*
-       Office door.
+        Check exit.
     */
 
+    const exitDistance =
+        Math.hypot(
+
+            player.x -
+            exitX,
+
+            player.z -
+            exitZ
+
+        );
+
+
     if (
-
-        player.position.z >
-        7.3
-
-        &&
-        Math.abs(
-            player.position.x
-        ) < 2
-
+        exitDistance <
+        2.3
     ) {
 
-        if (
-            memory.keyFound
-        ) {
-
-            openMainDoor();
-
-        }
-        else {
-
-            showMessage(
-                "The door is locked."
-            );
-
-        }
-
+        winGame();
 
         return;
 
@@ -3155,264 +3069,30 @@ function interact() {
 
 
     /*
-       Maze key.
+        Check maze entrance.
     */
 
     if (
-
-        !memory.mazeKeyFound
-
-        &&
-
-        mazeKey.visible
-
-        &&
-
-        player.position.distanceTo(
-            mazeKey.position
-        ) < 2
-
-    ) {
-
-        memory.mazeKeyFound =
-            true;
-
-
-        mazeKey.visible =
-            false;
-
-
-        updateObjective();
-
-
-        showMessage(
-            "You found the second key."
-        );
-
-
-        return;
-
-    }
-
-
-    /*
-       Final door.
-    */
-
-    const finalDoorDistance =
-        Math.abs(
-
-            player.position.z -
-            finalDoor.position.z
-
-        );
-
-
-    if (
-        finalDoorDistance < 3
-        &&
-        Math.abs(
-            player.position.x
-        ) < 2
+        player.z >
+        7 &&
+        player.z <
+        10
     ) {
 
         if (
-            memory.mazeKeyFound
+            Math.abs(
+                player.x
+            ) <
+            1.5
         ) {
 
-            winGame();
-
-        }
-        else {
-
             showMessage(
-                "The final door is locked."
+                "The maze begins here..."
             );
 
         }
 
     }
-
-}
-
-
-/* =========================================================
-   MAIN DOOR
-========================================================= */
-
-let doorOpening =
-    false;
-
-
-function openMainDoor() {
-
-    if (
-        doorOpening
-    ) {
-
-        return;
-
-    }
-
-
-    doorOpening =
-        true;
-
-
-    showMessage(
-        "The door opens..."
-    );
-
-}
-
-
-function updateDoor(
-    delta
-) {
-
-    if (
-        !doorOpening
-    ) {
-
-        return;
-
-    }
-
-
-    mainDoor.position.y +=
-        delta * 3;
-
-
-    doorHandle.position.y +=
-        delta * 3;
-
-
-    if (
-        mainDoor.position.y >
-        5
-    ) {
-
-        mainDoor.visible =
-            false;
-
-
-        doorHandle.visible =
-            false;
-
-    }
-
-}
-
-
-/* =========================================================
-   OBJECTIVE
-========================================================= */
-
-const objective =
-    document.getElementById(
-        "objective"
-    );
-
-
-function updateObjective() {
-
-    if (
-        !memory.keyFound
-    ) {
-
-        objective.textContent =
-            "Search the office for the key.";
-
-    }
-    else if (
-        !memory.mazeEntered
-    ) {
-
-        objective.textContent =
-            "Find the office door.";
-
-    }
-    else if (
-        !memory.mazeKeyFound
-    ) {
-
-        objective.textContent =
-            "Find your way through the maze.";
-
-    }
-    else {
-
-        objective.textContent =
-            "Find the final door.";
-
-    }
-
-}
-
-
-/* =========================================================
-   FLASHLIGHT HUD
-========================================================= */
-
-function updateFlashlightHUD() {
-
-    const hud =
-        document.getElementById(
-            "flashlightStatus"
-        );
-
-
-    if (
-        !memory.flashlightFound
-    ) {
-
-        hud.textContent =
-            "Flashlight: NOT FOUND";
-
-        return;
-
-    }
-
-
-    hud.textContent =
-
-        flashlightOn
-
-            ? "Flashlight: ON"
-
-            : "Flashlight: OFF";
-
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-const message =
-    document.getElementById(
-        "message"
-    );
-
-
-let messageTimer =
-    0;
-
-
-function showMessage(
-    text
-) {
-
-    message.textContent =
-        text;
-
-
-    message.style.display =
-        "block";
-
-
-    messageTimer =
-        2;
 
 }
 
@@ -3429,177 +3109,269 @@ const prompt =
 
 function updatePrompt() {
 
-    const drawer =
-        getClosestDrawer();
+    let text =
+        "";
+
+
+    const result =
+        closestDrawer();
 
 
     if (
-        drawer
+        result.drawer &&
+        result.distance < 1.7
     ) {
 
-        prompt.textContent =
-
-            drawer.open
-
-                ? "E  Close drawer"
-
-                : "E  Open drawer";
-
-
-        prompt.style.display =
-            "block";
-
-
-        return;
+        text =
+            result.drawer.open
+                ? "E — Close drawer"
+                : "E — Open drawer";
 
     }
 
 
-    /*
-       Office door.
-    */
+    const exitDistance =
+        Math.hypot(
+
+            player.x -
+            exitX,
+
+            player.z -
+            exitZ
+
+        );
+
 
     if (
-
-        player.position.z >
-        7.3
-
-        &&
-        Math.abs(
-            player.position.x
-        ) < 2
-
+        exitDistance <
+        2.3
     ) {
 
-        prompt.textContent =
-
-            memory.keyFound
-
-                ? "E  Open door"
-
-                : "E  Door locked";
-
-
-        prompt.style.display =
-            "block";
-
-
-        return;
+        text =
+            "E — EXIT";
 
     }
 
 
-    /*
-       Maze key.
-    */
+    prompt.textContent =
+        text;
 
-    if (
-
-        !memory.mazeKeyFound
-
-        &&
-        mazeKey.visible
-
-        &&
-        player.position.distanceTo(
-            mazeKey.position
-        ) < 2
-
-    ) {
-
-        prompt.textContent =
-            "E  Pick up key";
-
-
-        prompt.style.display =
-            "block";
-
-
-        return;
-
-    }
-
-
-    /*
-       Final door.
-    */
-
-    if (
-
-        Math.abs(
-
-            player.position.z -
-            finalDoor.position.z
-
-        ) < 3
-
-        &&
-        Math.abs(
-            player.position.x
-        ) < 2
-
-    ) {
-
-        prompt.textContent =
-
-            memory.mazeKeyFound
-
-                ? "E  Open final door"
-
-                : "Locked";
-
-
-        prompt.style.display =
-            "block";
-
-
-        return;
-
-    }
-
-
-    prompt.style.display =
-        "none";
+    prompt.style.opacity =
+        text
+            ? "1"
+            : "0";
 
 }
 
 
 /* =========================================================
-   ROOM DETECTION
+   MESSAGE
 ========================================================= */
 
-function updateRoomState() {
+const message =
+    document.getElementById(
+        "message"
+    );
 
-    if (
-        player.position.z >
-        9.5
-    ) {
-
-        if (
-            !memory.mazeEntered
-        ) {
-
-            memory.mazeEntered =
-                true;
+let messageTimer =
+    0;
 
 
-            updateObjective();
+function showMessage(
+    text
+) {
 
-        }
+    message.textContent =
+        text;
 
-    }
+    message.style.opacity =
+        "1";
+
+    messageTimer =
+        2.5;
 
 }
 
 
 /* =========================================================
-   CAMERA
+   LOOP SYSTEM
+========================================================= */
+
+let running =
+    false;
+
+let loopNumber =
+    1;
+
+let timeRemaining =
+    60;
+
+
+/*
+    These memories survive resets.
+*/
+
+const memory = {
+
+    keyFound: false,
+
+    flashlightFound: false,
+
+    mazeEntered: false,
+
+    exitFound: false
+
+};
+
+
+/* =========================================================
+   RESET PLAYER
+========================================================= */
+
+function resetPlayer() {
+
+    player.x =
+        0;
+
+    player.z =
+        -5.5;
+
+    player.yaw =
+        0;
+
+    player.pitch =
+        0;
+
+}
+
+
+/* =========================================================
+   RESET DRAWERS
+========================================================= */
+
+function resetDrawers() {
+
+    for (
+        const drawer of
+        drawerObjects
+    ) {
+
+        drawer.open =
+            false;
+
+        drawer.group.position.z =
+            3.05;
+
+    }
+
+
+    keyGroup.visible =
+        false;
+
+    flashlightPickup.visible =
+        false;
+
+
+    /*
+        Items stay assigned to their
+        guaranteed drawers.
+    */
+
+    drawerObjects[
+        keyDrawerIndex
+    ].hasKey =
+        !memory.keyFound;
+
+
+    drawerObjects[
+        flashlightDrawerIndex
+    ].hasFlashlight =
+        !memory.flashlightFound;
+
+}
+
+
+/* =========================================================
+   LOOP RESET
+========================================================= */
+
+function resetLoop() {
+
+    timeRemaining =
+        60;
+
+
+    resetPlayer();
+
+    resetDrawers();
+
+
+    flashlightOn =
+        false;
+
+
+    playerFlashlight.intensity =
+        0;
+
+
+    flashlightHUD.style.display =
+        hasFlashlight
+            ? "block"
+            : "none";
+
+
+    /*
+        Once an item has been found,
+        it stays remembered.
+    */
+
+    if (
+        memory.keyFound
+    ) {
+
+        drawerObjects[
+            keyDrawerIndex
+        ].hasKey =
+            false;
+
+    }
+
+
+    if (
+        memory.flashlightFound
+    ) {
+
+        drawerObjects[
+            flashlightDrawerIndex
+        ].hasFlashlight =
+            false;
+
+    }
+
+
+    document.getElementById(
+        "loopCounter"
+    ).textContent =
+        "Loop " +
+        loopNumber;
+
+}
+
+
+/* =========================================================
+   CAMERA UPDATE
 ========================================================= */
 
 function updateCamera() {
 
-    camera.position.copy(
-        player.position
+    camera.position.set(
+
+        player.x,
+
+        player.y,
+
+        player.z
+
     );
 
 
@@ -3618,118 +3390,93 @@ function updateCamera() {
 
 
 /* =========================================================
-   LOOP RESET
+   CHECK MEMORY ITEMS
 ========================================================= */
 
-function resetLoop() {
-
-    loopNumber++;
-
-    timeLeft =
-        60;
-
-
-    player.position.set(
-        0,
-        1.65,
-        6
-    );
-
-
-    player.yaw =
-        0;
-
-
-    player.pitch =
-        0;
-
+function updateMemory() {
 
     /*
-       Reset office door.
+        Key becomes permanently remembered
+        when the player opens the correct drawer.
     */
 
-    doorOpening =
-        false;
+    const keyDrawer =
+        drawerObjects[
+            keyDrawerIndex
+        ];
 
 
-    mainDoor.position.y =
-        2;
-
-
-    mainDoor.visible =
-        true;
-
-
-    doorHandle.position.y =
-        2;
-
-
-    doorHandle.visible =
-        true;
-
-
-    /*
-       Reset drawers.
-    */
-
-    for (
-        const drawer
-        of drawers
+    if (
+        keyDrawer.open &&
+        keyDrawer.hasKey
     ) {
 
-        drawer.open =
-            false;
+        memory.keyFound =
+            true;
+
+    }
 
 
-        drawer.drawer.position.z =
-            drawer.closedZ;
+    const lightDrawer =
+        drawerObjects[
+            flashlightDrawerIndex
+        ];
 
 
-        drawer.handle.position.z =
-            drawer.closedZ -
-            0.1;
+    if (
+        lightDrawer.open &&
+        lightDrawer.hasFlashlight
+    ) {
+
+        memory.flashlightFound =
+            true;
+
+        hasFlashlight =
+            true;
 
     }
 
 
     /*
-       Reset flashlight physically.
+        Maze entered.
     */
 
-    flashlightOn =
-        false;
+    if (
+        player.z >
+        mazeStartZ + 1
+    ) {
 
+        memory.mazeEntered =
+            true;
 
-    flashlight.intensity =
-        0;
-
-
-    flashlightBody.visible =
-        false;
-
-
-    flashlightLens.visible =
-        false;
-
-
-    updateFlashlightHUD();
+    }
 
 
     /*
-       Maze key comes back until
-       the player has permanently found it.
+        Exit discovered.
     */
 
-    mazeKey.visible =
-        !memory.mazeKeyFound;
+    const exitDistance =
+        Math.hypot(
+
+            player.x -
+            exitX,
+
+            player.z -
+            exitZ
+
+        );
 
 
-    updateObjective();
+    if (
+        exitDistance <
+        3
+    ) {
 
+        memory.exitFound =
+            true;
 
-    showMessage(
-        "The loop begins again."
-    );
+    }
 
 }
 
@@ -3738,46 +3485,37 @@ function resetLoop() {
    TIMER
 ========================================================= */
 
-const timer =
-    document.getElementById(
-        "timer"
-    );
-
-
-const loopCounter =
-    document.getElementById(
-        "loopCounter"
-    );
-
-
 function updateTimer(
     delta
 ) {
 
-    timeLeft -=
+    timeRemaining -=
         delta;
 
 
     if (
-        timeLeft <= 0
+        timeRemaining <= 0
     ) {
 
-        timeLeft =
+        timeRemaining =
             0;
+
+        loopNumber++;
 
 
         resetLoop();
 
+        showMessage(
+            "Time ran out. The loop resets..."
+        );
+
     }
 
 
-    timer.textContent =
-        timeLeft.toFixed(1);
-
-
-    loopCounter.textContent =
-        "Loop " +
-        loopNumber;
+    document.getElementById(
+        "timer"
+    ).textContent =
+        timeRemaining.toFixed(1);
 
 }
 
@@ -3786,42 +3524,20 @@ function updateTimer(
    WIN
 ========================================================= */
 
-const winScreen =
-    document.getElementById(
-        "winScreen"
-    );
-
-
 function winGame() {
-
-    if (
-        won
-    ) {
-
-        return;
-
-    }
-
-
-    won =
-        true;
-
 
     running =
         false;
 
 
-    if (
-        document.pointerLockElement
-    ) {
-
-        document.exitPointerLock();
-
-    }
+    document.exitPointerLock();
 
 
-    winScreen.style.display =
-        "flex";
+    document.getElementById(
+        "winScreen"
+    ).classList.remove(
+        "hidden"
+    );
 
 }
 
@@ -3834,29 +3550,51 @@ function startGame() {
 
     document.getElementById(
         "startScreen"
-    ).style.display =
-        "none";
+    ).classList.add(
+        "hidden"
+    );
 
 
-    won =
-        false;
+    document.getElementById(
+        "gameOverScreen"
+    ).classList.add(
+        "hidden"
+    );
 
 
-    running =
-        true;
+    document.getElementById(
+        "winScreen"
+    ).classList.add(
+        "hidden"
+    );
 
 
     loopNumber =
         1;
 
 
-    timeLeft =
-        60;
+    memory.keyFound =
+        false;
+
+    memory.flashlightFound =
+        false;
+
+    memory.mazeEntered =
+        false;
+
+    memory.exitFound =
+        false;
 
 
-    updateObjective();
+    hasFlashlight =
+        false;
 
-    updateFlashlightHUD();
+
+    resetLoop();
+
+
+    running =
+        true;
 
 
     lastTime =
@@ -3864,10 +3602,139 @@ function startGame() {
 
 
     requestAnimationFrame(
-        loop
+        gameLoop
     );
 
 }
+
+
+/* =========================================================
+   GAME LOOP
+========================================================= */
+
+let lastTime =
+    performance.now();
+
+
+function gameLoop(
+    time
+) {
+
+    if (!running) {
+
+        render();
+
+        return;
+
+    }
+
+
+    const delta =
+        Math.min(
+
+            (time -
+            lastTime) /
+            1000,
+
+            .033
+
+        );
+
+
+    lastTime =
+        time;
+
+
+    updateMovement(
+        delta
+    );
+
+
+    updateDrawers(
+        delta
+    );
+
+
+    updateMemory();
+
+
+    updateTimer(
+        delta
+    );
+
+
+    updateCamera();
+
+
+    updatePrompt();
+
+
+    if (
+        messageTimer > 0
+    ) {
+
+        messageTimer -=
+            delta;
+
+
+        if (
+            messageTimer <= 0
+        ) {
+
+            message.style.opacity =
+                "0";
+
+        }
+
+    }
+
+
+    render();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function render() {
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+}
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        camera.aspect =
+            window.innerWidth /
+            window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+    }
+);
 
 
 /* =========================================================
@@ -3886,159 +3753,29 @@ document.getElementById(
     "restartButton"
 ).addEventListener(
     "click",
-    () => {
+    startGame
+);
 
-        location.reload();
 
-    }
+document.getElementById(
+    "winRestartButton"
+).addEventListener(
+    "click",
+    startGame
 );
 
 
 /* =========================================================
-   RESIZE
+   INITIAL STATE
 ========================================================= */
 
-window.addEventListener(
-    "resize",
-    () => {
-
-        camera.aspect =
-
-            window.innerWidth /
-            window.innerHeight;
-
-
-        camera.updateProjectionMatrix();
-
-
-        renderer.setSize(
-
-            window.innerWidth,
-
-            window.innerHeight
-
-        );
-
-    }
-);
-
-
-/* =========================================================
-   GAME LOOP
-========================================================= */
-
-function loop(
-    time
-) {
-
-    if (
-        !running
-    ) {
-
-        renderer.render(
-            scene,
-            camera
-        );
-
-        return;
-
-    }
-
-
-    const delta =
-
-        Math.min(
-
-            (
-                time -
-                lastTime
-            ) / 1000,
-
-            0.033
-
-        );
-
-
-    lastTime =
-        time;
-
-
-    updateTimer(
-        delta
-    );
-
-
-    updateMovement(
-        delta
-    );
-
-
-    updateDoor(
-        delta
-    );
-
-
-    updateRoomState();
-
-
-    updatePrompt();
-
-
-    updateCamera();
-
-
-    if (
-        messageTimer > 0
-    ) {
-
-        messageTimer -=
-            delta;
-
-
-        if (
-            messageTimer <= 0
-        ) {
-
-            message.style.display =
-                "none";
-
-        }
-
-    }
-
-
-    renderer.render(
-        scene,
-        camera
-    );
-
-
-    requestAnimationFrame(
-        loop
-    );
-
-}
-
-
-/* =========================================================
-   INITIAL
-========================================================= */
-
-updateObjective();
-
-updateFlashlightHUD();
+resetLoop();
 
 updateCamera();
 
-
-renderer.render(
-    scene,
-    camera
-);
+render();
 
 </script>
 
 </body>
-
 </html>
-```
