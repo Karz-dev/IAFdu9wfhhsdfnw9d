@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>LOOP</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     width: 100%;
     height: 100%;
@@ -28,34 +30,46 @@ canvas {
 #menu {
     position: fixed;
     inset: 0;
-    z-index: 20;
+    z-index: 100;
+
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
+
     background:
-        radial-gradient(circle, rgba(30,30,30,.4), rgba(0,0,0,.97));
+        radial-gradient(
+            circle,
+            #202020 0%,
+            #050505 70%
+        );
 }
 
 #menu h1 {
-    font-size: 64px;
-    letter-spacing: 12px;
-    margin: 0 0 10px;
+    margin: 0;
+
+    font-size: 70px;
+    letter-spacing: 14px;
 }
 
 #menu p {
-    color: #aaa;
-    margin-bottom: 30px;
+    margin: 10px 0 30px;
+
+    color: #888;
 }
 
 #play {
+    padding: 15px 50px;
+
     border: 0;
     border-radius: 8px;
-    padding: 15px 45px;
+
+    background: #222;
+    color: white;
+
     font-size: 22px;
     font-weight: bold;
-    color: white;
-    background: #222;
+
     cursor: pointer;
 }
 
@@ -63,110 +77,260 @@ canvas {
     background: #444;
 }
 
+#loading {
+    margin-top: 15px;
+
+    color: #777;
+    font-size: 13px;
+}
+
 #hud {
     position: fixed;
     inset: 0;
-    z-index: 5;
+
+    z-index: 10;
+
     pointer-events: none;
 }
 
 #timer {
     position: absolute;
+
     top: 20px;
     left: 20px;
+
     font-size: 24px;
     font-weight: bold;
-    text-shadow: 0 2px 5px black;
+
+    text-shadow:
+        0 2px 6px black;
 }
 
 #objective {
     position: absolute;
+
     top: 55px;
     left: 20px;
-    color: #bbb;
+
     font-size: 14px;
-    text-shadow: 0 2px 5px black;
+
+    color: #aaa;
+
+    text-shadow:
+        0 2px 6px black;
 }
 
 #crosshair {
     position: absolute;
+
     left: 50%;
     top: 50%;
+
     width: 5px;
     height: 5px;
-    transform: translate(-50%, -50%);
+
+    transform:
+        translate(-50%, -50%);
+
     border-radius: 50%;
-    background: rgba(255,255,255,.8);
+
+    background: white;
 }
 
 #message {
     position: absolute;
+
     bottom: 50px;
     left: 50%;
-    transform: translateX(-50%);
-    font-size: 16px;
-    color: #ddd;
-    text-shadow: 0 2px 6px black;
-}
 
-#fade {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    background: black;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity .5s;
+    transform:
+        translateX(-50%);
+
+    color: #ddd;
+
+    text-shadow:
+        0 2px 6px black;
 }
 
 #hint {
-    position: fixed;
-    bottom: 18px;
+    position: absolute;
+
+    bottom: 15px;
     left: 50%;
-    transform: translateX(-50%);
-    color: #777;
+
+    transform:
+        translateX(-50%);
+
+    color: #666;
+
     font-size: 12px;
 }
-</style>
 
+</style>
 </head>
 
 <body>
 
+
+<!-- ==============================
+     MENU
+================================ -->
+
 <div id="menu">
+
     <h1>LOOP</h1>
-    <p>Something is wrong with this place.</p>
-    <button id="play">ENTER</button>
+
+    <p>
+        Something is wrong with this place.
+    </p>
+
+    <button id="play">
+        ENTER
+    </button>
+
+    <div id="loading"></div>
+
 </div>
+
+
+<!-- ==============================
+     HUD
+================================ -->
 
 <div id="hud">
-    <div id="timer">60.0</div>
-    <div id="objective">Find the key.</div>
+
+    <div id="timer">
+        60.0
+    </div>
+
+    <div id="objective">
+        Find the key.
+    </div>
+
     <div id="crosshair"></div>
+
     <div id="message"></div>
-    <div id="hint">WASD • Mouse • F flashlight • E interact</div>
+
+    <div id="hint">
+        WASD • Mouse • F flashlight • E interact
+    </div>
+
 </div>
 
-<div id="fade"></div>
 
-<script type="module">
+<!-- =========================================================
+     STARTUP SCRIPT
+
+     IMPORTANT:
+     This is NOT a module.
+
+     Therefore the ENTER button works even if Three.js
+     hasn't loaded yet.
+========================================================= -->
+
+<script>
+
+const playButton =
+    document.getElementById("play");
+
+const loadingText =
+    document.getElementById("loading");
+
+const menu =
+    document.getElementById("menu");
+
+let gameStarted = false;
+
+
+playButton.addEventListener(
+    "click",
+    async function () {
+
+        if (gameStarted)
+            return;
+
+        loadingText.textContent =
+            "Loading...";
+
+        playButton.disabled =
+            true;
+
+        try {
+
+            await startGame();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            loadingText.textContent =
+                "ERROR: " +
+                error.message;
+
+            playButton.disabled =
+                false;
+
+        }
+
+    }
+);
+
+
+async function startGame() {
+
+    /*
+       Dynamically load Three.js.
+
+       This means the ENTER button itself
+       does not depend on the module loading
+       successfully beforehand.
+    */
+
+    const THREE =
+        await import(
+            "./three.module.min.js"
+        );
+
+
+    gameStarted = true;
+
+    menu.style.display =
+        "none";
+
+
+    createGame(
+        THREE
+    );
+
+}
+
+</script>
+
+
+<!-- =========================================================
+     GAME
+========================================================= -->
+
+<script>
+
+function createGame(
+    THREE
+) {
+
 
 /* =========================================================
-   THREE.JS
-========================================================= */
-
-import * as THREE from "./three.module.min.js";
-
-
-/* =========================================================
-   BASIC SETUP
+   SCENE
 ========================================================= */
 
 const scene =
     new THREE.Scene();
 
 scene.background =
-    new THREE.Color(0x050505);
+    new THREE.Color(
+        0x050505
+    );
 
 scene.fog =
     new THREE.FogExp2(
@@ -175,34 +339,56 @@ scene.fog =
     );
 
 
+/* =========================================================
+   CAMERA
+========================================================= */
+
 const camera =
     new THREE.PerspectiveCamera(
+
         75,
+
         window.innerWidth /
         window.innerHeight,
+
         0.05,
+
         200
+
     );
 
 
+/* =========================================================
+   RENDERER
+========================================================= */
+
 const renderer =
     new THREE.WebGLRenderer({
+
         antialias: true
+
     });
+
 
 renderer.setSize(
     window.innerWidth,
     window.innerHeight
 );
 
+
 renderer.setPixelRatio(
+
     Math.min(
         window.devicePixelRatio,
         2
     )
+
 );
 
-renderer.shadowMap.enabled = true;
+
+renderer.shadowMap.enabled =
+    true;
+
 
 document.body.appendChild(
     renderer.domElement
@@ -210,48 +396,55 @@ document.body.appendChild(
 
 
 /* =========================================================
-   UI
+   HUD
 ========================================================= */
 
-const menu =
-    document.getElementById("menu");
-
-const playButton =
-    document.getElementById("play");
-
 const timerText =
-    document.getElementById("timer");
+    document.getElementById(
+        "timer"
+    );
 
 const objectiveText =
-    document.getElementById("objective");
+    document.getElementById(
+        "objective"
+    );
 
 const messageText =
-    document.getElementById("message");
-
-const fade =
-    document.getElementById("fade");
+    document.getElementById(
+        "message"
+    );
 
 
 /* =========================================================
-   GAME STATE
+   GAME VARIABLES
 ========================================================= */
 
-let gameStarted = false;
-let gameRunning = false;
+let running =
+    true;
 
-let loopTime = 60;
+let loopTime =
+    60;
 
-let hasKey = false;
-let drawerOpened = false;
-let flashlightOn = true;
+let hasKey =
+    false;
 
-let inMaze = false;
-let escapedMaze = false;
+let drawerOpened =
+    false;
 
-let yaw = 0;
-let pitch = 0;
+let flashlightOn =
+    true;
 
-let messageTimer = 0;
+let inMaze =
+    false;
+
+let yaw =
+    0;
+
+let pitch =
+    0;
+
+let messageTimer =
+    0;
 
 
 /* =========================================================
@@ -267,11 +460,12 @@ const player = {
             8
         ),
 
-    height: 1.7,
+    speed:
+        4.2,
 
-    speed: 4.2,
+    radius:
+        0.35
 
-    radius: .35
 };
 
 
@@ -286,15 +480,18 @@ camera.position.copy(
 
 const keys = {};
 
+
 window.addEventListener(
     "keydown",
-    event => {
+    function(event) {
 
-        keys[event.code] = true;
+        keys[
+            event.code
+        ] = true;
+
 
         if (
-            event.code === "KeyF" &&
-            gameRunning
+            event.code === "KeyF"
         ) {
 
             flashlightOn =
@@ -302,14 +499,16 @@ window.addEventListener(
 
             flashlight.visible =
                 flashlightOn;
+
         }
 
+
         if (
-            event.code === "KeyE" &&
-            gameRunning
+            event.code === "KeyE"
         ) {
 
             interact();
+
         }
 
     }
@@ -318,9 +517,11 @@ window.addEventListener(
 
 window.addEventListener(
     "keyup",
-    event => {
+    function(event) {
 
-        keys[event.code] = false;
+        keys[
+            event.code
+        ] = false;
 
     }
 );
@@ -332,10 +533,9 @@ window.addEventListener(
 
 renderer.domElement.addEventListener(
     "click",
-    () => {
+    function() {
 
         if (
-            gameRunning &&
             document.pointerLockElement !==
             renderer.domElement
         ) {
@@ -350,20 +550,27 @@ renderer.domElement.addEventListener(
 
 document.addEventListener(
     "mousemove",
-    event => {
+    function(event) {
 
         if (
             document.pointerLockElement !==
             renderer.domElement
-        ) return;
+        ) {
+
+            return;
+
+        }
+
 
         yaw -=
             event.movementX *
             0.0022;
 
+
         pitch -=
             event.movementY *
             0.0022;
+
 
         pitch =
             Math.max(
@@ -384,41 +591,73 @@ document.addEventListener(
 
 const wallMaterial =
     new THREE.MeshStandardMaterial({
-        color: 0x282828,
-        roughness: .95
+
+        color:
+            0x282828,
+
+        roughness:
+            0.95
+
     });
+
 
 const floorMaterial =
     new THREE.MeshStandardMaterial({
-        color: 0x161616,
-        roughness: 1
+
+        color:
+            0x151515,
+
+        roughness:
+            1
+
     });
+
 
 const ceilingMaterial =
     new THREE.MeshStandardMaterial({
-        color: 0x101010,
-        roughness: 1
+
+        color:
+            0x0d0d0d,
+
+        roughness:
+            1
+
     });
+
 
 const woodMaterial =
     new THREE.MeshStandardMaterial({
-        color: 0x332820,
-        roughness: .9
+
+        color:
+            0x332820,
+
+        roughness:
+            0.9
+
     });
+
 
 const metalMaterial =
     new THREE.MeshStandardMaterial({
-        color: 0x303030,
-        metalness: .45,
-        roughness: .6
+
+        color:
+            0x303030,
+
+        metalness:
+            0.45,
+
+        roughness:
+            0.6
+
     });
 
 
 /* =========================================================
-   HELPERS
+   COLLIDERS
 ========================================================= */
 
 const colliders = [];
+
 
 function box(
     x,
@@ -438,11 +677,13 @@ function box(
             sz
         );
 
+
     const mesh =
         new THREE.Mesh(
             geometry,
             material
         );
+
 
     mesh.position.set(
         x,
@@ -450,23 +691,36 @@ function box(
         z
     );
 
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
 
-    scene.add(mesh);
+    mesh.castShadow =
+        true;
+
+    mesh.receiveShadow =
+        true;
+
+
+    scene.add(
+        mesh
+    );
+
 
     if (collide) {
 
         colliders.push({
-            x,
-            z,
-            sx,
-            sz
+
+            x: x,
+            z: z,
+
+            sx: sx,
+            sz: sz
+
         });
 
     }
 
+
     return mesh;
+
 }
 
 
@@ -475,30 +729,45 @@ function box(
 ========================================================= */
 
 box(
+
     0,
     -0.1,
     0,
-    80,
-    .2,
-    80,
-    floorMaterial,
-    false
-);
 
-box(
-    0,
-    5,
-    0,
     80,
-    .2,
+    0.2,
     80,
-    ceilingMaterial,
+
+    floorMaterial,
+
     false
+
 );
 
 
 /* =========================================================
-   OFFICE OUTER WALLS
+   CEILING
+========================================================= */
+
+box(
+
+    0,
+    5,
+    0,
+
+    80,
+    0.2,
+    80,
+
+    ceilingMaterial,
+
+    false
+
+);
+
+
+/* =========================================================
+   OUTER WALLS
 ========================================================= */
 
 box(
@@ -507,9 +776,10 @@ box(
     -35,
     70,
     5,
-    .5,
+    0.5,
     wallMaterial
 );
+
 
 box(
     0,
@@ -517,25 +787,27 @@ box(
     35,
     70,
     5,
-    .5,
+    0.5,
     wallMaterial
 );
+
 
 box(
     -35,
     2.5,
     0,
-    .5,
+    0.5,
     5,
     70,
     wallMaterial
 );
 
+
 box(
     35,
     2.5,
     0,
-    .5,
+    0.5,
     5,
     70,
     wallMaterial
@@ -543,7 +815,7 @@ box(
 
 
 /* =========================================================
-   OFFICE ROOMS
+   OFFICE WALLS
 ========================================================= */
 
 box(
@@ -552,9 +824,10 @@ box(
     -18,
     25,
     5,
-    .5,
+    0.5,
     wallMaterial
 );
+
 
 box(
     12,
@@ -562,25 +835,27 @@ box(
     -18,
     20,
     5,
-    .5,
+    0.5,
     wallMaterial
 );
+
 
 box(
     -22,
     2.5,
     0,
-    .5,
+    0.5,
     5,
     25,
     wallMaterial
 );
 
+
 box(
     15,
     2.5,
     0,
-    .5,
+    0.5,
     5,
     25,
     wallMaterial
@@ -598,33 +873,36 @@ function makeDesk(
 
     box(
         x,
-        .8,
+        0.8,
         z,
         3.5,
-        .25,
+        0.25,
         1.6,
         woodMaterial
     );
 
+
     box(
         x - 1.45,
-        .4,
+        0.4,
         z,
-        .2,
-        .8,
+        0.2,
+        0.8,
         1.3,
         woodMaterial
     );
 
+
     box(
         x + 1.45,
-        .4,
+        0.4,
         z,
-        .2,
-        .8,
+        0.2,
+        0.8,
         1.3,
         woodMaterial
     );
+
 
     box(
         x,
@@ -632,21 +910,23 @@ function makeDesk(
         z,
         1.2,
         1.1,
-        .12,
+        0.12,
         metalMaterial,
         false
     );
 
+
     box(
         x,
         1.12,
-        z - .05,
-        .8,
-        .08,
-        .5,
+        z - 0.05,
+        0.8,
+        0.08,
+        0.5,
         metalMaterial,
         false
     );
+
 }
 
 
@@ -674,23 +954,25 @@ function makeChair(
 
     box(
         x,
-        .65,
+        0.65,
         z,
-        .8,
-        .15,
-        .8,
+        0.8,
+        0.15,
+        0.8,
         metalMaterial
     );
+
 
     box(
         x,
         1.2,
-        z + .35,
-        .75,
+        z + 0.35,
+        0.75,
         1,
-        .12,
+        0.12,
         metalMaterial
     );
+
 }
 
 
@@ -715,11 +997,12 @@ function makeShelf(
         x,
         2,
         z,
-        .6,
+        0.6,
         4,
         4,
         woodMaterial
     );
+
 
     for (
         let i = 0;
@@ -729,22 +1012,39 @@ function makeShelf(
 
         box(
             x,
-            .55 + i * 1,
+            0.55 +
+            i * 1,
+
             z - 1.7,
-            .65,
-            .08,
+
+            0.65,
+            0.08,
             3.3,
+
             woodMaterial,
+
             false
         );
 
     }
+
 }
 
 
-makeShelf(-30, 22);
-makeShelf(-26, 22);
-makeShelf(29, -25);
+makeShelf(
+    -30,
+    22
+);
+
+makeShelf(
+    -26,
+    22
+);
+
+makeShelf(
+    29,
+    -25
+);
 
 
 /* =========================================================
@@ -754,27 +1054,36 @@ makeShelf(29, -25);
 const cabinet =
     new THREE.Group();
 
+
 cabinet.position.set(
     -28,
     0,
     12
 );
 
-scene.add(cabinet);
+
+scene.add(
+    cabinet
+);
 
 
 const cabinetBody =
     new THREE.Mesh(
+
         new THREE.BoxGeometry(
             2.5,
             3,
             1.5
         ),
+
         metalMaterial
+
     );
+
 
 cabinetBody.position.y =
     1.5;
+
 
 cabinet.add(
     cabinetBody
@@ -782,6 +1091,7 @@ cabinet.add(
 
 
 const drawers = [];
+
 
 for (
     let i = 0;
@@ -791,23 +1101,38 @@ for (
 
     const drawer =
         new THREE.Mesh(
+
             new THREE.BoxGeometry(
                 2.1,
-                .75,
-                .15
+                0.75,
+                0.15
             ),
+
             metalMaterial
+
         );
 
+
     drawer.position.set(
+
         0,
-        .65 + i * .95,
-        -.82
+
+        0.65 +
+        i * 0.95,
+
+        -0.82
+
     );
 
-    cabinet.add(drawer);
 
-    drawers.push(drawer);
+    cabinet.add(
+        drawer
+    );
+
+
+    drawers.push(
+        drawer
+    );
 
 }
 
@@ -818,18 +1143,29 @@ for (
 
 const key =
     new THREE.Mesh(
+
         new THREE.TorusGeometry(
-            .16,
-            .045,
+            0.16,
+            0.045,
             8,
             20
         ),
+
         new THREE.MeshStandardMaterial({
-            color: 0xd6b85a,
-            metalness: .8,
-            roughness: .25
+
+            color:
+                0xd6b85a,
+
+            metalness:
+                0.8,
+
+            roughness:
+                0.25
+
         })
+
     );
+
 
 key.position.set(
     -28,
@@ -837,7 +1173,10 @@ key.position.set(
     11.35
 );
 
-scene.add(key);
+
+scene.add(
+    key
+);
 
 
 /* =========================================================
@@ -863,10 +1202,13 @@ const maze = [
 ];
 
 
-const cell = 2.4;
+const mazeCell =
+    2.4;
+
 
 const mazeOriginX =
     -16;
+
 
 const mazeOriginZ =
     15;
@@ -886,24 +1228,37 @@ for (
 
         if (
             maze[row][col] !== "#"
-        ) continue;
+        ) {
+
+            continue;
+
+        }
+
 
         const x =
             mazeOriginX +
-            col * cell;
+            col *
+            mazeCell;
+
 
         const z =
             mazeOriginZ +
-            row * cell;
+            row *
+            mazeCell;
+
 
         box(
+
             x,
             2.5,
             z,
-            cell,
+
+            mazeCell,
             5,
-            cell,
+            mazeCell,
+
             wallMaterial
+
         );
 
     }
@@ -912,42 +1267,33 @@ for (
 
 
 /* =========================================================
-   MAZE EXIT
-========================================================= */
-
-const exitDoor =
-    box(
-        25,
-        2.5,
-        25,
-        3,
-        5,
-        .5,
-        metalMaterial,
-        false
-    );
-
-
-/* =========================================================
    LIGHTING
 ========================================================= */
 
 const ambient =
     new THREE.HemisphereLight(
+
         0x555555,
         0x080808,
-        .18
+        0.18
+
     );
 
-scene.add(ambient);
+
+scene.add(
+    ambient
+);
 
 
 const officeLight =
     new THREE.PointLight(
+
         0x777777,
         2,
         25
+
     );
+
 
 officeLight.position.set(
     -10,
@@ -955,7 +1301,10 @@ officeLight.position.set(
     -10
 );
 
-officeLight.castShadow = true;
+
+officeLight.castShadow =
+    true;
+
 
 scene.add(
     officeLight
@@ -963,7 +1312,7 @@ scene.add(
 
 
 /* =========================================================
-   RANDOM OFFICE LIGHTS
+   RANDOM LIGHTS
 ========================================================= */
 
 const lightPositions = [
@@ -988,24 +1337,32 @@ const lightPositions = [
 
 
 for (
-    const [x, z]
+    const position
     of lightPositions
 ) {
 
     const light =
         new THREE.PointLight(
+
             0x666666,
-            .8,
+            0.8,
             12
+
         );
 
+
     light.position.set(
-        x,
+
+        position[0],
         4.2,
-        z
+        position[1]
+
     );
 
-    scene.add(light);
+
+    scene.add(
+        light
+    );
 
 }
 
@@ -1016,19 +1373,28 @@ for (
 
 const flashlight =
     new THREE.SpotLight(
+
         0xffffff,
         6,
         30,
+
         Math.PI / 7,
-        .55,
+
+        0.55,
+
         1.5
+
     );
 
-flashlight.castShadow = true;
+
+flashlight.castShadow =
+    true;
+
 
 scene.add(
     flashlight
 );
+
 
 scene.add(
     flashlight.target
@@ -1047,27 +1413,43 @@ function collides(
     const r =
         player.radius;
 
+
     for (
-        const c of colliders
+        const c
+        of colliders
     ) {
 
         const minX =
-            c.x - c.sx / 2 - r;
+            c.x -
+            c.sx / 2 -
+            r;
+
 
         const maxX =
-            c.x + c.sx / 2 + r;
+            c.x +
+            c.sx / 2 +
+            r;
+
 
         const minZ =
-            c.z - c.sz / 2 - r;
+            c.z -
+            c.sz / 2 -
+            r;
+
 
         const maxZ =
-            c.z + c.sz / 2 + r;
+            c.z +
+            c.sz / 2 +
+            r;
+
 
         if (
+
             x > minX &&
             x < maxX &&
             z > minZ &&
             z < maxZ
+
         ) {
 
             return true;
@@ -1076,7 +1458,9 @@ function collides(
 
     }
 
+
     return false;
+
 }
 
 
@@ -1088,26 +1472,45 @@ function updateMovement(
     dt
 ) {
 
-    let moveX = 0;
-    let moveZ = 0;
+    let moveX =
+        0;
 
-    if (keys["KeyW"])
+    let moveZ =
+        0;
+
+
+    if (
+        keys["KeyW"]
+    )
         moveZ += 1;
 
-    if (keys["KeyS"])
+
+    if (
+        keys["KeyS"]
+    )
         moveZ -= 1;
 
-    if (keys["KeyA"])
+
+    if (
+        keys["KeyA"]
+    )
         moveX -= 1;
 
-    if (keys["KeyD"])
+
+    if (
+        keys["KeyD"]
+    )
         moveX += 1;
 
 
     if (
         moveX === 0 &&
         moveZ === 0
-    ) return;
+    ) {
+
+        return;
+
+    }
 
 
     const length =
@@ -1116,22 +1519,25 @@ function updateMovement(
             moveZ
         );
 
-    moveX /= length;
-    moveZ /= length;
 
+    moveX /=
+        length;
 
-    /*
-       Correct FPS movement.
-    */
+    moveZ /=
+        length;
+
 
     const forwardX =
         -Math.sin(yaw);
 
+
     const forwardZ =
         -Math.cos(yaw);
 
+
     const rightX =
         Math.cos(yaw);
+
 
     const rightZ =
         -Math.sin(yaw);
@@ -1141,22 +1547,27 @@ function updateMovement(
         forwardX * moveZ +
         rightX * moveX;
 
+
     const worldZ =
         forwardZ * moveZ +
         rightZ * moveX;
 
 
-    const speed =
-        player.speed * dt;
+    const movement =
+        player.speed *
+        dt;
 
 
     const newX =
         player.position.x +
-        worldX * speed;
+        worldX *
+        movement;
+
 
     const newZ =
         player.position.z +
-        worldZ * speed;
+        worldZ *
+        movement;
 
 
     if (
@@ -1197,11 +1608,14 @@ function updateCamera() {
         player.position
     );
 
+
     camera.rotation.order =
         "YXZ";
 
+
     camera.rotation.y =
         yaw;
+
 
     camera.rotation.x =
         pitch;
@@ -1214,19 +1628,39 @@ function updateCamera() {
             -1
         );
 
+
     forward.applyQuaternion(
         camera.quaternion
     );
 
+
     flashlight.position.copy(
         camera.position
     );
+
 
     flashlight.target.position.copy(
         camera.position
     ).add(
         forward.multiplyScalar(10)
     );
+
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function showMessage(
+    text
+) {
+
+    messageText.textContent =
+        text;
+
+    messageTimer =
+        3;
 
 }
 
@@ -1248,25 +1682,38 @@ function interact() {
         distance < 3
     ) {
 
-        if (!drawerOpened) {
+        if (
+            !drawerOpened
+        ) {
 
-            drawerOpened = true;
+            drawerOpened =
+                true;
 
-            drawers[2].position.z =
+
+            drawers[2]
+                .position.z =
                 -1.25;
+
 
             showMessage(
                 "The drawer slides open."
             );
 
-        } else {
+        }
 
-            hasKey = true;
+        else {
 
-            key.visible = false;
+            hasKey =
+                true;
+
+
+            key.visible =
+                false;
+
 
             objectiveText.textContent =
                 "Find the maze.";
+
 
             showMessage(
                 "You found a key."
@@ -1274,132 +1721,7 @@ function interact() {
 
         }
 
-        return;
     }
-
-
-    if (
-        hasKey &&
-        !inMaze
-    ) {
-
-        const d =
-            player.position.distanceTo(
-                new THREE.Vector3(
-                    25,
-                    1.7,
-                    25
-                )
-            );
-
-        if (d < 4) {
-
-            enterMaze();
-
-        }
-
-    }
-
-
-    if (
-        inMaze &&
-        hasKey
-    ) {
-
-        const d =
-            player.position.distanceTo(
-                new THREE.Vector3(
-                    25,
-                    1.7,
-                    25
-                )
-            );
-
-        if (d < 4) {
-
-            escapedMaze = true;
-
-            showMessage(
-                "You found the exit."
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   MAZE TRANSITION
-========================================================= */
-
-function enterMaze() {
-
-    inMaze = true;
-
-    player.position.set(
-        mazeOriginX +
-        cell,
-        1.7,
-        mazeOriginZ +
-        cell
-    );
-
-    objectiveText.textContent =
-        "Find the way out.";
-
-    scene.fog.density =
-        0.075;
-
-    ambient.intensity =
-        .08;
-
-    showMessage(
-        "The door closes behind you."
-    );
-
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-function showMessage(
-    text
-) {
-
-    messageText.textContent =
-        text;
-
-    messageTimer = 3;
-
-}
-
-
-/* =========================================================
-   TIMER
-========================================================= */
-
-function updateTimer(
-    dt
-) {
-
-    loopTime -= dt;
-
-    if (
-        loopTime <= 0
-    ) {
-
-        resetLoop();
-
-        return;
-
-    }
-
-    timerText.textContent =
-        loopTime.toFixed(1);
 
 }
 
@@ -1410,17 +1732,30 @@ function updateTimer(
 
 function resetLoop() {
 
-    loopTime = 60;
+    loopTime =
+        60;
 
-    hasKey = false;
-    drawerOpened = false;
-    inMaze = false;
-    escapedMaze = false;
 
-    key.visible = true;
+    hasKey =
+        false;
 
-    drawers[2].position.z =
-        -.82;
+
+    drawerOpened =
+        false;
+
+
+    inMaze =
+        false;
+
+
+    key.visible =
+        true;
+
+
+    drawers[2]
+        .position.z =
+        -0.82;
+
 
     player.position.set(
         0,
@@ -1428,17 +1763,29 @@ function resetLoop() {
         8
     );
 
-    yaw = 0;
-    pitch = 0;
+
+    yaw =
+        0;
+
+    pitch =
+        0;
+
 
     objectiveText.textContent =
         "Find the key.";
 
+
+    timerText.textContent =
+        "60.0";
+
+
     scene.fog.density =
-        .035;
+        0.035;
+
 
     ambient.intensity =
-        .18;
+        0.18;
+
 
     showMessage(
         "Something feels familiar."
@@ -1448,33 +1795,40 @@ function resetLoop() {
 
 
 /* =========================================================
-   HORROR ATMOSPHERE
+   ATMOSPHERE
 ========================================================= */
 
-let flickerTimer = 0;
+let flickerTimer =
+    0;
+
 
 function updateAtmosphere(
     dt
 ) {
 
-    flickerTimer -= dt;
+    flickerTimer -=
+        dt;
+
 
     if (
         flickerTimer <= 0
     ) {
 
         flickerTimer =
-            THREE.MathUtils.randFloat(
-                4,
-                10
-            );
+            5 +
+            Math.random() *
+            7;
+
 
         const lights =
             scene.children.filter(
+
                 object =>
                     object.isPointLight &&
                     object !== officeLight
+
             );
+
 
         if (
             lights.length
@@ -1488,22 +1842,28 @@ function updateAtmosphere(
                     )
                 ];
 
+
             const original =
                 light.intensity;
+
 
             light.intensity =
                 0;
 
+
             setTimeout(
-                () => {
+
+                function() {
 
                     light.intensity =
                         original;
 
                 },
-                80 +
+
+                100 +
                 Math.random() *
                 250
+
             );
 
         }
@@ -1514,103 +1874,59 @@ function updateAtmosphere(
 
 
 /* =========================================================
-   AUDIO
-========================================================= */
-
-let audioContext = null;
-
-let footstepTimer = 0;
-
-
-function startAudio() {
-
-    if (
-        audioContext
-    ) return;
-
-    audioContext =
-        new (
-            window.AudioContext ||
-            window.webkitAudioContext
-        )();
-
-}
-
-
-function footstep() {
-
-    if (!audioContext)
-        return;
-
-    const oscillator =
-        audioContext.createOscillator();
-
-    const gain =
-        audioContext.createGain();
-
-    oscillator.type =
-        "triangle";
-
-    oscillator.frequency.value =
-        65 +
-        Math.random() * 15;
-
-    gain.gain.setValueAtTime(
-        .0001,
-        audioContext.currentTime
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-        .035,
-        audioContext.currentTime + .01
-    );
-
-    gain.gain.exponentialRampToValueAtTime(
-        .0001,
-        audioContext.currentTime + .12
-    );
-
-    oscillator.connect(gain);
-    gain.connect(
-        audioContext.destination
-    );
-
-    oscillator.start();
-
-    oscillator.stop(
-        audioContext.currentTime +
-        .13
-    );
-
-}
-
-
-/* =========================================================
-   GAME UPDATE
+   UPDATE
 ========================================================= */
 
 function update(
     dt
 ) {
 
-    if (!gameRunning)
+    if (
+        !running
+    ) {
+
         return;
 
+    }
 
-    updateMovement(dt);
+
+    updateMovement(
+        dt
+    );
+
 
     updateCamera();
 
-    updateTimer(dt);
 
-    updateAtmosphere(dt);
+    loopTime -=
+        dt;
+
+
+    if (
+        loopTime <= 0
+    ) {
+
+        resetLoop();
+
+    }
+
+
+    timerText.textContent =
+        loopTime.toFixed(1);
+
+
+    updateAtmosphere(
+        dt
+    );
 
 
     if (
         messageTimer > 0
     ) {
 
-        messageTimer -= dt;
+        messageTimer -=
+            dt;
+
 
         if (
             messageTimer <= 0
@@ -1618,33 +1934,6 @@ function update(
 
             messageText.textContent =
                 "";
-
-        }
-
-    }
-
-
-    const moving =
-        keys["KeyW"] ||
-        keys["KeyA"] ||
-        keys["KeyS"] ||
-        keys["KeyD"];
-
-
-    if (
-        moving
-    ) {
-
-        footstepTimer -= dt;
-
-        if (
-            footstepTimer <= 0
-        ) {
-
-            footstep();
-
-            footstepTimer =
-                .42;
 
         }
 
@@ -1669,17 +1958,26 @@ function animate(
         animate
     );
 
+
     const dt =
         Math.min(
+
             (time - lastTime) /
             1000,
-            .05
+
+            0.05
+
         );
+
 
     lastTime =
         time;
 
-    update(dt);
+
+    update(
+        dt
+    );
+
 
     renderer.render(
         scene,
@@ -1690,48 +1988,20 @@ function animate(
 
 
 /* =========================================================
-   START GAME
-========================================================= */
-
-function startGame() {
-
-    if (gameStarted)
-        return;
-
-    gameStarted = true;
-    gameRunning = true;
-
-    menu.style.display =
-        "none";
-
-    startAudio();
-
-    renderer.domElement.requestPointerLock();
-
-    resetLoop();
-
-}
-
-
-playButton.addEventListener(
-    "click",
-    startGame
-);
-
-
-/* =========================================================
    RESIZE
 ========================================================= */
 
 window.addEventListener(
     "resize",
-    () => {
+    function() {
 
         camera.aspect =
             window.innerWidth /
             window.innerHeight;
 
+
         camera.updateProjectionMatrix();
+
 
         renderer.setSize(
             window.innerWidth,
@@ -1743,14 +2013,32 @@ window.addEventListener(
 
 
 /* =========================================================
-   INITIAL STATE
+   START
 ========================================================= */
+
+resetLoop();
 
 updateCamera();
 
 animate(
     performance.now()
 );
+
+
+/* =========================================================
+   POINTER LOCK
+========================================================= */
+
+setTimeout(
+    function() {
+
+        renderer.domElement.requestPointerLock();
+
+    },
+    100
+);
+
+}
 
 </script>
 
