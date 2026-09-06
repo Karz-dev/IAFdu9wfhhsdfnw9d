@@ -26,9 +26,9 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background: #020307;
-        color: white;
+        background: #000;
         font-family: Arial, sans-serif;
+        color: white;
     }
 
     canvas {
@@ -50,26 +50,25 @@
         left: 20px;
         font-size: 22px;
         font-weight: bold;
-        color: #eeeeee;
-        text-shadow: 0 2px 8px black;
+        text-shadow: 0 2px 8px #000;
     }
 
-    #loopCounter {
+    #loop {
         position: absolute;
         top: 48px;
         left: 20px;
+        color: #888;
         font-size: 14px;
-        color: #9ca3af;
-        text-shadow: 0 2px 8px black;
+        text-shadow: 0 2px 8px #000;
     }
 
-    #status {
+    #objective {
         position: absolute;
         top: 18px;
         right: 20px;
+        color: #aaa;
         font-size: 14px;
-        color: #9ca3af;
-        text-shadow: 0 2px 8px black;
+        text-shadow: 0 2px 8px #000;
         text-align: right;
     }
 
@@ -77,23 +76,23 @@
         position: absolute;
         left: 50%;
         top: 50%;
-        width: 4px;
-        height: 4px;
+        width: 3px;
+        height: 3px;
         transform: translate(-50%, -50%);
+        background: white;
         border-radius: 50%;
-        background: rgba(255,255,255,0.8);
-        box-shadow: 0 0 5px black;
+        opacity: 0.8;
     }
 
     #prompt {
         position: absolute;
         left: 50%;
-        bottom: 18%;
+        bottom: 17%;
         transform: translateX(-50%);
         padding: 8px 14px;
-        border-radius: 8px;
-        background: rgba(0,0,0,0.55);
-        color: #eeeeee;
+        border-radius: 7px;
+        background: rgba(0, 0, 0, 0.65);
+        color: #ddd;
         font-size: 14px;
         opacity: 0;
         transition: opacity 0.15s;
@@ -102,43 +101,39 @@
     #message {
         position: absolute;
         left: 50%;
-        bottom: 11%;
+        bottom: 10%;
         transform: translateX(-50%);
-        max-width: 600px;
-        padding: 10px 18px;
+        max-width: 650px;
         text-align: center;
+        color: #ccc;
         font-size: 15px;
-        color: #d1d5db;
-        text-shadow: 0 2px 10px black;
+        text-shadow: 0 2px 10px #000;
         opacity: 0;
         transition: opacity 0.2s;
     }
 
-    #flashlightStatus {
+    #flashlight {
         position: absolute;
-        bottom: 20px;
         right: 20px;
+        bottom: 20px;
+        color: #777;
         font-size: 13px;
-        color: #9ca3af;
-        text-shadow: 0 2px 8px black;
+        text-shadow: 0 2px 8px #000;
     }
 
     #vignette {
         position: absolute;
         inset: 0;
-        pointer-events: none;
         background:
             radial-gradient(
                 circle,
-                transparent 25%,
-                rgba(0,0,0,0.25) 55%,
-                rgba(0,0,0,0.75) 100%
+                transparent 20%,
+                rgba(0, 0, 0, 0.2) 55%,
+                rgba(0, 0, 0, 0.85) 100%
             );
     }
 
-    #startScreen,
-    #gameOverScreen,
-    #winScreen {
+    .screen {
         position: absolute;
         inset: 0;
         display: flex;
@@ -148,36 +143,38 @@
         background:
             radial-gradient(
                 circle at center,
-                rgba(20,24,32,0.25),
-                rgba(0,0,0,0.92)
+                rgba(20, 23, 28, 0.25),
+                rgba(0, 0, 0, 0.96)
             );
         pointer-events: auto;
     }
 
-    #gameOverScreen,
+    #gameOver,
     #winScreen {
         display: none;
     }
 
     h1 {
-        margin: 0 0 10px;
+        margin: 0;
         font-size: 64px;
-        letter-spacing: 12px;
-        text-shadow: 0 0 30px rgba(255,255,255,0.15);
+        letter-spacing: 14px;
+        font-weight: 600;
     }
 
     .subtitle {
-        margin-bottom: 35px;
-        color: #9ca3af;
-        font-size: 15px;
+        margin-top: 12px;
+        margin-bottom: 32px;
+        color: #888;
+        font-size: 14px;
         text-align: center;
+        line-height: 1.7;
     }
 
     button {
-        padding: 13px 32px;
-        border: 1px solid #4b5563;
-        border-radius: 8px;
-        background: #111827;
+        padding: 13px 34px;
+        border: 1px solid #555;
+        border-radius: 7px;
+        background: #101216;
         color: white;
         font-size: 16px;
         cursor: pointer;
@@ -185,15 +182,15 @@
     }
 
     button:hover {
-        background: #1f2937;
+        background: #1b1e24;
     }
 
     .controls {
         margin-top: 25px;
-        color: #6b7280;
+        color: #555;
         font-size: 12px;
-        text-align: center;
         line-height: 1.8;
+        text-align: center;
     }
 
 </style>
@@ -212,11 +209,11 @@
         60.0
     </div>
 
-    <div id="loopCounter">
+    <div id="loop">
         LOOP 1
     </div>
 
-    <div id="status">
+    <div id="objective">
         FIND THE KEY
     </div>
 
@@ -226,13 +223,17 @@
 
     <div id="message"></div>
 
-    <div id="flashlightStatus">
-        Flashlight: OFF
+    <div id="flashlight">
+        Flashlight: NOT FOUND
     </div>
 
     <div id="vignette"></div>
 
-    <div id="startScreen">
+
+    <div
+        id="startScreen"
+        class="screen"
+    >
 
         <h1>LOOP</h1>
 
@@ -254,12 +255,16 @@
 
     </div>
 
-    <div id="gameOverScreen">
+
+    <div
+        id="gameOver"
+        class="screen"
+    >
 
         <h1>LOOP</h1>
 
         <div class="subtitle">
-            Time ran out.
+            The loop has ended.
         </div>
 
         <button id="restartButton">
@@ -268,16 +273,20 @@
 
     </div>
 
-    <div id="winScreen">
 
-        <h1>?</h1>
+    <div
+        id="winScreen"
+        class="screen"
+    >
+
+        <h1>LOOP</h1>
 
         <div class="subtitle">
-            You found the way out.
+            You escaped.
         </div>
 
-        <button id="winRestartButton">
-            PLAY AGAIN
+        <button id="winButton">
+            AGAIN
         </button>
 
     </div>
@@ -292,36 +301,16 @@
 
 
     /* =========================================================
-       BASIC SETUP
+       RENDERER
     ========================================================= */
 
     const canvas =
         document.getElementById("game");
 
-    const scene =
-        new THREE.Scene();
-
-    scene.background =
-        new THREE.Color(0x020307);
-
-
-    const camera =
-        new THREE.PerspectiveCamera(
-            75,
-            window.innerWidth /
-            window.innerHeight,
-            0.05,
-            100
-        );
-
-
-    camera.rotation.order =
-        "YXZ";
-
 
     const renderer =
         new THREE.WebGLRenderer({
-            canvas,
+            canvas: canvas,
             antialias: true
         });
 
@@ -343,34 +332,75 @@
     renderer.shadowMap.enabled =
         true;
 
+
     renderer.shadowMap.type =
         THREE.PCFSoftShadowMap;
 
 
     /* =========================================================
-       GAME STATE
+       SCENE
     ========================================================= */
 
-    const LOOP_TIME = 60;
+    const scene =
+        new THREE.Scene();
 
-    let running = false;
 
-    let won = false;
+    scene.background =
+        new THREE.Color(
+            0x020305
+        );
+
+
+    const camera =
+        new THREE.PerspectiveCamera(
+            75,
+            window.innerWidth /
+            window.innerHeight,
+            0.05,
+            100
+        );
+
+
+    camera.rotation.order =
+        "YXZ";
+
+
+    scene.add(
+        camera
+    );
+
+
+    /* =========================================================
+       STATE
+    ========================================================= */
+
+    let running =
+        false;
+
+    let won =
+        false;
 
     let timeRemaining =
-        LOOP_TIME;
+        60;
 
-    let loopNumber = 1;
+    let loopNumber =
+        1;
 
-    let lastTime = 0;
+    let lastTime =
+        0;
 
-    let mouseLocked = false;
+    let pointerLocked =
+        false;
 
-    let keyCollected = false;
 
-    let flashlightCollected = false;
+    let keyCollected =
+        false;
 
-    let flashlightOn = false;
+    let flashlightCollected =
+        false;
+
+    let flashlightOn =
+        false;
 
 
     /* =========================================================
@@ -383,14 +413,14 @@
             new THREE.Vector3(
                 0,
                 1.65,
-                6
+                5.2
             ),
 
         height: 1.65,
 
         radius: 0.28,
 
-        speed: 3.1,
+        speed: 3.0,
 
         yaw: 0,
 
@@ -437,19 +467,23 @@
                 event.preventDefault();
             }
 
-            if (event.code === "KeyE") {
 
-                if (!event.repeat) {
-                    interact();
-                }
+            if (
+                event.code === "KeyE" &&
+                !event.repeat
+            ) {
+
+                interact();
 
             }
 
-            if (event.code === "KeyF") {
 
-                if (!event.repeat) {
-                    toggleFlashlight();
-                }
+            if (
+                event.code === "KeyF" &&
+                !event.repeat
+            ) {
+
+                toggleFlashlight();
 
             }
 
@@ -495,7 +529,7 @@
 
 
     /* =========================================================
-       MOUSE LOOK
+       POINTER LOCK
     ========================================================= */
 
     canvas.addEventListener(
@@ -516,7 +550,7 @@
         "pointerlockchange",
         () => {
 
-            mouseLocked =
+            pointerLocked =
                 document.pointerLockElement === canvas;
 
         }
@@ -527,15 +561,23 @@
         "mousemove",
         event => {
 
-            if (!mouseLocked || !running) {
+            if (
+                !running ||
+                !pointerLocked
+            ) {
+
                 return;
+
             }
+
 
             player.yaw -=
                 event.movementX * 0.0022;
 
+
             player.pitch -=
                 event.movementY * 0.0022;
+
 
             player.pitch =
                 Math.max(
@@ -551,29 +593,45 @@
 
 
     /* =========================================================
-       AUDIO ENGINE
+       AUDIO
     ========================================================= */
 
-    let audioContext = null;
+    let audioContext =
+        null;
 
-    let masterGain = null;
+    let masterGain =
+        null;
 
-    let ambientGain = null;
+    let ambientGain =
+        null;
 
-    let audioStarted = false;
+    let audioReady =
+        false;
 
-    let lastFootstep = 0;
+    let nextStep =
+        0;
 
-    let ambientTimer = 0;
+    let nextAmbient =
+        5;
 
 
     function startAudio() {
 
-        if (audioStarted) {
+        if (audioReady) {
+
+            if (
+                audioContext.state ===
+                "suspended"
+            ) {
+
+                audioContext.resume();
+
+            }
+
             return;
+
         }
 
-        audioStarted = true;
 
         audioContext =
             new (
@@ -581,11 +639,14 @@
                 window.webkitAudioContext
             )();
 
+
         masterGain =
             audioContext.createGain();
 
+
         masterGain.gain.value =
             0.55;
+
 
         masterGain.connect(
             audioContext.destination
@@ -595,50 +656,66 @@
         ambientGain =
             audioContext.createGain();
 
+
         ambientGain.gain.value =
             0.035;
+
 
         ambientGain.connect(
             masterGain
         );
 
 
-        createAmbientHum();
-
-    }
-
-
-    function createAmbientHum() {
-
-        const oscillator =
+        const hum =
             audioContext.createOscillator();
 
-        const gain =
+
+        const humGain =
             audioContext.createGain();
 
-        oscillator.type =
+
+        hum.type =
             "sine";
 
-        oscillator.frequency.value =
-            46;
 
-        gain.gain.value =
+        hum.frequency.value =
+            47;
+
+
+        humGain.gain.value =
             0.08;
 
-        oscillator.connect(gain);
 
-        gain.connect(ambientGain);
+        hum.connect(
+            humGain
+        );
 
-        oscillator.start();
+
+        humGain.connect(
+            ambientGain
+        );
+
+
+        hum.start();
+
+
+        audioReady =
+            true;
 
     }
 
 
-    function playFootstep() {
+    function shortTone(
+        frequency,
+        duration,
+        volume,
+        type = "sine"
+    ) {
 
-        if (!audioStarted) {
+        if (!audioReady) {
             return;
         }
+
 
         const now =
             audioContext.currentTime;
@@ -647,335 +724,125 @@
         const oscillator =
             audioContext.createOscillator();
 
-        const gain =
-            audioContext.createGain();
-
-
-        oscillator.type =
-            "triangle";
-
-        oscillator.frequency.setValueAtTime(
-            90 + Math.random() * 35,
-            now
-        );
-
-        oscillator.frequency.exponentialRampToValueAtTime(
-            45,
-            now + 0.08
-        );
-
-
-        gain.gain.setValueAtTime(
-            0.0001,
-            now
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.08,
-            now + 0.008
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + 0.12
-        );
-
-
-        oscillator.connect(gain);
-
-        gain.connect(masterGain);
-
-        oscillator.start(now);
-
-        oscillator.stop(
-            now + 0.13
-        );
-
-    }
-
-
-    function playClick() {
-
-        if (!audioStarted) {
-            return;
-        }
-
-        const now =
-            audioContext.currentTime;
-
-        const oscillator =
-            audioContext.createOscillator();
 
         const gain =
             audioContext.createGain();
 
 
         oscillator.type =
-            "square";
+            type;
+
 
         oscillator.frequency.value =
-            850;
+            frequency;
 
 
         gain.gain.setValueAtTime(
-            0.04,
+            0.0001,
             now
         );
 
+
         gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + 0.05
+            volume,
+            now + 0.01
         );
 
 
-        oscillator.connect(gain);
+        gain.gain.exponentialRampToValueAtTime(
+            0.0001,
+            now + duration
+        );
 
-        gain.connect(masterGain);
 
-        oscillator.start(now);
+        oscillator.connect(
+            gain
+        );
+
+
+        gain.connect(
+            masterGain
+        );
+
+
+        oscillator.start(
+            now
+        );
+
 
         oscillator.stop(
-            now + 0.06
+            now + duration + 0.02
         );
 
     }
 
 
-    function playDrawerSound() {
+    function footstep() {
 
-        if (!audioStarted) {
-            return;
-        }
-
-        const now =
-            audioContext.currentTime;
-
-
-        const oscillator =
-            audioContext.createOscillator();
-
-        const gain =
-            audioContext.createGain();
-
-
-        oscillator.type =
-            "sawtooth";
-
-        oscillator.frequency.setValueAtTime(
-            100,
-            now
+        shortTone(
+            72 + Math.random() * 30,
+            0.11,
+            0.07,
+            "triangle"
         );
 
-        oscillator.frequency.linearRampToValueAtTime(
+    }
+
+
+    function drawerSound() {
+
+        shortTone(
+            95,
+            0.3,
+            0.1,
+            "sawtooth"
+        );
+
+    }
+
+
+    function keySound() {
+
+        shortTone(
+            650,
+            0.18,
+            0.08
+        );
+
+        setTimeout(
+            () => {
+
+                shortTone(
+                    900,
+                    0.22,
+                    0.07
+                );
+
+            },
+            100
+        );
+
+    }
+
+
+    function doorSound() {
+
+        shortTone(
             55,
-            now + 0.25
-        );
-
-
-        gain.gain.setValueAtTime(
-            0.0001,
-            now
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
+            0.7,
             0.12,
-            now + 0.03
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + 0.3
-        );
-
-
-        oscillator.connect(gain);
-
-        gain.connect(masterGain);
-
-        oscillator.start(now);
-
-        oscillator.stop(
-            now + 0.32
+            "sawtooth"
         );
 
     }
 
 
-    function playKeySound() {
+    function strangeAmbient() {
 
-        if (!audioStarted) {
-            return;
-        }
-
-        const now =
-            audioContext.currentTime;
-
-
-        const oscillator =
-            audioContext.createOscillator();
-
-        const gain =
-            audioContext.createGain();
-
-
-        oscillator.type =
-            "sine";
-
-        oscillator.frequency.setValueAtTime(
-            500,
-            now
-        );
-
-        oscillator.frequency.exponentialRampToValueAtTime(
-            900,
-            now + 0.25
-        );
-
-
-        gain.gain.setValueAtTime(
-            0.0001,
-            now
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.12,
-            now + 0.02
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + 0.35
-        );
-
-
-        oscillator.connect(gain);
-
-        gain.connect(masterGain);
-
-        oscillator.start(now);
-
-        oscillator.stop(
-            now + 0.4
-        );
-
-    }
-
-
-    function playDoorSound() {
-
-        if (!audioStarted) {
-            return;
-        }
-
-        const now =
-            audioContext.currentTime;
-
-
-        const oscillator =
-            audioContext.createOscillator();
-
-        const gain =
-            audioContext.createGain();
-
-
-        oscillator.type =
-            "sawtooth";
-
-        oscillator.frequency.setValueAtTime(
-            65,
-            now
-        );
-
-        oscillator.frequency.linearRampToValueAtTime(
-            30,
-            now + 0.65
-        );
-
-
-        gain.gain.setValueAtTime(
-            0.0001,
-            now
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.16,
-            now + 0.05
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + 0.75
-        );
-
-
-        oscillator.connect(gain);
-
-        gain.connect(masterGain);
-
-        oscillator.start(now);
-
-        oscillator.stop(
-            now + 0.8
-        );
-
-    }
-
-
-    function playCreepySound() {
-
-        if (!audioStarted) {
-            return;
-        }
-
-        const now =
-            audioContext.currentTime;
-
-
-        const oscillator =
-            audioContext.createOscillator();
-
-        const gain =
-            audioContext.createGain();
-
-
-        oscillator.type =
-            "sine";
-
-        oscillator.frequency.setValueAtTime(
-            160,
-            now
-        );
-
-        oscillator.frequency.exponentialRampToValueAtTime(
-            42,
-            now + 2.5
-        );
-
-
-        gain.gain.setValueAtTime(
-            0.0001,
-            now
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.05,
-            now + 0.8
-        );
-
-        gain.gain.exponentialRampToValueAtTime(
-            0.0001,
-            now + 2.7
-        );
-
-
-        oscillator.connect(gain);
-
-        gain.connect(masterGain);
-
-        oscillator.start(now);
-
-        oscillator.stop(
-            now + 2.8
+        shortTone(
+            130,
+            2.2,
+            0.035
         );
 
     }
@@ -998,6 +865,7 @@
 
     flashlight.castShadow =
         true;
+
 
     flashlight.shadow.mapSize.width =
         512;
@@ -1024,14 +892,11 @@
         flashlightTarget;
 
 
-    scene.add(
-        camera
-    );
-
-
     function updateFlashlight() {
 
-        if (!flashlightOn) {
+        if (
+            !flashlightOn
+        ) {
 
             flashlight.intensity =
                 0;
@@ -1052,6 +917,7 @@
                 -1
             );
 
+
         direction.applyQuaternion(
             camera.quaternion
         );
@@ -1071,21 +937,34 @@
 
     function toggleFlashlight() {
 
-        if (!flashlightCollected) {
+        if (
+            !flashlightCollected
+        ) {
+
             return;
+
         }
+
 
         flashlightOn =
             !flashlightOn;
 
+
         document.getElementById(
-            "flashlightStatus"
+            "flashlight"
         ).textContent =
             flashlightOn
                 ? "Flashlight: ON"
                 : "Flashlight: OFF";
 
-        playClick();
+
+        shortTone(
+            flashlightOn
+                ? 500
+                : 250,
+            0.06,
+            0.04
+        );
 
     }
 
@@ -1096,49 +975,42 @@
 
     const wallMaterial =
         new THREE.MeshStandardMaterial({
-            color: 0x20242b,
-            roughness: 0.9
+            color: 0x1b1e23,
+            roughness: 0.95
         });
 
 
     const floorMaterial =
         new THREE.MeshStandardMaterial({
-            color: 0x111419,
+            color: 0x0d0f12,
             roughness: 1
         });
 
 
     const ceilingMaterial =
         new THREE.MeshStandardMaterial({
-            color: 0x090b0f,
+            color: 0x07080a,
             roughness: 1
         });
 
 
     const woodMaterial =
         new THREE.MeshStandardMaterial({
-            color: 0x28231f,
-            roughness: 0.85
-        });
-
-
-    const darkWoodMaterial =
-        new THREE.MeshStandardMaterial({
-            color: 0x151311,
+            color: 0x25201c,
             roughness: 0.9
         });
 
 
     const metalMaterial =
         new THREE.MeshStandardMaterial({
-            color: 0x353940,
-            roughness: 0.7,
+            color: 0x30343a,
+            roughness: 0.8,
             metalness: 0.25
         });
 
 
     /* =========================================================
-       HELPERS
+       COLLISION
     ========================================================= */
 
     const collisionBoxes = [];
@@ -1152,20 +1024,16 @@
         height,
         depth,
         material,
-        collide = true
+        collision = true
     ) {
-
-        const geometry =
-            new THREE.BoxGeometry(
-                width,
-                height,
-                depth
-            );
-
 
         const mesh =
             new THREE.Mesh(
-                geometry,
+                new THREE.BoxGeometry(
+                    width,
+                    height,
+                    depth
+                ),
                 material
             );
 
@@ -1180,22 +1048,29 @@
         mesh.castShadow =
             true;
 
+
         mesh.receiveShadow =
             true;
 
 
-        scene.add(mesh);
+        scene.add(
+            mesh
+        );
 
 
-        if (collide) {
+        if (collision) {
 
             collisionBoxes.push({
-                x,
-                z,
+
+                x: x,
+                z: z,
+
                 halfWidth:
                     width / 2,
+
                 halfDepth:
                     depth / 2
+
             });
 
         }
@@ -1213,7 +1088,7 @@
         depth
     ) {
 
-        return addBox(
+        addBox(
             x,
             0,
             z,
@@ -1227,13 +1102,79 @@
     }
 
 
+    function collidesAt(
+        x,
+        z
+    ) {
+
+        for (
+            const box of collisionBoxes
+        ) {
+
+            const closestX =
+                Math.max(
+                    box.x -
+                    box.halfWidth,
+
+                    Math.min(
+                        x,
+                        box.x +
+                        box.halfWidth
+                    )
+                );
+
+
+            const closestZ =
+                Math.max(
+                    box.z -
+                    box.halfDepth,
+
+                    Math.min(
+                        z,
+                        box.z +
+                        box.halfDepth
+                    )
+                );
+
+
+            const dx =
+                x -
+                closestX;
+
+
+            const dz =
+                z -
+                closestZ;
+
+
+            if (
+                dx * dx +
+                dz * dz <
+                player.radius *
+                player.radius
+            ) {
+
+                return true;
+
+            }
+
+        }
+
+
+        return false;
+
+    }
+
+
     /* =========================================================
        OFFICE
     ========================================================= */
 
-    const OFFICE_WIDTH = 12;
+    const officeWidth =
+        12;
 
-    const OFFICE_DEPTH = 15;
+    const officeDepth =
+        15;
 
 
     function buildOffice() {
@@ -1241,39 +1182,33 @@
         addFloor(
             0,
             0,
-            OFFICE_WIDTH,
-            OFFICE_DEPTH
+            officeWidth,
+            officeDepth
         );
 
-
-        /* Ceiling */
 
         addBox(
             0,
             3.4,
             0,
-            OFFICE_WIDTH,
+            officeWidth,
             0.2,
-            OFFICE_DEPTH,
+            officeDepth,
             ceilingMaterial,
             false
         );
 
 
-        /* Back wall */
-
         addBox(
             0,
             1.7,
             -7.4,
-            OFFICE_WIDTH,
+            officeWidth,
             3.4,
             0.25,
             wallMaterial
         );
 
-
-        /* Left wall */
 
         addBox(
             -5.9,
@@ -1281,12 +1216,10 @@
             0,
             0.25,
             3.4,
-            OFFICE_DEPTH,
+            officeDepth,
             wallMaterial
         );
 
-
-        /* Right wall */
 
         addBox(
             5.9,
@@ -1294,94 +1227,66 @@
             0,
             0.25,
             3.4,
-            OFFICE_DEPTH,
+            officeDepth,
             wallMaterial
         );
 
 
-        /*
-            Front wall with central opening.
-        */
+        /* Front wall with opening */
 
         addBox(
-            -3.8,
+            -4,
             1.7,
             7.4,
-            4.2,
-            3.4,
-            0.25,
-            wallMaterial
-        );
-
-
-        addBox(
             3.8,
-            1.7,
-            7.4,
-            4.2,
             3.4,
             0.25,
             wallMaterial
         );
 
 
-        /* =====================================================
-           DOORWAY TO MAZE
-        ===================================================== */
+        addBox(
+            4,
+            1.7,
+            7.4,
+            3.8,
+            3.4,
+            0.25,
+            wallMaterial
+        );
+
 
         addBox(
             0,
-            3.0,
+            3,
             7.4,
-            3.2,
+            4.2,
             0.8,
             0.25,
             wallMaterial
         );
 
 
-        const mazeSign =
-            makeTextSprite(
-                "MAZE",
-                "#dddddd",
-                1.2
-            );
-
-
-        mazeSign.position.set(
-            0,
-            2.45,
-            7.05
-        );
-
-
-        scene.add(
-            mazeSign
-        );
-
-
-        /* =====================================================
-           DESK
-        ===================================================== */
+        /* Desk */
 
         addBox(
-            -2.7,
-            1.05,
-            -1.6,
+            -2.8,
+            1,
+            -1.8,
             3.8,
-            0.18,
-            1.5,
+            0.2,
+            1.4,
             woodMaterial
         );
 
 
         addBox(
-            -4.15,
+            -4.35,
             0.5,
-            -1.6,
-            0.18,
+            -1.8,
+            0.2,
             1,
-            1.3,
+            1.2,
             woodMaterial
         );
 
@@ -1389,10 +1294,10 @@
         addBox(
             -1.25,
             0.5,
-            -1.6,
-            0.18,
+            -1.8,
+            0.2,
             1,
-            1.3,
+            1.2,
             woodMaterial
         );
 
@@ -1400,212 +1305,144 @@
         /* Monitor */
 
         addBox(
-            -2.7,
+            -2.8,
             1.65,
-            -1.75,
-            1.55,
-            0.9,
-            0.12,
+            -1.9,
+            1.5,
+            0.85,
+            0.1,
             metalMaterial,
             false
         );
 
 
         addBox(
-            -2.7,
-            1.15,
-            -1.75,
-            0.12,
+            -2.8,
+            1.2,
+            -1.9,
+            0.1,
             0.35,
-            0.12,
+            0.1,
             metalMaterial,
             false
         );
 
 
-        const monitorScreen =
-            addBox(
-                -2.7,
-                1.65,
-                -1.67,
-                1.35,
-                0.7,
-                0.02,
-                new THREE.MeshStandardMaterial({
-                    color: 0x050709,
-                    emissive: 0x020304
-                }),
-                false
-            );
-
-
-        /* Keyboard */
+        /* Chair */
 
         addBox(
-            -2.7,
-            1.17,
-            -0.85,
-            1.1,
-            0.05,
-            0.4,
-            metalMaterial,
-            false
-        );
-
-
-        /* =====================================================
-           CHAIR
-        ===================================================== */
-
-        addBox(
-            -2.7,
+            -2.8,
             0.7,
-            0.2,
-            1.15,
+            0.1,
+            1.1,
             0.18,
-            1.15,
-            darkWoodMaterial,
+            1.1,
+            woodMaterial,
             false
         );
 
 
         addBox(
-            -2.7,
-            1.35,
-            0.65,
-            0.95,
+            -2.8,
+            1.3,
+            0.55,
+            0.9,
             1.1,
             0.15,
-            darkWoodMaterial,
+            woodMaterial,
             false
         );
 
 
-        /* =====================================================
-           BOOKSHELF
-        ===================================================== */
+        /* Shelves */
 
-        createBookshelf(
+        createShelf(
             3.9,
-            -4.8
+            -4.7
         );
 
 
-        createBookshelf(
+        createShelf(
             3.9,
-            -1.2
+            -1.0
         );
 
 
-        /* =====================================================
-           FILING CABINET
-        ===================================================== */
+        /* Cabinets */
 
-        createFilingCabinet(
+        createCabinet(
             -4.1,
-            3.7
+            3.8
         );
 
 
-        /* =====================================================
-           LAMP
-        ===================================================== */
+        createCabinet(
+            3.9,
+            2.5
+        );
 
-        const lampLight =
-            new THREE.PointLight(
-                0xffc477,
-                0.7,
-                5
+
+        /* MAZE SIGN */
+
+        const sign =
+            makeText(
+                "MAZE",
+                0.8,
+                "#777777"
             );
 
 
-        lampLight.position.set(
-            -2.7,
-            2.1,
-            -1.6
+        sign.position.set(
+            0,
+            2.45,
+            7.05
         );
 
-
-        lampLight.castShadow =
-            true;
 
         scene.add(
-            lampLight
-        );
-
-
-        const lamp =
-            addBox(
-                -2.7,
-                1.95,
-                -1.6,
-                0.25,
-                0.45,
-                0.25,
-                metalMaterial,
-                false
-            );
-
-
-        /* =====================================================
-           FLASHLIGHT CABINET
-        ===================================================== */
-
-        createSpecialCabinet(
-            3.9,
-            2.6
+            sign
         );
 
     }
 
 
     /* =========================================================
-       BOOKSHELF
+       SHELVES
     ========================================================= */
 
-    const shelfObjects = [];
+    const shelves = [];
 
 
-    function createBookshelf(
+    function createShelf(
         x,
         z
     ) {
 
-        const width = 1.5;
-
-        const height = 2.7;
-
-        const depth = 0.45;
-
-
         addBox(
             x,
-            height / 2,
+            1.4,
             z,
-            width,
-            height,
-            depth,
-            darkWoodMaterial
+            1.5,
+            2.8,
+            0.45,
+            woodMaterial
         );
 
 
-        const shelfYs = [
-            0.55,
-            1.15,
-            1.75,
-            2.35
-        ];
-
-
-        for (const y of shelfYs) {
+        for (
+            let row = 0;
+            row < 4;
+            row++
+        ) {
 
             addBox(
                 x,
-                y,
-                z - 0.05,
-                width - 0.1,
+                0.55 +
+                row * 0.6,
+                z - 0.25,
+                1.35,
                 0.08,
-                depth + 0.05,
+                0.5,
                 woodMaterial,
                 false
             );
@@ -1613,20 +1450,14 @@
         }
 
 
-        const shelf =
-            {
-                x,
-                z,
-                searched: false
-            };
+        shelves.push({
 
+            x: x,
+            z: z,
+            searched: false
 
-        shelfObjects.push(
-            shelf
-        );
+        });
 
-
-        /* Random-looking books */
 
         for (
             let row = 0;
@@ -1640,31 +1471,31 @@
                 i++
             ) {
 
-                const bookHeight =
-                    0.35 +
-                    Math.random() * 0.2;
+                addBox(
+                    x -
+                    0.5 +
+                    i * 0.25,
 
-                const book =
-                    addBox(
-                        x - 0.55 +
-                        i * 0.25,
-                        0.65 +
-                        row * 0.6,
-                        z - 0.3,
-                        0.16,
-                        bookHeight,
-                        new THREE.MeshStandardMaterial({
-                            color:
-                                0x292d32 +
-                                Math.floor(
-                                    Math.random() * 0x080808
-                                )
-                        }),
-                        false
-                    );
+                    0.72 +
+                    row * 0.6,
 
-                book.rotation.z =
-                    (Math.random() - 0.5) * 0.08;
+                    z - 0.29,
+
+                    0.14,
+
+                    0.38 +
+                    Math.random() *
+                    0.12,
+
+                    0.12,
+
+                    new THREE.MeshStandardMaterial({
+                        color:
+                            0x292b2e
+                    }),
+
+                    false
+                );
 
             }
 
@@ -1674,46 +1505,13 @@
 
 
     /* =========================================================
-       FILING CABINET / DRAWERS
+       DRAWERS
     ========================================================= */
 
     const drawers = [];
 
 
-    function createFilingCabinet(
-        x,
-        z
-    ) {
-
-        addBox(
-            x,
-            1.25,
-            z,
-            1.35,
-            2.5,
-            0.75,
-            metalMaterial
-        );
-
-
-        for (
-            let i = 0;
-            i < 4;
-            i++
-        ) {
-
-            createDrawer(
-                x,
-                z - 0.4,
-                0.45 + i * 0.55
-            );
-
-        }
-
-    }
-
-
-    function createSpecialCabinet(
+    function createCabinet(
         x,
         z
     ) {
@@ -1722,9 +1520,9 @@
             x,
             1.2,
             z,
-            1.35,
+            1.3,
             2.4,
-            0.75,
+            0.7,
             metalMaterial
         );
 
@@ -1735,10 +1533,17 @@
             i++
         ) {
 
-            createDrawer(
-                x,
-                z - 0.4,
-                0.45 + i * 0.55
+            const drawer =
+                createDrawer(
+                    x,
+                    z,
+                    0.45 +
+                    i * 0.53
+                );
+
+
+            drawers.push(
+                drawer
             );
 
         }
@@ -1763,46 +1568,39 @@
         );
 
 
-        const drawerMesh =
+        const body =
             new THREE.Mesh(
                 new THREE.BoxGeometry(
-                    1.15,
-                    0.4,
-                    0.65
+                    1.1,
+                    0.38,
+                    0.62
                 ),
                 metalMaterial
             );
 
 
-        drawerMesh.castShadow =
-            true;
-
-
-        drawerMesh.receiveShadow =
+        body.castShadow =
             true;
 
 
         group.add(
-            drawerMesh
+            body
         );
 
 
         const handle =
             new THREE.Mesh(
                 new THREE.BoxGeometry(
-                    0.35,
-                    0.06,
-                    0.08
+                    0.32,
+                    0.05,
+                    0.07
                 ),
                 metalMaterial
             );
 
 
-        handle.position.set(
-            0,
-            0,
-            -0.37
-        );
+        handle.position.z =
+            -0.35;
 
 
         group.add(
@@ -1815,47 +1613,39 @@
         );
 
 
-        const drawer =
-            {
-                group,
-                open: false,
-                targetZ: z,
-                hasKey: false,
-                hasFlashlight: false
-            };
+        return {
 
+            group: group,
 
-        drawers.push(
-            drawer
-        );
+            baseZ: z,
+
+            open: false,
+
+            containsKey: false,
+
+            containsFlashlight: false
+
+        };
 
     }
 
 
-    /*
-        Put important items into fixed drawers.
-        This means they ALWAYS exist.
-    */
+    /* =========================================================
+       IMPORTANT DRAWERS
+    ========================================================= */
 
-    const keyDrawer =
-        drawers[2];
+    let keyDrawer =
+        null;
 
-
-    const flashlightDrawer =
-        drawers[6];
-
-
-    keyDrawer.hasKey = true;
-
-    flashlightDrawer.hasFlashlight =
-        true;
+    let flashlightDrawer =
+        null;
 
 
     /* =========================================================
-       KEY MODEL
+       KEY
     ========================================================= */
 
-    const keyGroup =
+    const key =
         new THREE.Group();
 
 
@@ -1865,17 +1655,17 @@
                 0.11,
                 0.025,
                 8,
-                18
+                16
             ),
             new THREE.MeshStandardMaterial({
-                color: 0xd8b24a,
+                color: 0xd4ae4d,
                 metalness: 0.8,
                 roughness: 0.25
             })
         );
 
 
-    keyGroup.add(
+    key.add(
         keyRing
     );
 
@@ -1883,130 +1673,62 @@
     const keyStem =
         new THREE.Mesh(
             new THREE.BoxGeometry(
-                0.22,
+                0.25,
                 0.035,
                 0.035
             ),
             new THREE.MeshStandardMaterial({
-                color: 0xd8b24a,
+                color: 0xd4ae4d,
                 metalness: 0.8,
                 roughness: 0.25
             })
         );
 
 
+    keyStem.position.x =
+        0.14;
+
+
     keyStem.rotation.z =
         Math.PI / 2;
 
 
-    keyStem.position.x =
-        0.13;
-
-
-    keyGroup.add(
+    key.add(
         keyStem
     );
 
 
-    keyGroup.visible =
+    key.visible =
         false;
 
 
     scene.add(
-        keyGroup
+        key
     );
-
-
-    function updateKeyPosition() {
-
-        if (
-            !keyDrawer.open ||
-            keyCollected
-        ) {
-
-            keyGroup.visible =
-                false;
-
-            return;
-
-        }
-
-
-        keyGroup.visible =
-            true;
-
-
-        keyGroup.position.set(
-            keyDrawer.group.position.x,
-            keyDrawer.group.position.y + 0.24,
-            keyDrawer.group.position.z - 0.05
-        );
-
-
-        keyGroup.rotation.y +=
-            0.01;
-
-    }
 
 
     /* =========================================================
-       FLASHLIGHT MODEL
+       FLASHLIGHT ITEM
     ========================================================= */
 
     const flashlightItem =
-        new THREE.Group();
-
-
-    const flashlightBody =
         new THREE.Mesh(
             new THREE.CylinderGeometry(
-                0.07,
-                0.07,
-                0.4,
-                12
-            ),
-            new THREE.MeshStandardMaterial({
-                color: 0x17191c,
-                metalness: 0.5,
-                roughness: 0.4
-            })
-        );
-
-
-    flashlightBody.rotation.z =
-        Math.PI / 2;
-
-
-    flashlightItem.add(
-        flashlightBody
-    );
-
-
-    const flashlightLens =
-        new THREE.Mesh(
-            new THREE.CircleGeometry(
                 0.065,
+                0.065,
+                0.38,
                 12
             ),
             new THREE.MeshStandardMaterial({
-                color: 0xffffff,
-                emissive: 0xffffff,
-                emissiveIntensity: 2
+                color: 0x111315,
+                metalness: 0.6,
+                roughness: 0.35
             })
         );
 
 
-    flashlightLens.rotation.y =
-        -Math.PI / 2;
-
-
-    flashlightLens.position.x =
-        0.205;
-
-
-    flashlightItem.add(
-        flashlightLens
-    );
+    flashlightItem.rotation.z =
+        Math.PI / 2;
 
 
     flashlightItem.visible =
@@ -2016,38 +1738,6 @@
     scene.add(
         flashlightItem
     );
-
-
-    function updateFlashlightItem() {
-
-        if (
-            !flashlightDrawer.open ||
-            flashlightCollected
-        ) {
-
-            flashlightItem.visible =
-                false;
-
-            return;
-
-        }
-
-
-        flashlightItem.visible =
-            true;
-
-
-        flashlightItem.position.set(
-            flashlightDrawer.group.position.x,
-            flashlightDrawer.group.position.y + 0.22,
-            flashlightDrawer.group.position.z - 0.04
-        );
-
-
-        flashlightItem.rotation.y +=
-            0.008;
-
-    }
 
 
     /* =========================================================
@@ -2073,30 +1763,33 @@
     ];
 
 
-    const MAZE_CELL = 1;
+    const mazeCell =
+        1;
+
 
     const mazeRows =
         maze.length;
 
+
     const mazeColumns =
         maze[0].length;
 
-    const mazeWidth =
-        mazeColumns * MAZE_CELL;
 
     const mazeOriginX =
-        -mazeWidth / 2 +
-        MAZE_CELL / 2;
+        -mazeColumns / 2 +
+        0.5;
+
 
     const mazeStartZ =
         8.1;
 
+
     const mazeOriginZ =
         mazeStartZ +
-        MAZE_CELL / 2;
+        0.5;
 
 
-    const mazeWalls = [];
+    const mazeCells = [];
 
 
     function buildMaze() {
@@ -2119,65 +1812,33 @@
 
                 const x =
                     mazeOriginX +
-                    col * MAZE_CELL;
+                    col;
+
 
                 const z =
                     mazeOriginZ +
-                    row * MAZE_CELL;
+                    row;
 
 
-                if (cell === "#") {
+                if (
+                    cell === "#"
+                ) {
 
                     addBox(
                         x,
                         1.5,
                         z,
-                        MAZE_CELL,
+                        1,
                         3,
-                        MAZE_CELL,
+                        1,
                         wallMaterial
                     );
 
 
-                    mazeWalls.push({
+                    mazeCells.push({
                         x,
                         z
                     });
-
-                }
-
-
-                if (cell === "S") {
-
-                    const sign =
-                        makeTextSprite(
-                            "ENTER",
-                            "#aaaaaa",
-                            0.6
-                        );
-
-
-                    sign.position.set(
-                        x,
-                        2.4,
-                        z
-                    );
-
-
-                    scene.add(
-                        sign
-                    );
-
-                }
-
-
-                if (cell === "K") {
-
-                    mazeKey.position.set(
-                        x,
-                        0.35,
-                        z
-                    );
 
                 }
 
@@ -2188,14 +1849,12 @@
 
         addFloor(
             0,
-            mazeStartZ +
-            mazeRows / 2,
-            mazeWidth,
+            mazeOriginZ +
+            mazeRows / 2 -
+            0.5,
+            mazeColumns,
             mazeRows
         );
-
-
-        createMazeExit();
 
     }
 
@@ -2212,8 +1871,8 @@
                 12
             ),
             new THREE.MeshStandardMaterial({
-                color: 0xb8d4ff,
-                emissive: 0x355caa,
+                color: 0x8ea9d8,
+                emissive: 0x253d70,
                 emissiveIntensity: 2
             })
         );
@@ -2228,128 +1887,340 @@
     );
 
 
+    const mazeKeyRow =
+        11;
+
+
+    const mazeKeyColumn =
+        12;
+
+
+    mazeKey.position.set(
+
+        mazeOriginX +
+        mazeKeyColumn,
+
+        0.3,
+
+        mazeOriginZ +
+        mazeKeyRow
+
+    );
+
+
     /* =========================================================
-       MAZE EXIT
+       EXIT
     ========================================================= */
 
-    let exitObject = null;
+    const exitZ =
+        mazeOriginZ +
+        mazeRows -
+        1;
 
 
-    function createMazeExit() {
-
-        const exitZ =
-            mazeOriginZ +
-            (mazeRows - 1) *
-            MAZE_CELL;
+    const exitGroup =
+        new THREE.Group();
 
 
-        const exitFrame =
-            new THREE.Group();
-
-
-        const left =
-            new THREE.Mesh(
-                new THREE.BoxGeometry(
-                    0.12,
-                    2.4,
-                    0.12
-                ),
-                metalMaterial
-            );
-
-
-        left.position.x =
-            -1.1;
-
-
-        left.position.y =
-            1.2;
-
-
-        const right =
-            left.clone();
-
-
-        right.position.x =
-            1.1;
-
-
-        const top =
-            new THREE.Mesh(
-                new THREE.BoxGeometry(
-                    2.3,
-                    0.12,
-                    0.12
-                ),
-                metalMaterial
-            );
-
-
-        top.position.y =
-            2.4;
-
-
-        exitFrame.add(
-            left
-        );
-
-        exitFrame.add(
-            right
-        );
-
-        exitFrame.add(
-            top
+    const exitLeft =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                0.12,
+                2.5,
+                0.12
+            ),
+            metalMaterial
         );
 
 
-        exitFrame.position.set(
-            0,
-            0,
-            exitZ + 0.15
+    exitLeft.position.set(
+        -1.05,
+        1.25,
+        0
+    );
+
+
+    const exitRight =
+        exitLeft.clone();
+
+
+    exitRight.position.x =
+        1.05;
+
+
+    const exitTop =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                2.2,
+                0.12,
+                0.12
+            ),
+            metalMaterial
         );
 
 
-        scene.add(
-            exitFrame
+    exitTop.position.y =
+        2.5;
+
+
+    exitGroup.add(
+        exitLeft
+    );
+
+    exitGroup.add(
+        exitRight
+    );
+
+    exitGroup.add(
+        exitTop
+    );
+
+
+    exitGroup.position.set(
+        0,
+        0,
+        exitZ + 0.25
+    );
+
+
+    scene.add(
+        exitGroup
+    );
+
+
+    const exitText =
+        makeText(
+            "EXIT",
+            0.7,
+            "#772222"
         );
 
 
-        const exitSign =
-            makeTextSprite(
-                "EXIT",
-                "#aa2222",
-                0.8
-            );
+    exitText.position.set(
+        0,
+        2.8,
+        exitZ + 0.1
+    );
 
 
-        exitSign.position.set(
-            0,
-            2.7,
-            exitZ + 0.05
+    scene.add(
+        exitText
+    );
+
+
+    /* =========================================================
+       HIDDEN MAZE EVENT
+    ========================================================= */
+
+    const watcher =
+        new THREE.Group();
+
+
+    const watcherBody =
+        new THREE.Mesh(
+            new THREE.CylinderGeometry(
+                0.22,
+                0.3,
+                1.75,
+                8
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x030303,
+                roughness: 1
+            })
         );
 
 
-        scene.add(
-            exitSign
+    watcherBody.position.y =
+        1.0;
+
+
+    watcher.add(
+        watcherBody
+    );
+
+
+    const watcherHead =
+        new THREE.Mesh(
+            new THREE.SphereGeometry(
+                0.22,
+                12,
+                12
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x020202,
+                roughness: 1
+            })
         );
 
 
-        exitObject = {
-            x: 0,
-            z: exitZ + 0.15
-        };
+    watcherHead.position.y =
+        2.0;
+
+
+    watcher.add(
+        watcherHead
+    );
+
+
+    /*
+        The object starts completely hidden.
+        Its behaviour is handled separately.
+    */
+
+    watcher.visible =
+        false;
+
+
+    scene.add(
+        watcher
+    );
+
+
+    const watcherSpots = [
+
+        {
+            x: -1.5,
+            z: 11.1
+        },
+
+        {
+            x: 2.5,
+            z: 13.1
+        },
+
+        {
+            x: -2.5,
+            z: 16.1
+        },
+
+        {
+            x: 3.5,
+            z: 18.1
+        },
+
+        {
+            x: -3.5,
+            z: 20.1
+        }
+
+    ];
+
+
+    let watcherActive =
+        false;
+
+    let watcherTimer =
+        0;
+
+    let watcherIndex =
+        -1;
+
+
+    function updateWatcher(
+        dt
+    ) {
+
+        if (
+            !keyCollected ||
+            player.position.z <
+            mazeStartZ
+        ) {
+
+            watcher.visible =
+                false;
+
+            watcherActive =
+                false;
+
+            return;
+
+        }
+
+
+        watcherTimer -=
+            dt;
+
+
+        if (
+            watcherTimer <= 0 &&
+            !watcherActive
+        ) {
+
+            watcherTimer =
+                6 +
+                Math.random() * 10;
+
+
+            if (
+                Math.random() <
+                0.45
+            ) {
+
+                watcherIndex =
+                    Math.floor(
+                        Math.random() *
+                        watcherSpots.length
+                    );
+
+
+                const spot =
+                    watcherSpots[
+                        watcherIndex
+                    ];
+
+
+                watcher.position.set(
+                    spot.x,
+                    0,
+                    spot.z
+                );
+
+
+                watcher.lookAt(
+                    player.position.x,
+                    1.2,
+                    player.position.z
+                );
+
+
+                watcher.visible =
+                    true;
+
+
+                watcherActive =
+                    true;
+
+
+                setTimeout(
+                    () => {
+
+                        watcher.visible =
+                            false;
+
+                        watcherActive =
+                            false;
+
+                    },
+                    900 +
+                    Math.random() * 1000
+                );
+
+            }
+
+        }
 
     }
 
 
     /* =========================================================
-       TEXT SPRITES
+       TEXT
     ========================================================= */
 
-    function makeTextSprite(
+    function makeText(
         text,
-        color,
-        size
+        size,
+        color
     ) {
 
         const canvas =
@@ -2365,39 +2236,40 @@
             128;
 
 
-        const context =
+        const ctx =
             canvas.getContext(
                 "2d"
             );
 
 
-        context.clearRect(
+        ctx.clearRect(
             0,
             0,
-            canvas.width,
-            canvas.height
+            512,
+            128
         );
 
 
-        context.font =
+        ctx.font =
             "bold 64px Arial";
 
 
-        context.textAlign =
+        ctx.textAlign =
             "center";
 
-        context.textBaseline =
+
+        ctx.textBaseline =
             "middle";
 
 
-        context.fillStyle =
+        ctx.fillStyle =
             color;
 
 
-        context.fillText(
+        ctx.fillText(
             text,
-            canvas.width / 2,
-            canvas.height / 2
+            256,
+            64
         );
 
 
@@ -2433,77 +2305,371 @@
 
 
     /* =========================================================
-       COLLISION
+       DRAWER SETUP
     ========================================================= */
 
-    function circleIntersectsBox(
-        px,
-        pz,
-        radius,
-        box
-    ) {
+    function setupImportantDrawers() {
 
-        const closestX =
-            Math.max(
-                box.x - box.halfWidth,
-                Math.min(
-                    px,
-                    box.x + box.halfWidth
-                )
-            );
+        /*
+            Cabinet 1 contains four drawers.
+            Cabinet 2 contains four drawers.
+
+            These are fixed rather than random,
+            so the items can never fail to spawn.
+        */
+
+        keyDrawer =
+            drawers[1];
 
 
-        const closestZ =
-            Math.max(
-                box.z - box.halfDepth,
-                Math.min(
-                    pz,
-                    box.z + box.halfDepth
-                )
-            );
+        flashlightDrawer =
+            drawers[6];
 
 
-        const dx =
-            px - closestX;
-
-        const dz =
-            pz - closestZ;
+        keyDrawer.containsKey =
+            true;
 
 
-        return (
-            dx * dx +
-            dz * dz
-        ) < radius * radius;
+        flashlightDrawer.containsFlashlight =
+            true;
 
     }
 
 
-    function collidesAt(
-        x,
-        z
+    /* =========================================================
+       DRAWER UPDATE
+    ========================================================= */
+
+    function updateDrawers(
+        dt
     ) {
 
         for (
-            const box of collisionBoxes
+            const drawer of drawers
         ) {
 
+            const target =
+                drawer.open
+                    ? drawer.baseZ - 0.48
+                    : drawer.baseZ;
+
+
+            drawer.group.position.z =
+                THREE.MathUtils.lerp(
+                    drawer.group.position.z,
+                    target,
+                    Math.min(
+                        1,
+                        dt * 12
+                    )
+                );
+
+        }
+
+
+        if (
+            keyDrawer &&
+            keyDrawer.open &&
+            !keyCollected
+        ) {
+
+            key.visible =
+                true;
+
+
+            key.position.set(
+                keyDrawer.group.position.x,
+                keyDrawer.group.position.y + 0.23,
+                keyDrawer.group.position.z - 0.08
+            );
+
+
+            key.rotation.y +=
+                dt * 1.5;
+
+        }
+        else {
+
+            key.visible =
+                false;
+
+        }
+
+
+        if (
+            flashlightDrawer &&
+            flashlightDrawer.open &&
+            !flashlightCollected
+        ) {
+
+            flashlightItem.visible =
+                true;
+
+
+            flashlightItem.position.set(
+                flashlightDrawer.group.position.x,
+                flashlightDrawer.group.position.y + 0.23,
+                flashlightDrawer.group.position.z - 0.08
+            );
+
+        }
+        else {
+
+            flashlightItem.visible =
+                false;
+
+        }
+
+    }
+
+
+    /* =========================================================
+       DISTANCE
+    ========================================================= */
+
+    function distance2D(
+        x1,
+        z1,
+        x2,
+        z2
+    ) {
+
+        return Math.hypot(
+            x1 - x2,
+            z1 - z2
+        );
+
+    }
+
+
+    /* =========================================================
+       NEARBY DRAWER
+    ========================================================= */
+
+    function nearbyDrawer() {
+
+        let result =
+            null;
+
+        let best =
+            1.4;
+
+
+        for (
+            const drawer of drawers
+        ) {
+
+            const distance =
+                distance2D(
+                    player.position.x,
+                    player.position.z,
+                    drawer.group.position.x,
+                    drawer.group.position.z
+                );
+
+
             if (
-                circleIntersectsBox(
-                    x,
-                    z,
-                    player.radius,
-                    box
-                )
+                distance < best
             ) {
 
-                return true;
+                best =
+                    distance;
+
+                result =
+                    drawer;
 
             }
 
         }
 
 
-        return false;
+        return result;
+
+    }
+
+
+    /* =========================================================
+       INTERACTION
+    ========================================================= */
+
+    function interact() {
+
+        if (!running) {
+            return;
+        }
+
+
+        /* Office key */
+
+        if (
+            key.visible &&
+            player.position.distanceTo(
+                key.position
+            ) < 1.15
+        ) {
+
+            keyCollected =
+                true;
+
+
+            key.visible =
+                false;
+
+
+            keyDrawer.containsKey =
+                false;
+
+
+            keySound();
+
+
+            document.getElementById(
+                "objective"
+            ).textContent =
+                "FIND THE EXIT";
+
+
+            showMessage(
+                "You found a key."
+            );
+
+
+            return;
+
+        }
+
+
+        /* Flashlight */
+
+        if (
+            flashlightItem.visible &&
+            player.position.distanceTo(
+                flashlightItem.position
+            ) < 1.15
+        ) {
+
+            flashlightCollected =
+                true;
+
+
+            flashlightItem.visible =
+                false;
+
+
+            flashlightDrawer.containsFlashlight =
+                false;
+
+
+            document.getElementById(
+                "flashlight"
+            ).textContent =
+                "Flashlight: OFF";
+
+
+            keySound();
+
+
+            showMessage(
+                "You found a flashlight."
+            );
+
+
+            return;
+
+        }
+
+
+        /* Drawers */
+
+        const drawer =
+            nearbyDrawer();
+
+
+        if (drawer) {
+
+            drawer.open =
+                !drawer.open;
+
+
+            drawerSound();
+
+
+            return;
+
+        }
+
+
+        /* Maze key */
+
+        if (
+            mazeKey.visible &&
+            player.position.distanceTo(
+                mazeKey.position
+            ) < 1
+        ) {
+
+            mazeKey.visible =
+                false;
+
+
+            keyCollected =
+                true;
+
+
+            keySound();
+
+
+            document.getElementById(
+                "objective"
+            ).textContent =
+                "FIND THE EXIT";
+
+
+            showMessage(
+                "You found the key."
+            );
+
+
+            return;
+
+        }
+
+
+        /* Exit */
+
+        if (
+            distance2D(
+                player.position.x,
+                player.position.z,
+                0,
+                exitZ
+            ) < 1.7
+        ) {
+
+            if (!keyCollected) {
+
+                showMessage(
+                    "Locked."
+                );
+
+
+                shortTone(
+                    180,
+                    0.08,
+                    0.04
+                );
+
+
+                return;
+
+            }
+
+
+            doorSound();
+
+            winGame();
+
+        }
 
     }
 
@@ -2516,54 +2682,57 @@
         dt
     ) {
 
-        let moveX = 0;
+        let x =
+            0;
 
-        let moveZ = 0;
+        let z =
+            0;
 
 
         if (keys.w) {
-            moveZ -= 1;
+            z -= 1;
         }
 
         if (keys.s) {
-            moveZ += 1;
+            z += 1;
         }
 
         if (keys.a) {
-            moveX -= 1;
+            x -= 1;
         }
 
         if (keys.d) {
-            moveX += 1;
+            x += 1;
         }
 
 
-        const moving =
-            moveX !== 0 ||
-            moveZ !== 0;
+        if (
+            x === 0 &&
+            z === 0
+        ) {
 
-
-        if (!moving) {
             return false;
+
         }
 
 
         const length =
             Math.hypot(
-                moveX,
-                moveZ
+                x,
+                z
             );
 
 
-        moveX /= length;
+        x /= length;
 
-        moveZ /= length;
+        z /= length;
 
 
         const sin =
             Math.sin(
                 player.yaw
             );
+
 
         const cos =
             Math.cos(
@@ -2572,27 +2741,28 @@
 
 
         const worldX =
-            moveX * cos -
-            moveZ * sin;
+            x * cos -
+            z * sin;
 
 
         const worldZ =
-            moveX * sin +
-            moveZ * cos;
+            x * sin +
+            z * cos;
 
 
-        const distance =
-            player.speed * dt;
+        const amount =
+            player.speed *
+            dt;
 
 
         const newX =
             player.position.x +
-            worldX * distance;
+            worldX * amount;
 
 
         const newZ =
             player.position.z +
-            worldZ * distance;
+            worldZ * amount;
 
 
         if (
@@ -2621,17 +2791,22 @@
         }
 
 
+        const now =
+            performance.now();
+
+
         if (
-            audioStarted &&
-            performance.now() -
-            lastFootstep >
-            430
+            audioReady &&
+            now >
+            nextStep
         ) {
 
-            playFootstep();
+            footstep();
 
-            lastFootstep =
-                performance.now();
+
+            nextStep =
+                now +
+                430;
 
         }
 
@@ -2642,387 +2817,7 @@
 
 
     /* =========================================================
-       CAMERA
-    ========================================================= */
-
-    function updateCamera() {
-
-        camera.position.copy(
-            player.position
-        );
-
-
-        camera.rotation.x =
-            player.pitch;
-
-        camera.rotation.y =
-            player.yaw;
-
-    }
-
-
-    /* =========================================================
-       DRAWERS
-    ========================================================= */
-
-    function updateDrawers(
-        dt
-    ) {
-
-        for (
-            const drawer of drawers
-        ) {
-
-            const target =
-                drawer.open
-                    ? drawer.targetZ - 0.45
-                    : drawer.targetZ;
-
-
-            drawer.group.position.z =
-                THREE.MathUtils.lerp(
-                    drawer.group.position.z,
-                    target,
-                    Math.min(
-                        1,
-                        dt * 12
-                    )
-                );
-
-        }
-
-    }
-
-
-    function getNearbyDrawer() {
-
-        let closest = null;
-
-        let closestDistance =
-            1.5;
-
-
-        for (
-            const drawer of drawers
-        ) {
-
-            const dx =
-                player.position.x -
-                drawer.group.position.x;
-
-
-            const dz =
-                player.position.z -
-                drawer.group.position.z;
-
-
-            const distance =
-                Math.hypot(
-                    dx,
-                    dz
-                );
-
-
-            if (
-                distance <
-                closestDistance
-            ) {
-
-                closest =
-                    drawer;
-
-                closestDistance =
-                    distance;
-
-            }
-
-        }
-
-
-        return closest;
-
-    }
-
-
-    function getNearbyShelf() {
-
-        let closest = null;
-
-        let closestDistance =
-            1.6;
-
-
-        for (
-            const shelf of shelfObjects
-        ) {
-
-            const dx =
-                player.position.x -
-                shelf.x;
-
-
-            const dz =
-                player.position.z -
-                shelf.z;
-
-
-            const distance =
-                Math.hypot(
-                    dx,
-                    dz
-                );
-
-
-            if (
-                distance <
-                closestDistance
-            ) {
-
-                closest =
-                    shelf;
-
-                closestDistance =
-                    distance;
-
-            }
-
-        }
-
-
-        return closest;
-
-    }
-
-
-    /* =========================================================
-       INTERACTION
-    ========================================================= */
-
-    function interact() {
-
-        if (!running) {
-            return;
-        }
-
-
-        /* Key in office drawer */
-
-        if (
-            keyDrawer.open &&
-            !keyCollected
-        ) {
-
-            const distance =
-                player.position.distanceTo(
-                    keyGroup.position
-                );
-
-
-            if (
-                distance < 1.2
-            ) {
-
-                keyCollected =
-                    true;
-
-                keyGroup.visible =
-                    false;
-
-                playKeySound();
-
-                showMessage(
-                    "You found a key."
-                );
-
-                updateStatus();
-
-                return;
-
-            }
-
-        }
-
-
-        /* Flashlight */
-
-        if (
-            flashlightDrawer.open &&
-            !flashlightCollected
-        ) {
-
-            const distance =
-                player.position.distanceTo(
-                    flashlightItem.position
-                );
-
-
-            if (
-                distance < 1.2
-            ) {
-
-                flashlightCollected =
-                    true;
-
-                flashlightItem.visible =
-                    false;
-
-                playKeySound();
-
-                showMessage(
-                    "A flashlight. Finally."
-                );
-
-                updateStatus();
-
-                return;
-
-            }
-
-        }
-
-
-        /* Drawer */
-
-        const drawer =
-            getNearbyDrawer();
-
-
-        if (drawer) {
-
-            drawer.open =
-                !drawer.open;
-
-            playDrawerSound();
-
-            return;
-
-        }
-
-
-        /* Shelves */
-
-        const shelf =
-            getNearbyShelf();
-
-
-        if (
-            shelf &&
-            !shelf.searched
-        ) {
-
-            shelf.searched =
-                true;
-
-            showMessage(
-                "Nothing useful."
-            );
-
-            playClick();
-
-            return;
-
-        }
-
-
-        /* Maze key */
-
-        if (
-            mazeKey.visible &&
-            player.position.distanceTo(
-                mazeKey.position
-            ) < 1.1
-        ) {
-
-            mazeKey.visible =
-                false;
-
-            keyCollected =
-                true;
-
-            playKeySound();
-
-            showMessage(
-                "This key feels... wrong."
-            );
-
-            updateStatus();
-
-            return;
-
-        }
-
-
-        /* Exit */
-
-        if (exitObject) {
-
-            const distance =
-                Math.hypot(
-                    player.position.x -
-                    exitObject.x,
-                    player.position.z -
-                    exitObject.z
-                );
-
-
-            if (
-                distance < 1.7
-            ) {
-
-                if (!keyCollected) {
-
-                    showMessage(
-                        "Locked."
-                    );
-
-                    playClick();
-
-                    return;
-
-                }
-
-
-                playDoorSound();
-
-                winGame();
-
-            }
-
-        }
-
-    }
-
-
-    /* =========================================================
-       STATUS
-    ========================================================= */
-
-    function updateStatus() {
-
-        const status =
-            document.getElementById(
-                "status"
-            );
-
-
-        if (!keyCollected) {
-
-            status.textContent =
-                "FIND THE KEY";
-
-            return;
-
-        }
-
-
-        status.textContent =
-            "FIND THE EXIT";
-
-    }
-
-
-    /* =========================================================
-       PROMPTS
+       PROMPT
     ========================================================= */
 
     function updatePrompt() {
@@ -3043,90 +2838,63 @@
         }
 
 
-        let text = "";
-
-
-        const drawer =
-            getNearbyDrawer();
-
-
-        if (drawer) {
-
-            text =
-                drawer.open
-                    ? "[E] Close drawer"
-                    : "[E] Open drawer";
-
-        }
+        let text =
+            "";
 
 
         if (
-            keyDrawer.open &&
-            !keyCollected &&
+            key.visible &&
             player.position.distanceTo(
-                keyGroup.position
-            ) < 1.2
+                key.position
+            ) < 1.15
         ) {
 
             text =
                 "[E] Pick up key";
 
         }
-
-
-        if (
-            flashlightDrawer.open &&
-            !flashlightCollected &&
+        else if (
+            flashlightItem.visible &&
             player.position.distanceTo(
                 flashlightItem.position
-            ) < 1.2
+            ) < 1.15
         ) {
 
             text =
                 "[E] Pick up flashlight";
 
         }
+        else {
+
+            const drawer =
+                nearbyDrawer();
 
 
-        const shelf =
-            getNearbyShelf();
+            if (drawer) {
 
+                text =
+                    drawer.open
+                        ? "[E] Close drawer"
+                        : "[E] Open drawer";
 
-        if (
-            shelf &&
-            !shelf.searched &&
-            !text
-        ) {
-
-            text =
-                "[E] Search shelf";
+            }
 
         }
 
 
         if (
-            exitObject
+            distance2D(
+                player.position.x,
+                player.position.z,
+                0,
+                exitZ
+            ) < 1.7
         ) {
 
-            const distance =
-                Math.hypot(
-                    player.position.x -
-                    exitObject.x,
-                    player.position.z -
-                    exitObject.z
-                );
-
-
-            if (
-                distance < 1.7
-            ) {
-
-                text =
-                    keyCollected
-                        ? "[E] Open exit"
-                        : "[E] The door is locked";
-
-            }
+            text =
+                keyCollected
+                    ? "[E] Open exit"
+                    : "[E] Locked";
 
         }
 
@@ -3147,7 +2915,8 @@
        MESSAGE
     ========================================================= */
 
-    let messageTimeout = null;
+    let messageTimer =
+        null;
 
 
     function showMessage(
@@ -3169,11 +2938,11 @@
 
 
         clearTimeout(
-            messageTimeout
+            messageTimer
         );
 
 
-        messageTimeout =
+        messageTimer =
             setTimeout(
                 () => {
 
@@ -3181,93 +2950,8 @@
                         "0";
 
                 },
-                2500
+                2200
             );
-
-    }
-
-
-    /* =========================================================
-       HORROR AMBIENCE
-    ========================================================= */
-
-    function updateAmbient(
-        dt
-    ) {
-
-        if (!audioStarted) {
-            return;
-        }
-
-
-        ambientTimer -=
-            dt;
-
-
-        if (
-            ambientTimer <= 0
-        ) {
-
-            ambientTimer =
-                8 +
-                Math.random() * 14;
-
-
-            if (
-                Math.random() <
-                0.45
-            ) {
-
-                playCreepySound();
-
-            }
-
-        }
-
-    }
-
-
-    /* =========================================================
-       LIGHTING
-    ========================================================= */
-
-    function setupLighting() {
-
-        const moon =
-            new THREE.HemisphereLight(
-                0x10131b,
-                0x020204,
-                0.12
-            );
-
-
-        scene.add(
-            moon
-        );
-
-
-        const officeLight =
-            new THREE.PointLight(
-                0x556070,
-                0.3,
-                10
-            );
-
-
-        officeLight.position.set(
-            0,
-            3,
-            1
-        );
-
-
-        officeLight.castShadow =
-            true;
-
-
-        scene.add(
-            officeLight
-        );
 
     }
 
@@ -3281,22 +2965,21 @@
         player.position.set(
             0,
             1.65,
-            6
+            5.2
         );
 
 
         player.yaw =
             0;
 
+
         player.pitch =
             0;
 
 
         timeRemaining =
-            LOOP_TIME;
+            60;
 
-
-        /* Close every drawer */
 
         for (
             const drawer of drawers
@@ -3308,23 +2991,23 @@
         }
 
 
-        /*
-            The important objects stay
-            discovered between loops.
-        */
-
-        keyDrawer.hasKey =
-            !keyCollected;
-
-
-        flashlightDrawer.hasFlashlight =
-            !flashlightCollected;
-
-
-        keyGroup.visible =
+        key.visible =
             false;
 
+
         flashlightItem.visible =
+            false;
+
+
+        mazeKey.visible =
+            false;
+
+
+        watcher.visible =
+            false;
+
+
+        watcherActive =
             false;
 
 
@@ -3333,25 +3016,145 @@
 
 
         document.getElementById(
-            "flashlightStatus"
+            "flashlight"
         ).textContent =
             flashlightCollected
                 ? "Flashlight: OFF"
                 : "Flashlight: NOT FOUND";
 
 
+        document.getElementById(
+            "objective"
+        ).textContent =
+            keyCollected
+                ? "FIND THE EXIT"
+                : "FIND THE KEY";
+
+    }
+
+
+    /* =========================================================
+       UPDATE
+    ========================================================= */
+
+    function update(
+        dt
+    ) {
+
+        timeRemaining -=
+            dt;
+
+
+        if (
+            timeRemaining <= 0
+        ) {
+
+            timeRemaining =
+                0;
+
+
+            gameOver();
+
+
+            return;
+
+        }
+
+
+        updateMovement(
+            dt
+        );
+
+
+        updateDrawers(
+            dt
+        );
+
+
         /*
-            Maze key only appears after
-            the office key is found.
+            The second key becomes available
+            once the player reaches the maze.
         */
 
-        mazeKey.visible =
-            false;
+        if (
+            keyCollected &&
+            player.position.z >
+            mazeStartZ + 1
+        ) {
+
+            mazeKey.visible =
+                true;
+
+        }
 
 
-        updateStatus();
+        updateWatcher(
+            dt
+        );
 
-        updateCamera();
+
+        updateFlashlight();
+
+        updatePrompt();
+
+
+        if (
+            audioReady
+        ) {
+
+            nextAmbient -=
+                dt;
+
+
+            if (
+                nextAmbient <= 0
+            ) {
+
+                nextAmbient =
+                    8 +
+                    Math.random() * 12;
+
+
+                if (
+                    Math.random() <
+                    0.35
+                ) {
+
+                    strangeAmbient();
+
+                }
+
+            }
+
+        }
+
+
+        camera.position.copy(
+            player.position
+        );
+
+
+        camera.rotation.x =
+            player.pitch;
+
+
+        camera.rotation.y =
+            player.yaw;
+
+
+        document.getElementById(
+            "timer"
+        ).textContent =
+            timeRemaining.toFixed(
+                1
+            );
+
+
+        document.getElementById(
+            "loop"
+        ).textContent =
+            "LOOP " +
+            loopNumber;
 
     }
 
@@ -3370,7 +3173,7 @@
 
 
         document.getElementById(
-            "gameOverScreen"
+            "gameOver"
         ).style.display =
             "flex";
 
@@ -3390,6 +3193,7 @@
 
         won =
             true;
+
 
         running =
             false;
@@ -3412,22 +3216,17 @@
 
     function startGame() {
 
+        /*
+            Audio is started directly from the
+            button click so browsers allow it.
+        */
+
         startAudio();
-
-
-        if (
-            audioContext &&
-            audioContext.state ===
-            "suspended"
-        ) {
-
-            audioContext.resume();
-
-        }
 
 
         running =
             true;
+
 
         won =
             false;
@@ -3437,11 +3236,28 @@
             1;
 
 
+        timeRemaining =
+            60;
+
+
         keyCollected =
             false;
 
+
         flashlightCollected =
             false;
+
+
+        flashlightOn =
+            false;
+
+
+        keyDrawer.containsKey =
+            true;
+
+
+        flashlightDrawer.containsFlashlight =
+            true;
 
 
         document.getElementById(
@@ -3451,7 +3267,7 @@
 
 
         document.getElementById(
-            "gameOverScreen"
+            "gameOver"
         ).style.display =
             "none";
 
@@ -3475,139 +3291,118 @@
 
 
     /* =========================================================
-       LOOP UPDATE
+       BUTTONS
     ========================================================= */
 
-    function update(
-        dt
-    ) {
+    document.getElementById(
+        "startButton"
+    ).addEventListener(
+        "click",
+        event => {
 
-        timeRemaining -=
-            dt;
+            event.stopPropagation();
 
-
-        if (
-            timeRemaining <= 0
-        ) {
-
-            timeRemaining =
-                0;
-
-            gameOver();
-
-            return;
+            startGame();
 
         }
+    );
 
 
-        const moving =
-            updateMovement(
-                dt
-            );
+    document.getElementById(
+        "restartButton"
+    ).addEventListener(
+        "click",
+        event => {
 
+            event.stopPropagation();
 
-        updateDrawers(
-            dt
-        );
-
-
-        updateKeyPosition();
-
-        updateFlashlightItem();
-
-        updateFlashlight();
-
-        updateCamera();
-
-        updatePrompt();
-
-        updateAmbient(
-            dt
-        );
-
-
-        /*
-            Once the office key is collected,
-            reveal the maze key.
-        */
-
-        if (
-            keyCollected &&
-            player.position.z >
-            mazeStartZ - 1
-        ) {
-
-            mazeKey.visible =
-                true;
+            startGame();
 
         }
+    );
 
 
-        document.getElementById(
-            "timer"
-        ).textContent =
-            timeRemaining.toFixed(
-                1
-            );
+    document.getElementById(
+        "winButton"
+    ).addEventListener(
+        "click",
+        event => {
 
+            event.stopPropagation();
 
-        document.getElementById(
-            "loopCounter"
-        ).textContent =
-            "LOOP " +
-            loopNumber;
+            startGame();
 
-    }
+        }
+    );
 
 
     /* =========================================================
-       RENDER LOOP
+       BUILD
     ========================================================= */
 
-    function animate(
-        time
-    ) {
+    buildOffice();
 
-        requestAnimationFrame(
-            animate
+    setupImportantDrawers();
+
+    buildMaze();
+
+
+    /* =========================================================
+       LIGHTING
+    ========================================================= */
+
+    const ambientLight =
+        new THREE.HemisphereLight(
+            0x161922,
+            0x010102,
+            0.13
         );
 
 
-        if (!running) {
-
-            renderer.render(
-                scene,
-                camera
-            );
-
-            return;
-
-        }
+    scene.add(
+        ambientLight
+    );
 
 
-        const dt =
-            Math.min(
-                (time - lastTime) /
-                1000,
-                0.05
-            );
-
-
-        lastTime =
-            time;
-
-
-        update(
-            dt
+    const weakOfficeLight =
+        new THREE.PointLight(
+            0x39404c,
+            0.22,
+            10
         );
 
 
-        renderer.render(
-            scene,
-            camera
-        );
+    weakOfficeLight.position.set(
+        0,
+        3,
+        0
+    );
 
-    }
+
+    weakOfficeLight.castShadow =
+        true;
+
+
+    scene.add(
+        weakOfficeLight
+    );
+
+
+    /* =========================================================
+       INITIAL CAMERA
+    ========================================================= */
+
+    camera.position.copy(
+        player.position
+    );
+
+
+    camera.rotation.x =
+        player.pitch;
+
+
+    camera.rotation.y =
+        player.yaw;
 
 
     /* =========================================================
@@ -3636,59 +3431,46 @@
 
 
     /* =========================================================
-       BUILD GAME
+       MAIN LOOP
     ========================================================= */
 
-    buildOffice();
+    function animate(
+        time
+    ) {
 
-    buildMaze();
-
-    setupLighting();
-
-    resetLoop();
-
-    updateCamera();
+        requestAnimationFrame(
+            animate
+        );
 
 
-    /* =========================================================
-       BUTTONS
-    ========================================================= */
+        if (running) {
 
-    document.getElementById(
-        "startButton"
-    ).addEventListener(
-        "click",
-        startGame
-    );
+            const dt =
+                Math.min(
+                    (time - lastTime) /
+                    1000,
+                    0.05
+                );
 
 
-    document.getElementById(
-        "restartButton"
-    ).addEventListener(
-        "click",
-        () => {
+            lastTime =
+                time;
 
-            startGame();
+
+            update(
+                dt
+            );
 
         }
-    );
 
 
-    document.getElementById(
-        "winRestartButton"
-    ).addEventListener(
-        "click",
-        () => {
+        renderer.render(
+            scene,
+            camera
+        );
 
-            startGame();
+    }
 
-        }
-    );
-
-
-    /* =========================================================
-       START RENDERING
-    ========================================================= */
 
     animate(
         performance.now()
