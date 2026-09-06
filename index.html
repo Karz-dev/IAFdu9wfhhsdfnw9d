@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
 <title>LOOP</title>
 
@@ -18,8 +22,13 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
+
     background: #050505;
-    font-family: Arial, sans-serif;
+
+    font-family:
+        Arial,
+        sans-serif;
+
     color: white;
 }
 
@@ -27,89 +36,151 @@ canvas {
     display: block;
 }
 
+
+/* ================================
+   MENU
+================================ */
+
 #menu {
+
     position: fixed;
+
     inset: 0;
+
     z-index: 100;
 
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
+
     justify-content: center;
 
     background:
         radial-gradient(
             circle,
-            #202020 0%,
-            #050505 70%
+            #252525 0%,
+            #090909 45%,
+            #000 100%
         );
 }
 
+
 #menu h1 {
+
     margin: 0;
 
-    font-size: 70px;
-    letter-spacing: 14px;
+    font-size: 72px;
+
+    letter-spacing: 16px;
+
+    text-shadow:
+        0 0 30px rgba(255,255,255,.12);
+
 }
+
 
 #menu p {
-    margin: 10px 0 30px;
+
+    margin:
+        12px 0 30px;
 
     color: #888;
+
 }
 
-#play {
-    padding: 15px 50px;
 
-    border: 0;
+#play {
+
+    padding:
+        15px 55px;
+
+    border: 1px solid #555;
+
     border-radius: 8px;
 
-    background: #222;
+    background: #191919;
+
     color: white;
 
-    font-size: 22px;
+    font-size: 21px;
+
     font-weight: bold;
 
     cursor: pointer;
+
+    transition:
+        background .2s,
+        transform .2s;
+
 }
+
 
 #play:hover {
-    background: #444;
+
+    background: #303030;
+
+    transform:
+        scale(1.04);
+
 }
+
 
 #loading {
+
     margin-top: 15px;
 
+    min-height: 18px;
+
     color: #777;
+
     font-size: 13px;
+
 }
 
+
+/* ================================
+   HUD
+================================ */
+
 #hud {
+
     position: fixed;
+
     inset: 0;
 
     z-index: 10;
 
     pointer-events: none;
+
 }
 
+
 #timer {
+
     position: absolute;
 
     top: 20px;
+
     left: 20px;
 
-    font-size: 24px;
+    font-size: 25px;
+
     font-weight: bold;
 
     text-shadow:
-        0 2px 6px black;
+        0 2px 7px black;
+
 }
 
+
 #objective {
+
     position: absolute;
 
-    top: 55px;
+    top: 56px;
+
     left: 20px;
 
     font-size: 14px;
@@ -117,16 +188,21 @@ canvas {
     color: #aaa;
 
     text-shadow:
-        0 2px 6px black;
+        0 2px 7px black;
+
 }
 
+
 #crosshair {
+
     position: absolute;
 
     left: 50%;
+
     top: 50%;
 
     width: 5px;
+
     height: 5px;
 
     transform:
@@ -135,12 +211,18 @@ canvas {
     border-radius: 50%;
 
     background: white;
+
+    opacity: .8;
+
 }
 
+
 #message {
+
     position: absolute;
 
-    bottom: 50px;
+    bottom: 55px;
+
     left: 50%;
 
     transform:
@@ -148,14 +230,22 @@ canvas {
 
     color: #ddd;
 
+    font-size: 16px;
+
     text-shadow:
-        0 2px 6px black;
+        0 2px 7px black;
+
+    white-space: nowrap;
+
 }
 
+
 #hint {
+
     position: absolute;
 
-    bottom: 15px;
+    bottom: 16px;
+
     left: 50%;
 
     transform:
@@ -164,15 +254,18 @@ canvas {
     color: #666;
 
     font-size: 12px;
+
 }
 
 </style>
+
 </head>
+
 
 <body>
 
 
-<!-- ==============================
+<!-- ================================
      MENU
 ================================ -->
 
@@ -193,7 +286,7 @@ canvas {
 </div>
 
 
-<!-- ==============================
+<!-- ================================
      HUD
 ================================ -->
 
@@ -218,106 +311,62 @@ canvas {
 </div>
 
 
-<!-- =========================================================
-     STARTUP SCRIPT
+<!-- ================================
+     THREE.JS
+================================ -->
 
-     IMPORTANT:
-     This is NOT a module.
+<script src="./three.js"></script>
 
-     Therefore the ENTER button works even if Three.js
-     hasn't loaded yet.
-========================================================= -->
 
 <script>
+
+/* =========================================================
+   CHECK THREE.JS
+========================================================= */
 
 const playButton =
     document.getElementById("play");
 
-const loadingText =
+const loading =
     document.getElementById("loading");
 
-const menu =
-    document.getElementById("menu");
 
-let gameStarted = false;
+if (
+    typeof THREE === "undefined"
+) {
 
+    loading.textContent =
+        "Three.js failed to load.";
 
-playButton.addEventListener(
-    "click",
-    async function () {
+    playButton.disabled =
+        true;
 
-        if (gameStarted)
-            return;
-
-        loadingText.textContent =
-            "Loading...";
-
-        playButton.disabled =
-            true;
-
-        try {
-
-            await startGame();
-
-        }
-
-        catch (error) {
-
-            console.error(error);
-
-            loadingText.textContent =
-                "ERROR: " +
-                error.message;
-
-            playButton.disabled =
-                false;
-
-        }
-
-    }
-);
-
-
-async function startGame() {
-
-    /*
-       Dynamically load Three.js.
-
-       This means the ENTER button itself
-       does not depend on the module loading
-       successfully beforehand.
-    */
-
-    const THREE =
-        await import(
-            "./three.module.min.js"
-        );
-
-
-    gameStarted = true;
-
-    menu.style.display =
-        "none";
-
-
-    createGame(
-        THREE
+    throw new Error(
+        "Three.js was not loaded."
     );
 
 }
 
-</script>
+
+/* =========================================================
+   MENU
+========================================================= */
+
+const menu =
+    document.getElementById("menu");
+
+const timerText =
+    document.getElementById("timer");
+
+const objectiveText =
+    document.getElementById("objective");
+
+const messageText =
+    document.getElementById("message");
 
 
-<!-- =========================================================
-     GAME
-========================================================= -->
-
-<script>
-
-function createGame(
-    THREE
-) {
+let started =
+    false;
 
 
 /* =========================================================
@@ -327,15 +376,17 @@ function createGame(
 const scene =
     new THREE.Scene();
 
+
 scene.background =
     new THREE.Color(
         0x050505
     );
 
+
 scene.fog =
     new THREE.FogExp2(
         0x050505,
-        0.035
+        0.032
     );
 
 
@@ -371,8 +422,10 @@ const renderer =
 
 
 renderer.setSize(
+
     window.innerWidth,
     window.innerHeight
+
 );
 
 
@@ -390,61 +443,13 @@ renderer.shadowMap.enabled =
     true;
 
 
+renderer.shadowMap.type =
+    THREE.PCFSoftShadowMap;
+
+
 document.body.appendChild(
     renderer.domElement
 );
-
-
-/* =========================================================
-   HUD
-========================================================= */
-
-const timerText =
-    document.getElementById(
-        "timer"
-    );
-
-const objectiveText =
-    document.getElementById(
-        "objective"
-    );
-
-const messageText =
-    document.getElementById(
-        "message"
-    );
-
-
-/* =========================================================
-   GAME VARIABLES
-========================================================= */
-
-let running =
-    true;
-
-let loopTime =
-    60;
-
-let hasKey =
-    false;
-
-let drawerOpened =
-    false;
-
-let flashlightOn =
-    true;
-
-let inMaze =
-    false;
-
-let yaw =
-    0;
-
-let pitch =
-    0;
-
-let messageTimer =
-    0;
 
 
 /* =========================================================
@@ -464,14 +469,42 @@ const player = {
         4.2,
 
     radius:
-        0.35
+        .35
 
 };
 
 
-camera.position.copy(
-    player.position
-);
+let yaw =
+    0;
+
+let pitch =
+    0;
+
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let running =
+    false;
+
+let loopTime =
+    60;
+
+let hasKey =
+    false;
+
+let drawerOpened =
+    false;
+
+let inMaze =
+    false;
+
+let mazeExit =
+    false;
+
+let messageTimer =
+    0;
 
 
 /* =========================================================
@@ -485,13 +518,13 @@ window.addEventListener(
     "keydown",
     function(event) {
 
-        keys[
-            event.code
-        ] = true;
+        keys[event.code] =
+            true;
 
 
         if (
-            event.code === "KeyF"
+            event.code === "KeyF" &&
+            running
         ) {
 
             flashlightOn =
@@ -504,7 +537,8 @@ window.addEventListener(
 
 
         if (
-            event.code === "KeyE"
+            event.code === "KeyE" &&
+            running
         ) {
 
             interact();
@@ -519,67 +553,8 @@ window.addEventListener(
     "keyup",
     function(event) {
 
-        keys[
-            event.code
-        ] = false;
-
-    }
-);
-
-
-/* =========================================================
-   MOUSE LOOK
-========================================================= */
-
-renderer.domElement.addEventListener(
-    "click",
-    function() {
-
-        if (
-            document.pointerLockElement !==
-            renderer.domElement
-        ) {
-
-            renderer.domElement.requestPointerLock();
-
-        }
-
-    }
-);
-
-
-document.addEventListener(
-    "mousemove",
-    function(event) {
-
-        if (
-            document.pointerLockElement !==
-            renderer.domElement
-        ) {
-
-            return;
-
-        }
-
-
-        yaw -=
-            event.movementX *
-            0.0022;
-
-
-        pitch -=
-            event.movementY *
-            0.0022;
-
-
-        pitch =
-            Math.max(
-                -1.45,
-                Math.min(
-                    1.45,
-                    pitch
-                )
-            );
+        keys[event.code] =
+            false;
 
     }
 );
@@ -593,10 +568,10 @@ const wallMaterial =
     new THREE.MeshStandardMaterial({
 
         color:
-            0x282828,
+            0x292929,
 
         roughness:
-            0.95
+            .95
 
     });
 
@@ -632,7 +607,7 @@ const woodMaterial =
             0x332820,
 
         roughness:
-            0.9
+            .9
 
     });
 
@@ -644,44 +619,53 @@ const metalMaterial =
             0x303030,
 
         metalness:
-            0.45,
+            .45,
 
         roughness:
-            0.6
+            .6
 
     });
 
 
 /* =========================================================
-   COLLIDERS
+   COLLISION
 ========================================================= */
 
 const colliders = [];
 
 
-function box(
+function createBox(
+
     x,
     y,
     z,
+
     sx,
     sy,
     sz,
+
     material,
+
     collide = true
+
 ) {
 
     const geometry =
         new THREE.BoxGeometry(
+
             sx,
             sy,
             sz
+
         );
 
 
     const mesh =
         new THREE.Mesh(
+
             geometry,
             material
+
         );
 
 
@@ -704,7 +688,9 @@ function box(
     );
 
 
-    if (collide) {
+    if (
+        collide
+    ) {
 
         colliders.push({
 
@@ -728,14 +714,14 @@ function box(
    FLOOR
 ========================================================= */
 
-box(
+createBox(
 
     0,
-    -0.1,
+    -.1,
     0,
 
     80,
-    0.2,
+    .2,
     80,
 
     floorMaterial,
@@ -749,14 +735,14 @@ box(
    CEILING
 ========================================================= */
 
-box(
+createBox(
 
     0,
     5,
     0,
 
     80,
-    0.2,
+    .2,
     80,
 
     ceilingMaterial,
@@ -770,44 +756,44 @@ box(
    OUTER WALLS
 ========================================================= */
 
-box(
+createBox(
     0,
     2.5,
     -35,
     70,
     5,
-    0.5,
+    .5,
     wallMaterial
 );
 
 
-box(
+createBox(
     0,
     2.5,
     35,
     70,
     5,
-    0.5,
+    .5,
     wallMaterial
 );
 
 
-box(
+createBox(
     -35,
     2.5,
     0,
-    0.5,
+    .5,
     5,
     70,
     wallMaterial
 );
 
 
-box(
+createBox(
     35,
     2.5,
     0,
-    0.5,
+    .5,
     5,
     70,
     wallMaterial
@@ -818,44 +804,44 @@ box(
    OFFICE WALLS
 ========================================================= */
 
-box(
+createBox(
     -12,
     2.5,
     -18,
     25,
     5,
-    0.5,
+    .5,
     wallMaterial
 );
 
 
-box(
+createBox(
     12,
     2.5,
     -18,
     20,
     5,
-    0.5,
+    .5,
     wallMaterial
 );
 
 
-box(
+createBox(
     -22,
     2.5,
     0,
-    0.5,
+    .5,
     5,
     25,
     wallMaterial
 );
 
 
-box(
+createBox(
     15,
     2.5,
     0,
-    0.5,
+    .5,
     5,
     25,
     wallMaterial
@@ -871,58 +857,58 @@ function makeDesk(
     z
 ) {
 
-    box(
+    createBox(
         x,
-        0.8,
+        .8,
         z,
         3.5,
-        0.25,
+        .25,
         1.6,
         woodMaterial
     );
 
 
-    box(
+    createBox(
         x - 1.45,
-        0.4,
+        .4,
         z,
-        0.2,
-        0.8,
+        .2,
+        .8,
         1.3,
         woodMaterial
     );
 
 
-    box(
+    createBox(
         x + 1.45,
-        0.4,
+        .4,
         z,
-        0.2,
-        0.8,
+        .2,
+        .8,
         1.3,
         woodMaterial
     );
 
 
-    box(
+    createBox(
         x,
         1.45,
         z,
         1.2,
         1.1,
-        0.12,
+        .12,
         metalMaterial,
         false
     );
 
 
-    box(
+    createBox(
         x,
         1.12,
-        z - 0.05,
-        0.8,
-        0.08,
-        0.5,
+        z - .05,
+        .8,
+        .08,
+        .5,
         metalMaterial,
         false
     );
@@ -930,17 +916,17 @@ function makeDesk(
 }
 
 
-makeDesk(-28, -8);
-makeDesk(-18, -8);
-makeDesk(-8, -8);
+makeDesk(-28,-8);
+makeDesk(-18,-8);
+makeDesk(-8,-8);
 
-makeDesk(-28, 5);
-makeDesk(-18, 5);
+makeDesk(-28,5);
+makeDesk(-18,5);
 
-makeDesk(5, -8);
-makeDesk(5, 4);
+makeDesk(5,-8);
+makeDesk(5,4);
 
-makeDesk(25, -8);
+makeDesk(25,-8);
 
 
 /* =========================================================
@@ -952,40 +938,40 @@ function makeChair(
     z
 ) {
 
-    box(
+    createBox(
         x,
-        0.65,
+        .65,
         z,
-        0.8,
-        0.15,
-        0.8,
+        .8,
+        .15,
+        .8,
         metalMaterial
     );
 
 
-    box(
+    createBox(
         x,
         1.2,
-        z + 0.35,
-        0.75,
+        z + .35,
+        .75,
         1,
-        0.12,
+        .12,
         metalMaterial
     );
 
 }
 
 
-makeChair(-28, -5.8);
-makeChair(-18, -5.8);
-makeChair(-8, -5.8);
+makeChair(-28,-5.8);
+makeChair(-18,-5.8);
+makeChair(-8,-5.8);
 
-makeChair(-28, 7.2);
-makeChair(-18, 7.2);
+makeChair(-28,7.2);
+makeChair(-18,7.2);
 
 
 /* =========================================================
-   BOOKSHELVES
+   SHELVES
 ========================================================= */
 
 function makeShelf(
@@ -993,11 +979,11 @@ function makeShelf(
     z
 ) {
 
-    box(
+    createBox(
         x,
         2,
         z,
-        0.6,
+        .6,
         4,
         4,
         woodMaterial
@@ -1010,20 +996,23 @@ function makeShelf(
         i++
     ) {
 
-        box(
+        createBox(
+
             x,
-            0.55 +
+
+            .55 +
             i * 1,
 
             z - 1.7,
 
-            0.65,
-            0.08,
+            .65,
+            .08,
             3.3,
 
             woodMaterial,
 
             false
+
         );
 
     }
@@ -1036,10 +1025,12 @@ makeShelf(
     22
 );
 
+
 makeShelf(
     -26,
     22
 );
+
 
 makeShelf(
     29,
@@ -1104,8 +1095,8 @@ for (
 
             new THREE.BoxGeometry(
                 2.1,
-                0.75,
-                0.15
+                .75,
+                .15
             ),
 
             metalMaterial
@@ -1117,10 +1108,10 @@ for (
 
         0,
 
-        0.65 +
-        i * 0.95,
+        .65 +
+        i * .95,
 
-        -0.82
+        -.82
 
     );
 
@@ -1145,8 +1136,8 @@ const key =
     new THREE.Mesh(
 
         new THREE.TorusGeometry(
-            0.16,
-            0.045,
+            .16,
+            .045,
             8,
             20
         ),
@@ -1157,10 +1148,10 @@ const key =
                 0xd6b85a,
 
             metalness:
-                0.8,
+                .8,
 
             roughness:
-                0.25
+                .25
 
         })
 
@@ -1247,7 +1238,7 @@ for (
             mazeCell;
 
 
-        box(
+        createBox(
 
             x,
             2.5,
@@ -1275,7 +1266,7 @@ const ambient =
 
         0x555555,
         0x080808,
-        0.18
+        .18
 
     );
 
@@ -1312,28 +1303,31 @@ scene.add(
 
 
 /* =========================================================
-   RANDOM LIGHTS
+   OTHER LIGHTS
 ========================================================= */
 
 const lightPositions = [
 
-    [-28, -12],
-    [-15, -12],
-    [-3, -12],
+    [-28,-12],
+    [-15,-12],
+    [-3,-12],
 
-    [-28, 2],
-    [-15, 2],
+    [-28,2],
+    [-15,2],
 
-    [5, -12],
-    [5, 2],
+    [5,-12],
+    [5,2],
 
-    [25, -12],
+    [25,-12],
 
-    [-25, 25],
-    [5, 25],
-    [28, 22]
+    [-25,25],
+    [5,25],
+    [28,22]
 
 ];
+
+
+const flickerLights = [];
 
 
 for (
@@ -1345,7 +1339,7 @@ for (
         new THREE.PointLight(
 
             0x666666,
-            0.8,
+            .8,
             12
 
         );
@@ -1364,6 +1358,11 @@ for (
         light
     );
 
+
+    flickerLights.push(
+        light
+    );
+
 }
 
 
@@ -1375,12 +1374,14 @@ const flashlight =
     new THREE.SpotLight(
 
         0xffffff,
+
         6,
-        30,
+
+        32,
 
         Math.PI / 7,
 
-        0.55,
+        .55,
 
         1.5
 
@@ -1401,8 +1402,12 @@ scene.add(
 );
 
 
+let flashlightOn =
+    true;
+
+
 /* =========================================================
-   COLLISION
+   COLLISION CHECK
 ========================================================= */
 
 function collides(
@@ -1523,6 +1528,7 @@ function updateMovement(
     moveX /=
         length;
 
+
     moveZ /=
         length;
 
@@ -1621,7 +1627,7 @@ function updateCamera() {
         pitch;
 
 
-    const forward =
+    const direction =
         new THREE.Vector3(
             0,
             0,
@@ -1629,7 +1635,7 @@ function updateCamera() {
         );
 
 
-    forward.applyQuaternion(
+    direction.applyQuaternion(
         camera.quaternion
     );
 
@@ -1642,10 +1648,72 @@ function updateCamera() {
     flashlight.target.position.copy(
         camera.position
     ).add(
-        forward.multiplyScalar(10)
+        direction.multiplyScalar(10)
     );
 
 }
+
+
+/* =========================================================
+   MOUSE
+========================================================= */
+
+renderer.domElement.addEventListener(
+    "click",
+    function() {
+
+        if (
+            running &&
+            document.pointerLockElement !==
+            renderer.domElement
+        ) {
+
+            renderer.domElement.requestPointerLock();
+
+        }
+
+    }
+);
+
+
+document.addEventListener(
+    "mousemove",
+    function(event) {
+
+        if (
+            document.pointerLockElement !==
+            renderer.domElement
+        ) {
+
+            return;
+
+        }
+
+
+        yaw -=
+            event.movementX *
+            .0022;
+
+
+        pitch -=
+            event.movementY *
+            .0022;
+
+
+        pitch =
+            Math.max(
+
+                -1.45,
+
+                Math.min(
+                    1.45,
+                    pitch
+                )
+
+            );
+
+    }
+);
 
 
 /* =========================================================
@@ -1671,52 +1739,125 @@ function showMessage(
 
 function interact() {
 
-    const distance =
-        player.position.distanceTo(
-            key.position
-        );
-
-
     if (
-        !hasKey &&
-        distance < 3
+        !hasKey
     ) {
 
+        const distance =
+            player.position.distanceTo(
+                key.position
+            );
+
+
         if (
-            !drawerOpened
+            distance < 3
         ) {
 
-            drawerOpened =
-                true;
+            if (
+                !drawerOpened
+            ) {
+
+                drawerOpened =
+                    true;
 
 
-            drawers[2]
-                .position.z =
-                -1.25;
+                drawers[2]
+                    .position.z =
+                    -1.25;
 
 
-            showMessage(
-                "The drawer slides open."
-            );
+                showMessage(
+                    "The drawer slides open."
+                );
+
+            }
+
+            else {
+
+                hasKey =
+                    true;
+
+
+                key.visible =
+                    false;
+
+
+                objectiveText.textContent =
+                    "Find the maze.";
+
+
+                showMessage(
+                    "You found a key."
+                );
+
+            }
+
+            return;
 
         }
 
-        else {
+    }
 
-            hasKey =
+
+    /* Enter maze */
+
+    if (
+        hasKey &&
+        !inMaze
+    ) {
+
+        const entrance =
+            new THREE.Vector3(
+                0,
+                1.7,
+                15
+            );
+
+
+        if (
+            player.position.distanceTo(
+                entrance
+            ) < 5
+        ) {
+
+            enterMaze();
+
+            return;
+
+        }
+
+    }
+
+
+    /* Maze exit */
+
+    if (
+        inMaze
+    ) {
+
+        const exit =
+            new THREE.Vector3(
+                mazeOriginX +
+                7 * mazeCell,
+
+                1.7,
+
+                mazeOriginZ +
+                12 * mazeCell
+            );
+
+
+        if (
+            player.position.distanceTo(
+                exit
+            ) < 4
+        ) {
+
+            mazeExit =
                 true;
 
-
-            key.visible =
-                false;
-
-
-            objectiveText.textContent =
-                "Find the maze.";
-
-
             showMessage(
-                "You found a key."
+                "..."
             );
 
         }
@@ -1727,7 +1868,49 @@ function interact() {
 
 
 /* =========================================================
-   LOOP RESET
+   ENTER MAZE
+========================================================= */
+
+function enterMaze() {
+
+    inMaze =
+        true;
+
+
+    player.position.set(
+
+        mazeOriginX +
+        mazeCell,
+
+        1.7,
+
+        mazeOriginZ +
+        mazeCell
+
+    );
+
+
+    objectiveText.textContent =
+        "Find the way out.";
+
+
+    scene.fog.density =
+        .075;
+
+
+    ambient.intensity =
+        .08;
+
+
+    showMessage(
+        "The door closes behind you."
+    );
+
+}
+
+
+/* =========================================================
+   RESET LOOP
 ========================================================= */
 
 function resetLoop() {
@@ -1748,13 +1931,17 @@ function resetLoop() {
         false;
 
 
+    mazeExit =
+        false;
+
+
     key.visible =
         true;
 
 
     drawers[2]
         .position.z =
-        -0.82;
+        -.82;
 
 
     player.position.set(
@@ -1766,6 +1953,7 @@ function resetLoop() {
 
     yaw =
         0;
+
 
     pitch =
         0;
@@ -1780,11 +1968,11 @@ function resetLoop() {
 
 
     scene.fog.density =
-        0.035;
+        .032;
 
 
     ambient.intensity =
-        0.18;
+        .18;
 
 
     showMessage(
@@ -1795,12 +1983,19 @@ function resetLoop() {
 
 
 /* =========================================================
-   ATMOSPHERE
+   HORROR EFFECT
 ========================================================= */
 
 let flickerTimer =
     0;
 
+
+/*
+   The following system creates rare changes
+   in the environment.
+
+   No UI announcement is made.
+*/
 
 function updateAtmosphere(
     dt
@@ -1815,35 +2010,25 @@ function updateAtmosphere(
     ) {
 
         flickerTimer =
-            5 +
+            4 +
             Math.random() *
-            7;
-
-
-        const lights =
-            scene.children.filter(
-
-                object =>
-                    object.isPointLight &&
-                    object !== officeLight
-
-            );
+            8;
 
 
         if (
-            lights.length
+            flickerLights.length > 0
         ) {
 
             const light =
-                lights[
+                flickerLights[
                     Math.floor(
                         Math.random() *
-                        lights.length
+                        flickerLights.length
                     )
                 ];
 
 
-            const original =
+            const intensity =
                 light.intensity;
 
 
@@ -1856,19 +2041,134 @@ function updateAtmosphere(
                 function() {
 
                     light.intensity =
-                        original;
+                        intensity;
 
                 },
 
-                100 +
+                70 +
                 Math.random() *
-                250
+                300
 
             );
 
         }
 
     }
+
+}
+
+
+/* =========================================================
+   SIMPLE AMBIENT AUDIO
+========================================================= */
+
+let audioContext =
+    null;
+
+
+let footstepTimer =
+    0;
+
+
+function startAudio() {
+
+    try {
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+    catch {
+
+        audioContext =
+            null;
+
+    }
+
+}
+
+
+function makeFootstep() {
+
+    if (
+        !audioContext
+    ) {
+
+        return;
+
+    }
+
+
+    const oscillator =
+        audioContext.createOscillator();
+
+
+    const gain =
+        audioContext.createGain();
+
+
+    oscillator.type =
+        "triangle";
+
+
+    oscillator.frequency.value =
+        55 +
+        Math.random() *
+        20;
+
+
+    gain.gain.setValueAtTime(
+
+        .0001,
+
+        audioContext.currentTime
+
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+
+        .025,
+
+        audioContext.currentTime +
+        .015
+
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+
+        .0001,
+
+        audioContext.currentTime +
+        .14
+
+    );
+
+
+    oscillator.connect(
+        gain
+    );
+
+
+    gain.connect(
+        audioContext.destination
+    );
+
+
+    oscillator.start();
+
+
+    oscillator.stop(
+
+        audioContext.currentTime +
+        .15
+
+    );
 
 }
 
@@ -1920,6 +2220,42 @@ function update(
     );
 
 
+    /* Footsteps */
+
+    const moving =
+        keys["KeyW"] ||
+        keys["KeyA"] ||
+        keys["KeyS"] ||
+        keys["KeyD"];
+
+
+    if (
+        moving
+    ) {
+
+        footstepTimer -=
+            dt;
+
+
+        if (
+            footstepTimer <= 0
+        ) {
+
+            makeFootstep();
+
+
+            footstepTimer =
+                inMaze
+                    ? .52
+                    : .42;
+
+        }
+
+    }
+
+
+    /* Message */
+
     if (
         messageTimer > 0
     ) {
@@ -1965,7 +2301,7 @@ function animate(
             (time - lastTime) /
             1000,
 
-            0.05
+            .05
 
         );
 
@@ -1988,6 +2324,47 @@ function animate(
 
 
 /* =========================================================
+   START BUTTON
+========================================================= */
+
+playButton.addEventListener(
+    "click",
+    function() {
+
+        if (
+            started
+        ) {
+
+            return;
+
+        }
+
+
+        started =
+            true;
+
+
+        running =
+            true;
+
+
+        menu.style.display =
+            "none";
+
+
+        startAudio();
+
+
+        resetLoop();
+
+
+        renderer.domElement.requestPointerLock();
+
+    }
+);
+
+
+/* =========================================================
    RESIZE
 ========================================================= */
 
@@ -2004,8 +2381,10 @@ window.addEventListener(
 
 
         renderer.setSize(
+
             window.innerWidth,
             window.innerHeight
+
         );
 
     }
@@ -2013,7 +2392,7 @@ window.addEventListener(
 
 
 /* =========================================================
-   START
+   INITIALISE
 ========================================================= */
 
 resetLoop();
@@ -2023,22 +2402,6 @@ updateCamera();
 animate(
     performance.now()
 );
-
-
-/* =========================================================
-   POINTER LOCK
-========================================================= */
-
-setTimeout(
-    function() {
-
-        renderer.domElement.requestPointerLock();
-
-    },
-    100
-);
-
-}
 
 </script>
 
