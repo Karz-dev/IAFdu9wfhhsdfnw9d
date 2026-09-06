@@ -1,4 +1,25 @@
-<!DOCTYPE html>
+window.addEventListener("keydown", event => {
+
+    const key = event.key.toLowerCase();
+
+    if (key === "w") keys.w = true;
+    if (key === "a") keys.a = true;
+    if (key === "s") keys.s = true;
+    if (key === "d") keys.d = true;
+
+});
+
+
+window.addEventListener("keyup", event => {
+
+    const key = event.key.toLowerCase();
+
+    if (key === "w") keys.w = false;
+    if (key === "a") keys.a = false;
+    if (key === "s") keys.s = false;
+    if (key === "d") keys.d = false;
+
+});<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -729,111 +750,28 @@ const keys = {
 };
 
 
-window.addEventListener(
-    "keydown",
-    event => {
+window.addEventListener("keydown", event => {
 
-        if (
-            event.key === "w" ||
-            event.key === "W"
-        ) {
+    const key = event.key.toLowerCase();
 
-            keys.w = true;
+    if (key === "w") keys.w = true;
+    if (key === "a") keys.a = true;
+    if (key === "s") keys.s = true;
+    if (key === "d") keys.d = true;
 
-        }
+});
 
 
-        if (
-            event.key === "a" ||
-            event.key === "A"
-        ) {
+window.addEventListener("keyup", event => {
 
-            keys.a = true;
+    const key = event.key.toLowerCase();
 
-        }
+    if (key === "w") keys.w = false;
+    if (key === "a") keys.a = false;
+    if (key === "s") keys.s = false;
+    if (key === "d") keys.d = false;
 
-
-        if (
-            event.key === "s" ||
-            event.key === "S"
-        ) {
-
-            keys.s = true;
-
-        }
-
-
-        if (
-            event.key === "d" ||
-            event.key === "D"
-        ) {
-
-            keys.d = true;
-
-        }
-
-
-        if (
-            (
-                event.key === "e" ||
-                event.key === "E"
-            ) &&
-            running
-        ) {
-
-            interact();
-
-        }
-
-    }
-);
-
-
-window.addEventListener(
-    "keyup",
-    event => {
-
-        if (
-            event.key === "w" ||
-            event.key === "W"
-        ) {
-
-            keys.w = false;
-
-        }
-
-
-        if (
-            event.key === "a" ||
-            event.key === "A"
-        ) {
-
-            keys.a = false;
-
-        }
-
-
-        if (
-            event.key === "s" ||
-            event.key === "S"
-        ) {
-
-            keys.s = false;
-
-        }
-
-
-        if (
-            event.key === "d" ||
-            event.key === "D"
-        ) {
-
-            keys.d = false;
-
-        }
-
-    }
-);
+});
 
 
 /* =====================================================
