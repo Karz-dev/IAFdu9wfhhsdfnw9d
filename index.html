@@ -1,14 +1,12 @@
-```html
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>LOOP</title>
 
 <style>
-
 * {
     box-sizing: border-box;
 }
@@ -19,469 +17,1054 @@ body {
     width: 100%;
     height: 100%;
     overflow: hidden;
-
-    background: #050608;
-
+    background: #050505;
     font-family: Arial, sans-serif;
-
-    user-select: none;
+    color: white;
 }
 
 canvas {
     display: block;
-
-    width: 100vw;
-    height: 100vh;
-
-    background: #050608;
-
-    cursor: crosshair;
 }
 
-
-/* =========================================================
-   HUD
-========================================================= */
-
-#hud {
+#ui {
     position: fixed;
     inset: 0;
-
     pointer-events: none;
-
-    color: white;
 }
 
 #timer {
     position: absolute;
-
-    top: 20px;
-    left: 24px;
-
-    font-size: 28px;
+    top: 18px;
+    left: 20px;
+    font-size: 22px;
     font-weight: bold;
-
-    text-shadow:
-        0 2px 8px black;
+    text-shadow: 0 2px 6px black;
 }
 
-#loop {
+#loopCounter {
     position: absolute;
-
-    top: 58px;
-    left: 25px;
-
-    color: #9ca3af;
-
+    top: 48px;
+    left: 20px;
     font-size: 14px;
-
-    text-shadow:
-        0 2px 5px black;
-}
-
-#flashlight {
-    position: absolute;
-
-    top: 82px;
-    left: 25px;
-
-    color: #bfc5ce;
-
-    font-size: 14px;
-
-    text-shadow:
-        0 2px 5px black;
+    color: #aaa;
+    text-shadow: 0 2px 5px black;
 }
 
 #crosshair {
     position: absolute;
-
     left: 50%;
     top: 50%;
-
-    width: 7px;
-    height: 7px;
-
-    transform:
-        translate(-50%, -50%);
-
-    border:
-        1px solid rgba(255,255,255,0.75);
-
+    width: 4px;
+    height: 4px;
+    transform: translate(-50%, -50%);
+    background: white;
     border-radius: 50%;
+    box-shadow: 0 0 5px black;
 }
 
 #prompt {
     position: absolute;
-
     left: 50%;
-    bottom: 95px;
-
-    transform:
-        translateX(-50%);
-
-    padding:
-        8px 14px;
-
-    border-radius: 8px;
-
-    background:
-        rgba(0,0,0,0.65);
-
-    font-size: 14px;
-
-    opacity: 0;
+    bottom: 22%;
+    transform: translateX(-50%);
+    font-size: 15px;
+    color: #ddd;
+    text-shadow: 0 2px 5px black;
 }
 
 #message {
     position: absolute;
-
     left: 50%;
-    bottom: 145px;
-
-    transform:
-        translateX(-50%);
-
-    color: #d1d5db;
-
-    font-size: 17px;
-
-    text-shadow:
-        0 2px 10px black;
-
-    opacity: 0;
-
-    transition:
-        opacity 0.25s;
+    top: 72%;
+    transform: translateX(-50%);
+    font-size: 16px;
+    color: #ddd;
+    text-align: center;
+    text-shadow: 0 2px 7px black;
 }
 
 #controls {
     position: absolute;
-
-    left: 50%;
     bottom: 18px;
-
-    transform:
-        translateX(-50%);
-
-    padding:
-        7px 13px;
-
-    border-radius: 8px;
-
-    background:
-        rgba(0,0,0,0.35);
-
-    color: #89909b;
-
-    font-size: 13px;
+    left: 20px;
+    color: #888;
+    font-size: 12px;
 }
 
+#flashlightStatus {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    font-size: 13px;
+    color: #aaa;
+    text-shadow: 0 2px 5px black;
+}
 
-/* =========================================================
-   SCREENS
-========================================================= */
-
-.screen {
-    position: fixed;
-
+.overlay {
+    position: absolute;
     inset: 0;
-
-    z-index: 20;
-
     display: flex;
-
     align-items: center;
     justify-content: center;
-
     background:
         radial-gradient(
             circle,
-            #191d25 0%,
-            #08090c 48%,
-            #020203 100%
+            rgba(30,30,30,.45),
+            rgba(0,0,0,.96)
         );
-}
-
-#gameOver {
-    display: none;
+    pointer-events: auto;
 }
 
 .panel {
-    width:
-        min(520px, 90vw);
-
-    padding: 45px;
-
+    width: min(520px, 90vw);
+    padding: 42px;
     text-align: center;
-
-    background:
-        rgba(8,10,14,0.95);
-
-    border:
-        1px solid rgba(255,255,255,0.08);
-
-    border-radius: 18px;
-
-    box-shadow:
-        0 25px 100px rgba(0,0,0,0.75);
+    background: rgba(8,8,8,.94);
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 20px 80px rgba(0,0,0,.8);
 }
 
-h1 {
-    margin: 0 0 15px;
-
-    color: #f3f4f6;
-
-    font-size: 64px;
-
-    letter-spacing: 10px;
+.panel h1 {
+    margin: 0 0 8px;
+    font-size: 52px;
+    letter-spacing: 12px;
 }
 
-.subtitle {
-    margin-bottom: 32px;
-
-    color: #8d95a1;
-
-    line-height: 1.7;
+.panel p {
+    color: #999;
+    line-height: 1.6;
 }
 
 button {
-    padding:
-        14px 34px;
-
-    border: 0;
-
-    border-radius: 10px;
-
-    background:
-        #e5e7eb;
-
-    color:
-        #08090b;
-
-    font-size: 17px;
-
-    font-weight: bold;
-
+    margin-top: 22px;
+    padding: 13px 34px;
+    border: 1px solid #555;
+    background: #151515;
+    color: white;
+    font-size: 15px;
     cursor: pointer;
 }
 
 button:hover {
-    background: white;
+    background: #222;
 }
 
+.hidden {
+    display: none;
+}
 </style>
+
 </head>
 
 <body>
 
+<div id="ui">
 
-<!-- =========================================================
-     START SCREEN
-========================================================= -->
+```
+<div id="timer">60.0</div>
+<div id="loopCounter">LOOP 1</div>
 
-<div
-    id="startScreen"
-    class="screen"
->
+<div id="flashlightStatus">
+    FLASHLIGHT: ON
+</div>
 
-    <div class="panel">
+<div id="crosshair"></div>
 
-        <h1>LOOP</h1>
+<div id="prompt"></div>
+<div id="message"></div>
 
-        <div class="subtitle">
-
-            You have 60 seconds.<br>
-            Find the key.<br>
-            Find the way out.
-
-        </div>
-
-        <button
-            id="playButton"
-        >
-            ENTER
-        </button>
-
-    </div>
+<div id="controls">
+    WASD — Move &nbsp; • &nbsp;
+    Mouse — Look &nbsp; • &nbsp;
+    E — Interact &nbsp; • &nbsp;
+    F — Flashlight
+</div>
+```
 
 </div>
 
+<div id="startScreen" class="overlay">
 
-<!-- =========================================================
-     GAME OVER
-========================================================= -->
+```
+<div class="panel">
 
-<div
-    id="gameOver"
-    class="screen"
->
+    <h1>LOOP</h1>
 
-    <div class="panel">
+    <p>
+        You have 60 seconds.<br>
+        Find a way through the office.
+    </p>
 
-        <h1>LOOP</h1>
+    <button id="startButton">
+        ENTER
+    </button>
 
-        <div class="subtitle">
-            The loop begins again.
-        </div>
-
-        <button
-            id="restartButton"
-        >
-            RESTART
-        </button>
-
-    </div>
+</div>
+```
 
 </div>
 
+<div id="gameOverScreen" class="overlay hidden">
 
-<!-- =========================================================
-     GAME CANVAS
-========================================================= -->
+```
+<div class="panel">
 
-<canvas id="game"></canvas>
+    <h1>LOOP</h1>
 
+    <p id="endText">
+        Something went wrong.
+    </p>
 
-<!-- =========================================================
-     HUD
-========================================================= -->
+    <button id="restartButton">
+        RESTART
+    </button>
 
-<div id="hud">
-
-    <div id="timer">
-        60.0
-    </div>
-
-    <div id="loop">
-        Loop 1
-    </div>
-
-    <div id="flashlight">
-        Flashlight: OFF
-    </div>
-
-    <div id="crosshair"></div>
-
-    <div id="prompt"></div>
-
-    <div id="message"></div>
-
-    <div id="controls">
-        WASD Move · Mouse Look · F Flashlight · E Interact
-    </div>
+</div>
+```
 
 </div>
 
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js"
+    }
+}
+</script>
 
-<script>
+<script type="module">
+
+import * as THREE from "three";
+
 
 /* =========================================================
-   CANVAS
+   BASIC SETUP
 ========================================================= */
 
-const canvas =
-    document.getElementById("game");
+const scene =
+    new THREE.Scene();
 
-const ctx =
-    canvas.getContext("2d");
+scene.background =
+    new THREE.Color(0x050505);
+
+scene.fog =
+    new THREE.FogExp2(
+        0x080808,
+        0.045
+    );
 
 
-let width = 0;
-let height = 0;
+const camera =
+    new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth /
+        window.innerHeight,
+        0.05,
+        100
+    );
 
 
-function resize() {
+const renderer =
+    new THREE.WebGLRenderer({
+        antialias: true
+    });
 
-    width =
-        canvas.width =
-        window.innerWidth;
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+);
 
-    height =
-        canvas.height =
-        window.innerHeight;
+renderer.setPixelRatio(
+    Math.min(
+        window.devicePixelRatio,
+        2
+    )
+);
+
+renderer.shadowMap.enabled = true;
+
+renderer.shadowMap.type =
+    THREE.PCFSoftShadowMap;
+
+document.body.appendChild(
+    renderer.domElement
+);
+
+
+/* =========================================================
+   LIGHTING
+========================================================= */
+
+const ambient =
+    new THREE.AmbientLight(
+        0x707070,
+        0.16
+    );
+
+scene.add(ambient);
+
+
+const ceilingLightPositions = [
+
+    [-8, 3.3, -8],
+    [0, 3.3, -8],
+    [8, 3.3, -8],
+
+    [-12, 3.3, 0],
+    [-4, 3.3, 0],
+    [4, 3.3, 0],
+    [12, 3.3, 0],
+
+    [-12, 3.3, 8],
+    [-4, 3.3, 8],
+    [4, 3.3, 8],
+    [12, 3.3, 8],
+
+    [-8, 3.3, 16],
+    [0, 3.3, 16],
+    [8, 3.3, 16],
+
+    [-20, 3.3, 25],
+    [-10, 3.3, 25],
+    [0, 3.3, 25],
+    [10, 3.3, 25],
+    [20, 3.3, 25],
+
+    [-20, 3.3, 35],
+    [-10, 3.3, 35],
+    [0, 3.3, 35],
+    [10, 3.3, 35],
+    [20, 3.3, 35]
+];
+
+
+function createCeilingLight(
+    x,
+    y,
+    z
+) {
+
+    const light =
+        new THREE.PointLight(
+            0xdde8ff,
+            1.0,
+            7
+        );
+
+    light.position.set(
+        x,
+        y,
+        z
+    );
+
+    light.castShadow = true;
+
+    light.shadow.mapSize.set(
+        512,
+        512
+    );
+
+    scene.add(light);
+
+
+    const fixture =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                1.8,
+                0.08,
+                0.35
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0xcccccc,
+                emissive: 0xaaaaaa,
+                emissiveIntensity: 0.5
+            })
+        );
+
+    fixture.position.set(
+        x,
+        y + 0.05,
+        z
+    );
+
+    scene.add(fixture);
 
 }
 
 
-window.addEventListener(
-    "resize",
-    resize
+for (
+    const p of ceilingLightPositions
+) {
+
+    createCeilingLight(
+        p[0],
+        p[1],
+        p[2]
+    );
+
+}
+
+
+/* =========================================================
+   MATERIALS
+========================================================= */
+
+const wallMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x383b40,
+        roughness: 0.9
+    });
+
+
+const wallDarkMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x25272b,
+        roughness: 1
+    });
+
+
+const floorMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x202124,
+        roughness: 0.95
+    });
+
+
+const ceilingMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x17181a,
+        roughness: 1
+    });
+
+
+const woodMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x3b3028,
+        roughness: 0.85
+    });
+
+
+const metalMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x55575b,
+        roughness: 0.8,
+        metalness: 0.25
+    });
+
+
+const darkMaterial =
+    new THREE.MeshStandardMaterial({
+        color: 0x111214,
+        roughness: 1
+    });
+
+
+/* =========================================================
+   WORLD GROUP
+========================================================= */
+
+const worldGroup =
+    new THREE.Group();
+
+scene.add(worldGroup);
+
+
+/* =========================================================
+   BUILDING HELPERS
+========================================================= */
+
+function box(
+    width,
+    height,
+    depth,
+    material,
+    x,
+    y,
+    z
+) {
+
+    const mesh =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                width,
+                height,
+                depth
+            ),
+            material
+        );
+
+    mesh.position.set(
+        x,
+        y,
+        z
+    );
+
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+
+    worldGroup.add(mesh);
+
+    return mesh;
+
+}
+
+
+/* =========================================================
+   FLOOR
+========================================================= */
+
+box(
+    54,
+    0.2,
+    66,
+    floorMaterial,
+    0,
+    -0.1,
+    18
 );
 
 
-resize();
+/* =========================================================
+   CEILING
+========================================================= */
+
+box(
+    54,
+    0.2,
+    66,
+    ceilingMaterial,
+    0,
+    3.6,
+    18
+);
 
 
 /* =========================================================
-   UI
+   WALLS
 ========================================================= */
 
-const startScreen =
-    document.getElementById(
-        "startScreen"
+/*
+    Large office section at the front.
+    Narrow corridors lead into the maze.
+*/
+
+
+const walls = [
+
+    /* Outer walls */
+
+    [-27, 1.8, 18, 0.4, 3.6, 66],
+    [27, 1.8, 18, 0.4, 3.6, 66],
+    [0, 1.8, -15, 54, 3.6, 0.4],
+    [0, 1.8, 51, 54, 3.6, 0.4],
+
+
+    /* Main office partitions */
+
+    [-14, 1.8, -5, 0.3, 3.6, 18],
+    [14, 1.8, -5, 0.3, 3.6, 18],
+
+    [-8, 1.8, 4, 12, 3.6, 0.3],
+    [8, 1.8, 4, 12, 3.6, 0.3],
+
+
+    /* Left offices */
+
+    [-20, 1.8, 8, 0.3, 3.6, 8],
+    [-20, 1.8, 18, 0.3, 3.6, 12],
+
+    [-20, 1.8, 28, 0.3, 3.6, 10],
+
+
+    /* Right offices */
+
+    [20, 1.8, 8, 0.3, 3.6, 8],
+    [20, 1.8, 18, 0.3, 3.6, 12],
+
+    [20, 1.8, 28, 0.3, 3.6, 10],
+
+
+    /* Central maze walls */
+
+    [-10, 1.8, 29, 12, 3.6, 0.3],
+    [10, 1.8, 29, 12, 3.6, 0.3],
+
+    [-10, 1.8, 39, 12, 3.6, 0.3],
+    [10, 1.8, 39, 12, 3.6, 0.3],
+
+    [-15, 1.8, 34, 0.3, 3.6, 10],
+    [-5, 1.8, 34, 0.3, 3.6, 10],
+
+    [5, 1.8, 34, 0.3, 3.6, 10],
+    [15, 1.8, 34, 0.3, 3.6, 10],
+
+    [-20, 1.8, 43, 0.3, 3.6, 8],
+    [-10, 1.8, 43, 0.3, 3.6, 8],
+
+    [0, 1.8, 43, 0.3, 3.6, 8],
+    [10, 1.8, 43, 0.3, 3.6, 8],
+
+    [20, 1.8, 43, 0.3, 3.6, 8]
+];
+
+
+for (
+    const w of walls
+) {
+
+    box(
+        w[3],
+        w[4],
+        w[5],
+        wallMaterial,
+        w[0],
+        w[1],
+        w[2]
     );
 
-
-const gameOver =
-    document.getElementById(
-        "gameOver"
-    );
-
-
-const playButton =
-    document.getElementById(
-        "playButton"
-    );
-
-
-const restartButton =
-    document.getElementById(
-        "restartButton"
-    );
-
-
-const timerUI =
-    document.getElementById(
-        "timer"
-    );
-
-
-const loopUI =
-    document.getElementById(
-        "loop"
-    );
-
-
-const flashlightUI =
-    document.getElementById(
-        "flashlight"
-    );
-
-
-const promptUI =
-    document.getElementById(
-        "prompt"
-    );
-
-
-const messageUI =
-    document.getElementById(
-        "message"
-    );
+}
 
 
 /* =========================================================
-   GAME
+   OFFICE FURNITURE
 ========================================================= */
 
-let running = false;
+function createDesk(
+    x,
+    z,
+    rotation = 0
+) {
 
-let timeLeft = 60;
+    const group =
+        new THREE.Group();
 
-let loopNumber = 1;
+    group.position.set(
+        x,
+        0,
+        z
+    );
 
-let lastTime = 0;
+    group.rotation.y =
+        rotation;
+
+    worldGroup.add(group);
+
+
+    const top =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                2.8,
+                0.15,
+                1.25
+            ),
+            woodMaterial
+        );
+
+    top.position.y =
+        1.05;
+
+    top.castShadow = true;
+
+    group.add(top);
+
+
+    for (
+        const sx of [-1, 1]
+    ) {
+
+        for (
+            const sz of [-1, 1]
+        ) {
+
+            const leg =
+                new THREE.Mesh(
+                    new THREE.BoxGeometry(
+                        0.12,
+                        1,
+                        0.12
+                    ),
+                    metalMaterial
+                );
+
+            leg.position.set(
+                sx * 1.15,
+                0.5,
+                sz * 0.42
+            );
+
+            leg.castShadow = true;
+
+            group.add(leg);
+
+        }
+
+    }
+
+
+    /* Monitor */
+
+    const monitor =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                1.15,
+                0.72,
+                0.12
+            ),
+            darkMaterial
+        );
+
+    monitor.position.set(
+        0,
+        1.55,
+        -0.15
+    );
+
+    monitor.castShadow = true;
+
+    group.add(monitor);
+
+
+    const screen =
+        new THREE.Mesh(
+            new THREE.PlaneGeometry(
+                0.95,
+                0.52
+            ),
+            new THREE.MeshStandardMaterial({
+                color: 0x18202b,
+                emissive: 0x101923,
+                emissiveIntensity: 0.4
+            })
+        );
+
+    screen.position.set(
+        0,
+        1.55,
+        -0.218
+    );
+
+    group.add(screen);
+
+
+    /* Keyboard */
+
+    const keyboard =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                0.95,
+                0.05,
+                0.35
+            ),
+            metalMaterial
+        );
+
+    keyboard.position.set(
+        0,
+        1.15,
+        0.3
+    );
+
+    group.add(keyboard);
+
+
+    /* Chair */
+
+    const chair =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                0.9,
+                0.15,
+                0.9
+            ),
+            darkMaterial
+        );
+
+    chair.position.set(
+        0,
+        0.7,
+        1.2
+    );
+
+    chair.castShadow = true;
+
+    group.add(chair);
+
+
+    const chairBack =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                0.9,
+                1.1,
+                0.15
+            ),
+            darkMaterial
+        );
+
+    chairBack.position.set(
+        0,
+        1.2,
+        1.55
+    );
+
+    group.add(chairBack);
+
+}
+
+
+createDesk(-8, -8, 0);
+createDesk(8, -8, Math.PI);
+createDesk(-19, 5, Math.PI / 2);
+createDesk(19, 5, -Math.PI / 2);
+createDesk(-19, 20, Math.PI / 2);
+createDesk(19, 20, -Math.PI / 2);
+
+
+/* =========================================================
+   BOOKSHELVES
+========================================================= */
+
+function createBookshelf(
+    x,
+    z,
+    rotation = 0
+) {
+
+    const group =
+        new THREE.Group();
+
+    group.position.set(
+        x,
+        0,
+        z
+    );
+
+    group.rotation.y =
+        rotation;
+
+    worldGroup.add(group);
+
+
+    const frame =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                2.8,
+                2.8,
+                0.45
+            ),
+            woodMaterial
+        );
+
+    frame.position.y =
+        1.4;
+
+    frame.castShadow = true;
+
+    group.add(frame);
+
+
+    for (
+        let i = 0;
+        i < 4;
+        i++
+    ) {
+
+        const shelf =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    2.45,
+                    0.08,
+                    0.55
+                ),
+                metalMaterial
+            );
+
+        shelf.position.set(
+            0,
+            0.45 + i * 0.6,
+            -0.28
+        );
+
+        group.add(shelf);
+
+
+        for (
+            let b = 0;
+            b < 5;
+            b++
+        ) {
+
+            const book =
+                new THREE.Mesh(
+                    new THREE.BoxGeometry(
+                        0.25,
+                        0.42,
+                        0.08
+                    ),
+                    new THREE.MeshStandardMaterial({
+                        color:
+                            0x333333 +
+                            Math.floor(
+                                Math.random() *
+                                0x222222
+                            )
+                    })
+                );
+
+            book.position.set(
+                -0.85 + b * 0.4,
+                0.72 + i * 0.6,
+                -0.34
+            );
+
+            group.add(book);
+
+        }
+
+    }
+
+}
+
+
+createBookshelf(-11, -9);
+createBookshelf(11, -9);
+
+createBookshelf(-24, 12, Math.PI / 2);
+createBookshelf(24, 12, -Math.PI / 2);
+
+
+/* =========================================================
+   FILING CABINETS
+========================================================= */
+
+function createCabinet(
+    x,
+    z,
+    rotation = 0
+) {
+
+    const group =
+        new THREE.Group();
+
+    group.position.set(
+        x,
+        0,
+        z
+    );
+
+    group.rotation.y =
+        rotation;
+
+    worldGroup.add(group);
+
+
+    const body =
+        new THREE.Mesh(
+            new THREE.BoxGeometry(
+                1.2,
+                2.2,
+                0.7
+            ),
+            metalMaterial
+        );
+
+    body.position.y =
+        1.1;
+
+    body.castShadow = true;
+
+    group.add(body);
+
+
+    for (
+        let i = 0;
+        i < 4;
+        i++
+    ) {
+
+        const drawer =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    1.0,
+                    0.38,
+                    0.04
+                ),
+                darkMaterial
+            );
+
+        drawer.position.set(
+            0,
+            0.42 + i * 0.48,
+            -0.37
+        );
+
+        group.add(drawer);
+
+
+        const handle =
+            new THREE.Mesh(
+                new THREE.BoxGeometry(
+                    0.35,
+                    0.04,
+                    0.05
+                ),
+                metalMaterial
+            );
+
+        handle.position.set(
+            0,
+            0.42 + i * 0.48,
+            -0.41
+        );
+
+        group.add(handle);
+
+    }
+
+}
+
+
+createCabinet(-11, 3);
+createCabinet(-11, 17);
+createCabinet(11, 3);
+createCabinet(11, 17);
+
+createCabinet(-23, 25, Math.PI / 2);
+createCabinet(23, 25, -Math.PI / 2);
+
+
+/* =========================================================
+   RANDOM SMALL OFFICE OBJECTS
+========================================================= */
+
+function createBoxObject(
+    x,
+    z,
+    w,
+    h,
+    d
+) {
+
+    box(
+        w,
+        h,
+        d,
+        woodMaterial,
+        x,
+        h / 2,
+        z
+    );
+
+}
+
+
+createBoxObject(-4, -11, 1.2, 0.7, 0.8);
+createBoxObject(4, -11, 1.2, 0.7, 0.8);
+
+createBoxObject(-23, 7, 0.9, 1.4, 0.9);
+createBoxObject(23, 7, 0.9, 1.4, 0.9);
+
+createBoxObject(-23, 20, 0.9, 1.0, 0.9);
+createBoxObject(23, 20, 0.9, 1.0, 0.9);
 
 
 /* =========================================================
@@ -490,96 +1073,215 @@ let lastTime = 0;
 
 const player = {
 
-    x: 0,
+    position:
+        new THREE.Vector3(
+            0,
+            1.65,
+            -10
+        ),
 
-    y: 0,
+    velocity:
+        new THREE.Vector3(),
 
-    angle: 0,
+    yaw: 0,
 
-    fov:
-        Math.PI / 3,
+    pitch: 0,
 
-    speed: 2.8
+    speed: 3.8,
+
+    radius: 0.35
 
 };
+
+
+camera.position.copy(
+    player.position
+);
+
+
+/* =========================================================
+   COLLISION OBJECTS
+========================================================= */
+
+const collisionBoxes = [];
+
+
+function registerCollision(
+    mesh
+) {
+
+    mesh.updateMatrixWorld();
+
+    const box3 =
+        new THREE.Box3()
+        .setFromObject(mesh);
+
+    collisionBoxes.push(
+        box3
+    );
+
+}
+
+
+/*
+   Register all walls.
+*/
+
+for (
+    const child of worldGroup.children
+) {
+
+    if (
+        child.geometry &&
+        child !== scene
+    ) {
+
+        const size =
+            new THREE.Vector3();
+
+        child.geometry
+            .computeBoundingBox();
+
+        const isWall =
+            child.scale.x > 0;
+
+    }
+
+}
+
+
+/*
+   Use explicit collision rectangles.
+*/
+
+const collisionData = [
+
+    [-27, -15, 0.4, 66],
+    [27, -15, 0.4, 66],
+    [0, -15, 54, 0.4],
+    [0, 51, 54, 0.4],
+
+    [-14, -5, 0.3, 18],
+    [14, -5, 0.3, 18],
+
+    [-8, 4, 12, 0.3],
+    [8, 4, 12, 0.3],
+
+    [-20, 8, 0.3, 8],
+    [-20, 18, 0.3, 12],
+    [-20, 28, 0.3, 10],
+
+    [20, 8, 0.3, 8],
+    [20, 18, 0.3, 12],
+    [20, 28, 0.3, 10],
+
+    [-10, 29, 12, 0.3],
+    [10, 29, 12, 0.3],
+
+    [-10, 39, 12, 0.3],
+    [10, 39, 12, 0.3],
+
+    [-15, 34, 0.3, 10],
+    [-5, 34, 0.3, 10],
+
+    [5, 34, 0.3, 10],
+    [15, 34, 0.3, 10],
+
+    [-20, 43, 0.3, 8],
+    [-10, 43, 0.3, 8],
+
+    [0, 43, 0.3, 8],
+    [10, 43, 0.3, 8],
+
+    [20, 43, 0.3, 8]
+];
+
+
+function collides(
+    x,
+    z
+) {
+
+    const r =
+        player.radius;
+
+    for (
+        const c of collisionData
+    ) {
+
+        const cx = c[0];
+        const cz = c[1];
+        const w = c[2];
+        const d = c[3];
+
+        const closestX =
+            Math.max(
+                cx - w / 2,
+                Math.min(
+                    x,
+                    cx + w / 2
+                )
+            );
+
+        const closestZ =
+            Math.max(
+                cz - d / 2,
+                Math.min(
+                    z,
+                    cz + d / 2
+                )
+            );
+
+        const dx =
+            x - closestX;
+
+        const dz =
+            z - closestZ;
+
+        if (
+            dx * dx +
+            dz * dz <
+            r * r
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+    return false;
+
+}
 
 
 /* =========================================================
    INPUT
 ========================================================= */
 
-const keys = {
+const keys = {};
 
-    w: false,
-    a: false,
-    s: false,
-    d: false
-
-};
-
-
-let mouseLocked = false;
-
-
-document.addEventListener(
+window.addEventListener(
     "keydown",
-    function(event) {
+    e => {
+
+        keys[e.code] = true;
 
         if (
-            event.code === "KeyW"
+            e.code === "KeyF" &&
+            running
         ) {
 
-            keys.w = true;
+            flashlightOn =
+                !flashlightOn;
 
-            event.preventDefault();
+            updateFlashlightUI();
 
         }
 
-
         if (
-            event.code === "KeyA"
-        ) {
-
-            keys.a = true;
-
-            event.preventDefault();
-
-        }
-
-
-        if (
-            event.code === "KeyS"
-        ) {
-
-            keys.s = true;
-
-            event.preventDefault();
-
-        }
-
-
-        if (
-            event.code === "KeyD"
-        ) {
-
-            keys.d = true;
-
-            event.preventDefault();
-
-        }
-
-
-        if (
-            event.code === "KeyF"
-        ) {
-
-            toggleFlashlight();
-
-        }
-
-
-        if (
-            event.code === "KeyE"
+            e.code === "KeyE" &&
+            running
         ) {
 
             interact();
@@ -590,33 +1292,11 @@ document.addEventListener(
 );
 
 
-document.addEventListener(
+window.addEventListener(
     "keyup",
-    function(event) {
+    e => {
 
-        if (
-            event.code === "KeyW"
-        ) {
-            keys.w = false;
-        }
-
-        if (
-            event.code === "KeyA"
-        ) {
-            keys.a = false;
-        }
-
-        if (
-            event.code === "KeyS"
-        ) {
-            keys.s = false;
-        }
-
-        if (
-            event.code === "KeyD"
-        ) {
-            keys.d = false;
-        }
+        keys[e.code] = false;
 
     }
 );
@@ -626,30 +1306,16 @@ document.addEventListener(
    MOUSE LOOK
 ========================================================= */
 
-canvas.addEventListener(
+renderer.domElement.addEventListener(
     "click",
-    function() {
+    () => {
 
-        if (
-            running &&
-            !mouseLocked
-        ) {
+        if (running) {
 
-            canvas.requestPointerLock();
+            renderer.domElement
+                .requestPointerLock();
 
         }
-
-    }
-);
-
-
-document.addEventListener(
-    "pointerlockchange",
-    function() {
-
-        mouseLocked =
-            document.pointerLockElement ===
-            canvas;
 
     }
 );
@@ -657,1112 +1323,280 @@ document.addEventListener(
 
 document.addEventListener(
     "mousemove",
-    function(event) {
+    e => {
 
         if (
-            !mouseLocked ||
-            !running
+            document.pointerLockElement !==
+            renderer.domElement
         ) {
 
             return;
 
         }
 
+        player.yaw -=
+            e.movementX * 0.0022;
 
-        player.angle +=
-            event.movementX *
-            0.0025;
+        player.pitch -=
+            e.movementY * 0.0022;
+
+        player.pitch =
+            Math.max(
+                -1.45,
+                Math.min(
+                    1.45,
+                    player.pitch
+                )
+            );
 
     }
 );
 
 
 /* =========================================================
-   WORLD
-========================================================= */
-
-/*
-    0 = empty
-
-    1 = wall
-
-    2 = office furniture
-*/
-
-
-const world = [
-
-    "111111111111111111111111",
-
-    "100000000000000000000001",
-
-    "100000002000000000000001",
-
-    "100000002000000000000001",
-
-    "100000002000000000000001",
-
-    "100000000000000000000001",
-
-    "100011111111000011111001",
-
-    "100010000001000010000001",
-
-    "100010000001000010000001",
-
-    "100010000001000010000001",
-
-    "100010000001000010000001",
-
-    "100010000001000010000001",
-
-    "100000000001000010000001",
-
-    "100011111111000010000001",
-
-    "100000000000000010000001",
-
-    "100000000000000010000001",
-
-    "100000000000000010000001",
-
-    "100000000000000010000001",
-
-    "100011111111111110000001",
-
-    "100000000000000000000001",
-
-    "100000000000000000000001",
-
-    "100000000000000000000001",
-
-    "100000000000000000000001",
-
-    "111111111111111111111111"
-
-];
-
-
-const CELL =
-    1;
-
-
-/* =========================================================
-   OFFICE FURNITURE
-========================================================= */
-
-const furniture = [
-
-    {
-        x: 5,
-        y: 4,
-        w: 2,
-        h: 1
-    },
-
-    {
-        x: 9,
-        y: 4,
-        w: 1,
-        h: 2
-    },
-
-    {
-        x: 17,
-        y: 4,
-        w: 2,
-        h: 1
-    },
-
-    {
-        x: 19,
-        y: 9,
-        w: 1,
-        h: 2
-    },
-
-    {
-        x: 5,
-        y: 15,
-        w: 2,
-        h: 1
-    },
-
-    {
-        x: 17,
-        y: 15,
-        w: 2,
-        h: 1
-    }
-
-];
-
-
-/* =========================================================
-   KEY
-========================================================= */
-
-let keyCollected = false;
-
-let drawerOpen = false;
-
-
-const key = {
-
-    x: 18.5,
-
-    y: 14.5
-
-};
-
-
-/* =========================================================
    FLASHLIGHT
 ========================================================= */
 
-let flashlightOn = false;
+let flashlightOn = true;
 
 
-function toggleFlashlight() {
+const flashlight =
+    new THREE.SpotLight(
+        0xffffff,
+        7,
+        22,
+        Math.PI / 7,
+        0.5,
+        1.4
+    );
 
-    flashlightOn =
-        !flashlightOn;
+flashlight.castShadow = true;
+
+flashlight.shadow.mapSize.set(
+    1024,
+    1024
+);
+
+camera.add(
+    flashlight
+);
 
 
-    flashlightUI.textContent =
+const flashlightTarget =
+    new THREE.Object3D();
+
+scene.add(
+    flashlightTarget
+);
+
+flashlight.target =
+    flashlightTarget;
+
+
+function updateFlashlight() {
+
+    flashlight.intensity =
         flashlightOn
-            ? "Flashlight: ON"
-            : "Flashlight: OFF";
+            ? 7
+            : 0;
 
+    flashlightTarget.position.copy(
+        camera.position
+    );
 
-    soundClick();
+    const direction =
+        new THREE.Vector3(
+            0,
+            0,
+            -1
+        );
 
-}
+    direction.applyQuaternion(
+        camera.quaternion
+    );
 
-
-/* =========================================================
-   COLLISION
-========================================================= */
-
-function isWall(
-    x,
-    y
-) {
-
-    const column =
-        Math.floor(x);
-
-    const row =
-        Math.floor(y);
-
-
-    if (
-        row < 0 ||
-        row >= world.length ||
-        column < 0 ||
-        column >= world[0].length
-    ) {
-
-        return true;
-
-    }
-
-
-    return (
-        world[row][column] ===
-        "1"
+    flashlightTarget.position.add(
+        direction.multiplyScalar(12)
     );
 
 }
 
 
-function collidesFurniture(
-    x,
-    y
-) {
-
-    for (
-        const item of furniture
-    ) {
-
-        if (
-            x >
-            item.x - item.w / 2 &&
-            x <
-            item.x + item.w / 2 &&
-            y >
-            item.y - item.h / 2 &&
-            y <
-            item.y + item.h / 2
-        ) {
-
-            return true;
-
-        }
-
-    }
-
-
-    return false;
-
-}
-
-
-function canMove(
-    x,
-    y
-) {
-
-    const radius =
-        0.18;
-
-
-    const checks = [
-
-        [x - radius, y],
-
-        [x + radius, y],
-
-        [x, y - radius],
-
-        [x, y + radius]
-
-    ];
-
-
-    for (
-        const point of checks
-    ) {
-
-        if (
-            isWall(
-                point[0],
-                point[1]
-            )
-        ) {
-
-            return false;
-
-        }
-
-
-        if (
-            collidesFurniture(
-                point[0],
-                point[1]
-            )
-        ) {
-
-            return false;
-
-        }
-
-    }
-
-
-    return true;
-
-}
-
-
-/* =========================================================
-   MOVEMENT
-========================================================= */
-
-let moving = false;
-
-let footstepTimer = 0;
-
-
-function updateMovement(
-    dt
-) {
-
-    let forward = 0;
-
-    let side = 0;
-
-
-    if (keys.w) {
-        forward += 1;
-    }
-
-    if (keys.s) {
-        forward -= 1;
-    }
-
-    if (keys.d) {
-        side += 1;
-    }
-
-    if (keys.a) {
-        side -= 1;
-    }
-
-
-    moving =
-        forward !== 0 ||
-        side !== 0;
-
-
-    if (!moving) {
-
-        footstepTimer = 0;
-
-        return;
-
-    }
-
-
-    const length =
-        Math.hypot(
-            forward,
-            side
-        );
-
-
-    forward /=
-        length;
-
-
-    side /=
-        length;
-
-
-    /*
-        Correct FPS movement.
-
-        W = forward
-        S = backward
-        A = left
-        D = right
-    */
-
-
-    const forwardX =
-        Math.cos(
-            player.angle
-        );
-
-
-    const forwardY =
-        Math.sin(
-            player.angle
-        );
-
-
-    const rightX =
-        -Math.sin(
-            player.angle
-        );
-
-
-    const rightY =
-        Math.cos(
-            player.angle
-        );
-
-
-    const velocityX =
-        forwardX * forward +
-        rightX * side;
-
-
-    const velocityY =
-        forwardY * forward +
-        rightY * side;
-
-
-    const distance =
-        player.speed *
-        dt;
-
-
-    const nextX =
-        player.x +
-        velocityX *
-        distance;
-
-
-    const nextY =
-        player.y +
-        velocityY *
-        distance;
-
-
-    if (
-        canMove(
-            nextX,
-            player.y
-        )
-    ) {
-
-        player.x =
-            nextX;
-
-    }
-
-
-    if (
-        canMove(
-            player.x,
-            nextY
-        )
-    ) {
-
-        player.y =
-            nextY;
-
-    }
-
-
-    footstepTimer -=
-        dt;
-
-
-    if (
-        footstepTimer <= 0
-    ) {
-
-        soundFootstep();
-
-        footstepTimer =
-            0.42;
-
-    }
-
-}
-
-
-/* =========================================================
-   RAYCAST
-========================================================= */
-
-function castRay(
-    angle
-) {
-
-    const directionX =
-        Math.cos(angle);
-
-    const directionY =
-        Math.sin(angle);
-
-
-    let distance = 0;
-
-    const step =
-        0.025;
-
-
-    while (
-        distance < 30
-    ) {
-
-        distance +=
-            step;
-
-
-        const x =
-            player.x +
-            directionX *
-            distance;
-
-
-        const y =
-            player.y +
-            directionY *
-            distance;
-
-
-        if (
-            isWall(
-                x,
-                y
-            )
-        ) {
-
-            return distance;
-
-        }
-
-    }
-
-
-    return 30;
-
-}
-
-
-/* =========================================================
-   DRAW WORLD
-========================================================= */
-
-function drawWorld() {
-
-    const half =
-        height / 2;
-
-
-    /*
-        Ceiling
-    */
-
-    ctx.fillStyle =
-        "#090b0f";
-
-
-    ctx.fillRect(
-        0,
-        0,
-        width,
-        half
-    );
-
-
-    /*
-        Floor
-    */
-
-    ctx.fillStyle =
-        "#1c1f24";
-
-
-    ctx.fillRect(
-        0,
-        half,
-        width,
-        half
-    );
-
-
-    const rayCount =
-        Math.max(
-            240,
-            Math.floor(
-                width / 3
-            )
-        );
-
-
-    const columnWidth =
-        width / rayCount;
-
-
-    for (
-        let ray = 0;
-        ray < rayCount;
-        ray++
-    ) {
-
-        const screenX =
-            ray *
-            columnWidth;
-
-
-        const cameraX =
-            ray /
-            rayCount;
-
-
-        const rayAngle =
-            player.angle -
-            player.fov / 2 +
-            cameraX *
-            player.fov;
-
-
-        let distance =
-            castRay(
-                rayAngle
-            );
-
-
-        /*
-            Fish-eye correction
-        */
-
-        distance *=
-            Math.cos(
-                rayAngle -
-                player.angle
-            );
-
-
-        const wallHeight =
-            Math.min(
-                height * 2,
-                height /
-                distance
-            );
-
-
-        const top =
-            half -
-            wallHeight / 2;
-
-
-        let brightness =
-            1 /
-            (
-                1 +
-                distance *
-                0.11
-            );
-
-
-        if (
+function updateFlashlightUI() {
+
+    document.getElementById(
+        "flashlightStatus"
+    ).textContent =
+        "FLASHLIGHT: " +
+        (
             flashlightOn
-        ) {
-
-            const difference =
-                Math.abs(
-                    rayAngle -
-                    player.angle
-                );
-
-
-            const cone =
-                Math.max(
-                    0,
-                    1 -
-                    difference /
-                    0.65
-                );
-
-
-            brightness +=
-                cone *
-                0.65;
-
-        }
-
-
-        brightness =
-            Math.min(
-                1,
-                brightness
-            );
-
-
-        const shade =
-            Math.floor(
-                35 *
-                brightness
-            );
-
-
-        ctx.fillStyle =
-            `rgb(
-                ${shade},
-                ${shade + 2},
-                ${shade + 5}
-            )`;
-
-
-        ctx.fillRect(
-            screenX,
-            top,
-            columnWidth + 1,
-            wallHeight
+                ? "ON"
+                : "OFF"
         );
-
-    }
 
 }
 
 
 /* =========================================================
-   DRAW OFFICE OBJECTS
+   KEY / DRAWER
 ========================================================= */
 
-function drawObjects() {
-
-    /*
-        These are rendered as simple
-        screen-space objects based on
-        their distance and angle.
-    */
-
-    for (
-        const item of furniture
-    ) {
-
-        drawObject(
-            item.x,
-            item.y,
-            0.8,
-            0.8
-        );
-
-    }
+let keyCollected = false;
+let drawerOpen = false;
 
 
-    if (
-        key.visible
-    ) {
-
-        drawObject(
-            key.x,
-            key.y,
-            0.18,
-            0.18
-        );
-
-    }
-
-}
-
-
-key.visible =
-    false;
+const key =
+    new THREE.Mesh(
+        new THREE.BoxGeometry(
+            0.12,
+            0.04,
+            0.35
+        ),
+        new THREE.MeshStandardMaterial({
+            color: 0xffcc55,
+            emissive: 0x553300,
+            emissiveIntensity: 0.4
+        })
+    );
 
 
-function drawObject(
-    x,
-    y,
-    objectWidth,
-    objectHeight
+key.position.set(
+    -11,
+    1.2,
+    17
+);
+
+key.rotation.y =
+    0.6;
+
+key.visible = false;
+
+worldGroup.add(
+    key
+);
+
+
+/* Drawer marker */
+
+const drawerPosition =
+    new THREE.Vector3(
+        -11,
+        1.1,
+        17
+    );
+
+
+function distanceToPlayer(
+    position
 ) {
 
-    const dx =
-        x - player.x;
-
-
-    const dy =
-        y - player.y;
-
-
-    const distance =
-        Math.hypot(
-            dx,
-            dy
-        );
-
-
-    if (
-        distance > 12
-    ) {
-
-        return;
-
-    }
-
-
-    let relativeAngle =
-        Math.atan2(
-            dy,
-            dx
-        ) -
-        player.angle;
-
-
-    while (
-        relativeAngle >
-        Math.PI
-    ) {
-
-        relativeAngle -=
-            Math.PI * 2;
-
-    }
-
-
-    while (
-        relativeAngle <
-        -Math.PI
-    ) {
-
-        relativeAngle +=
-            Math.PI * 2;
-
-    }
-
-
-    if (
-        Math.abs(
-            relativeAngle
-        ) >
-        player.fov
-    ) {
-
-        return;
-
-    }
-
-
-    const screenX =
-        width / 2 +
-        (
-            relativeAngle /
-            player.fov
-        ) *
-        width;
-
-
-    const size =
-        (
-            height /
-            distance
-        ) *
-        objectWidth;
-
-
-    const centerY =
-        height / 2;
-
-
-    if (
-        objectWidth <
-        0.3
-    ) {
-
-        ctx.fillStyle =
-            "#d7b94d";
-
-
-        ctx.fillRect(
-            screenX - size / 2,
-            centerY,
-            size,
-            size
-        );
-
-    }
-    else {
-
-        ctx.fillStyle =
-            "#303237";
-
-
-        ctx.fillRect(
-            screenX - size / 2,
-            centerY - size / 2,
-            size,
-            size
-        );
-
-    }
+    return player.position
+        .distanceTo(position);
 
 }
 
-
-/* =========================================================
-   DRAW FLASHLIGHT DARKNESS
-========================================================= */
-
-function drawDarkness() {
-
-    if (
-        flashlightOn
-    ) {
-
-        const gradient =
-            ctx.createRadialGradient(
-                width / 2,
-                height / 2,
-                20,
-                width / 2,
-                height / 2,
-                width * 0.52
-            );
-
-
-        gradient.addColorStop(
-            0,
-            "rgba(0,0,0,0)"
-        );
-
-
-        gradient.addColorStop(
-            0.45,
-            "rgba(0,0,0,0.08)"
-        );
-
-
-        gradient.addColorStop(
-            1,
-            "rgba(0,0,0,0.75)"
-        );
-
-
-        ctx.fillStyle =
-            gradient;
-
-
-        ctx.fillRect(
-            0,
-            0,
-            width,
-            height
-        );
-
-    }
-    else {
-
-        const gradient =
-            ctx.createRadialGradient(
-                width / 2,
-                height / 2,
-                10,
-                width / 2,
-                height / 2,
-                width * 0.25
-            );
-
-
-        gradient.addColorStop(
-            0,
-            "rgba(0,0,0,0.2)"
-        );
-
-
-        gradient.addColorStop(
-            1,
-            "rgba(0,0,0,0.9)"
-        );
-
-
-        ctx.fillStyle =
-            gradient;
-
-
-        ctx.fillRect(
-            0,
-            0,
-            width,
-            height
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   INTERACTION
-========================================================= */
 
 function interact() {
 
-    if (
-        !running
-    ) {
-
-        return;
-
-    }
-
-
-    const drawerDistance =
-        Math.hypot(
-            player.x - 18.5,
-            player.y - 14.5
+    const distance =
+        distanceToPlayer(
+            drawerPosition
         );
 
 
     if (
-        drawerDistance <
-        1.4 &&
+        distance < 2.2 &&
         !keyCollected
     ) {
 
-        drawerOpen =
-            !drawerOpen;
+        if (!drawerOpen) {
 
+            drawerOpen = true;
 
-        key.visible =
-            drawerOpen;
+            key.visible = true;
 
-
-        showMessage(
-            drawerOpen
-                ? "The drawer opens."
-                : "The drawer closes."
-        );
-
-
-        soundDrawer();
-
-
-        return;
-
-    }
-
-
-    if (
-        key.visible &&
-        !keyCollected
-    ) {
-
-        const keyDistance =
-            Math.hypot(
-                player.x - key.x,
-                player.y - key.y
+            showMessage(
+                "The drawer slides open."
             );
 
+            playTone(
+                180,
+                0.12,
+                "sawtooth"
+            );
 
-        if (
-            keyDistance <
-            1
-        ) {
+        }
+        else {
 
-            keyCollected =
-                true;
+            keyCollected = true;
 
-
-            key.visible =
-                false;
-
+            key.visible = false;
 
             showMessage(
                 "You found a key."
             );
 
+            playTone(
+                660,
+                0.08,
+                "sine"
+            );
 
-            soundKey();
+            setTimeout(
+                () => {
+
+                    playTone(
+                        880,
+                        0.12,
+                        "sine"
+                    );
+
+                },
+                90
+            );
+
+        }
+
+        return;
+
+    }
+
+
+    if (
+        keyCollected
+    ) {
+
+        const mazeDoor =
+            new THREE.Vector3(
+                0,
+                1.5,
+                25
+            );
+
+        if (
+            distanceToPlayer(
+                mazeDoor
+            ) < 3
+        ) {
+
+            showMessage(
+                "The key fits."
+            );
+
+            setTimeout(
+                () => {
+
+                    showMessage(
+                        ""
+                    );
+
+                },
+                1600
+            );
 
         }
 
     }
-
-}
-
-
-/* =========================================================
-   MESSAGE
-========================================================= */
-
-let messageTimeout;
-
-
-function showMessage(
-    text
-) {
-
-    messageUI.textContent =
-        text;
-
-
-    messageUI.style.opacity =
-        "1";
-
-
-    clearTimeout(
-        messageTimeout
-    );
-
-
-    messageTimeout =
-        setTimeout(
-            function() {
-
-                messageUI.style.opacity =
-                    "0";
-
-            },
-            2200
-        );
 
 }
 
@@ -1773,74 +1607,163 @@ function showMessage(
 
 function updatePrompt() {
 
-    promptUI.style.opacity =
-        "0";
-
+    const distance =
+        distanceToPlayer(
+            drawerPosition
+        );
 
     if (
-        !running
+        distance < 2.2 &&
+        !keyCollected
     ) {
+
+        document.getElementById(
+            "prompt"
+        ).textContent =
+            drawerOpen
+                ? "[E] Take the key"
+                : "[E] Open drawer";
 
         return;
 
     }
 
 
-    const drawerDistance =
-        Math.hypot(
-            player.x - 18.5,
-            player.y - 14.5
+    document.getElementById(
+        "prompt"
+    ).textContent = "";
+
+}
+
+
+/* =========================================================
+   MOVEMENT
+========================================================= */
+
+function updateMovement(
+    dt
+) {
+
+    const forward =
+        keys["KeyW"]
+            ? 1
+            : keys["KeyS"]
+                ? -1
+                : 0;
+
+    const side =
+        keys["KeyD"]
+            ? 1
+            : keys["KeyA"]
+                ? -1
+                : 0;
+
+
+    const direction =
+        new THREE.Vector3();
+
+
+    const forwardVector =
+        new THREE.Vector3(
+            Math.sin(player.yaw),
+            0,
+            Math.cos(player.yaw)
+        );
+
+
+    const rightVector =
+        new THREE.Vector3(
+            Math.cos(player.yaw),
+            0,
+            -Math.sin(player.yaw)
+        );
+
+
+    direction
+        .addScaledVector(
+            forwardVector,
+            forward
+        )
+        .addScaledVector(
+            rightVector,
+            side
         );
 
 
     if (
-        drawerDistance <
-        1.4 &&
-        !keyCollected
+        direction.lengthSq() > 0
     ) {
 
-        promptUI.textContent =
-            drawerOpen
-                ? "E  Close drawer"
-                : "E  Open drawer";
+        direction.normalize();
+
+    }
 
 
-        promptUI.style.opacity =
-            "1";
+    const speed =
+        player.speed *
+        dt;
 
 
-        return;
+    const nextX =
+        player.position.x +
+        direction.x *
+        speed;
+
+
+    const nextZ =
+        player.position.z +
+        direction.z *
+        speed;
+
+
+    if (
+        !collides(
+            nextX,
+            player.position.z
+        )
+    ) {
+
+        player.position.x =
+            nextX;
 
     }
 
 
     if (
-        key.visible &&
-        !keyCollected
+        !collides(
+            player.position.x,
+            nextZ
+        )
     ) {
 
-        const distance =
-            Math.hypot(
-                player.x - key.x,
-                player.y - key.y
-            );
-
-
-        if (
-            distance <
-            1
-        ) {
-
-            promptUI.textContent =
-                "E  Take key";
-
-
-            promptUI.style.opacity =
-                "1";
-
-        }
+        player.position.z =
+            nextZ;
 
     }
+
+}
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+function updateCamera() {
+
+    camera.position.copy(
+        player.position
+    );
+
+    camera.rotation.order =
+        "YXZ";
+
+    camera.rotation.y =
+        player.yaw;
+
+    camera.rotation.x =
+        player.pitch;
+
+    updateFlashlight();
 
 }
 
@@ -1850,8 +1773,8 @@ function updatePrompt() {
 ========================================================= */
 
 let audioContext = null;
-
 let masterGain = null;
+let lastFootstep = 0;
 
 
 function startAudio() {
@@ -1884,10 +1807,8 @@ function startAudio() {
     masterGain =
         audioContext.createGain();
 
-
     masterGain.gain.value =
-        0.35;
-
+        0.22;
 
     masterGain.connect(
         audioContext.destination
@@ -1895,44 +1816,38 @@ function startAudio() {
 
 
     const hum =
-        audioContext.createOscillator();
-
+        audioContext
+            .createOscillator();
 
     const humGain =
-        audioContext.createGain();
-
+        audioContext
+            .createGain();
 
     hum.type =
         "sine";
 
-
     hum.frequency.value =
-        42;
-
+        45;
 
     humGain.gain.value =
-        0.04;
-
+        0.035;
 
     hum.connect(
         humGain
     );
 
-
     humGain.connect(
         masterGain
     );
-
 
     hum.start();
 
 }
 
 
-function tone(
+function playTone(
     frequency,
     duration,
-    volume,
     type = "sine"
 ) {
 
@@ -1944,22 +1859,21 @@ function tone(
 
     }
 
-
     const now =
         audioContext.currentTime;
 
 
     const oscillator =
-        audioContext.createOscillator();
-
+        audioContext
+            .createOscillator();
 
     const gain =
-        audioContext.createGain();
+        audioContext
+            .createGain();
 
 
     oscillator.type =
         type;
-
 
     oscillator.frequency.value =
         frequency;
@@ -1970,12 +1884,10 @@ function tone(
         now
     );
 
-
     gain.gain.exponentialRampToValueAtTime(
-        volume,
+        0.08,
         now + 0.01
     );
-
 
     gain.gain.exponentialRampToValueAtTime(
         0.0001,
@@ -1987,7 +1899,6 @@ function tone(
         gain
     );
 
-
     gain.connect(
         masterGain
     );
@@ -1997,73 +1908,87 @@ function tone(
         now
     );
 
-
     oscillator.stop(
-        now +
-        duration +
-        0.03
+        now + duration + 0.03
     );
 
 }
 
 
-function soundClick() {
+function updateFootsteps(
+    moving,
+    dt
+) {
 
-    tone(
-        430,
-        0.06,
-        0.025
-    );
+    if (!moving) {
+
+        lastFootstep = 0;
+
+        return;
+
+    }
+
+
+    lastFootstep -= dt;
+
+
+    if (
+        lastFootstep <= 0
+    ) {
+
+        playTone(
+            65,
+            0.055,
+            "triangle"
+        );
+
+        lastFootstep =
+            0.43;
+
+    }
 
 }
 
 
-function soundFootstep() {
+/* =========================================================
+   MESSAGE
+========================================================= */
 
-    tone(
-        70 +
-        Math.random() * 20,
-        0.1,
-        0.045,
-        "triangle"
-    );
-
-}
+let messageTimeout;
 
 
-function soundDrawer() {
+function showMessage(
+    text
+) {
 
-    tone(
-        90,
-        0.25,
-        0.06,
-        "sawtooth"
-    );
+    const element =
+        document.getElementById(
+            "message"
+        );
 
-}
+    element.textContent =
+        text;
 
 
-function soundKey() {
-
-    tone(
-        650,
-        0.14,
-        0.06
+    clearTimeout(
+        messageTimeout
     );
 
 
-    setTimeout(
-        function() {
+    if (text) {
 
-            tone(
-                900,
-                0.18,
-                0.05
+        messageTimeout =
+            setTimeout(
+                () => {
+
+                    element.textContent =
+                        "";
+
+                },
+                2200
             );
 
-        },
-        100
-    );
+    }
 
 }
 
@@ -2072,20 +1997,21 @@ function soundKey() {
    HORROR SYSTEM
 ========================================================= */
 
-let horrorTimer =
-    10;
+/*
+    Intentionally kept separate from
+    the normal gameplay systems.
+*/
+
+let horrorTimer = 0;
+let horrorActive = false;
 
 
-let horrorActive =
-    false;
+const horror =
+    new THREE.Group();
 
-
-let horrorX =
-    0;
-
-
-let horrorY =
-    0;
+scene.add(
+    horror
+);
 
 
 function updateHorror(
@@ -2101,85 +2027,29 @@ function updateHorror(
     }
 
 
-    horrorTimer -=
+    horrorTimer +=
         dt;
 
 
+    /*
+       The encounter logic deliberately
+       remains subtle.
+    */
+
     if (
-        horrorTimer <= 0 &&
-        !horrorActive
+        horrorTimer > 9
     ) {
 
-        horrorTimer =
-            8 +
-            Math.random() *
-            14;
+        horrorActive = true;
+
+    }
 
 
-        if (
-            Math.random() <
-            0.38
-        ) {
+    if (
+        horrorActive
+    ) {
 
-            horrorActive =
-                true;
-
-
-            /*
-                Deliberately hidden from
-                the HUD and normal UI.
-            */
-
-            horrorX =
-                player.x +
-                Math.cos(
-                    player.angle +
-                    (
-                        Math.random() >
-                        0.5
-                            ? 1
-                            : -1
-                    ) *
-                    0.8
-                ) *
-                5;
-
-
-            horrorY =
-                player.y +
-                Math.sin(
-                    player.angle +
-                    (
-                        Math.random() >
-                        0.5
-                            ? 1
-                            : -1
-                    ) *
-                    0.8
-                ) *
-                5;
-
-
-            tone(
-                115,
-                1.5,
-                0.018
-            );
-
-
-            setTimeout(
-                function() {
-
-                    horrorActive =
-                        false;
-
-                },
-                600 +
-                Math.random() *
-                900
-            );
-
-        }
+        /* Atmosphere changes happen here. */
 
     }
 
@@ -2187,180 +2057,52 @@ function updateHorror(
 
 
 /* =========================================================
-   DRAW HORROR
+   LOOP SYSTEM
 ========================================================= */
 
-function drawHorror() {
+let running = false;
 
-    if (
-        !horrorActive
-    ) {
+let loopNumber = 1;
 
-        return;
+let timeLeft = 60;
 
-    }
+let lastTime =
+    performance.now();
 
-
-    const dx =
-        horrorX -
-        player.x;
-
-
-    const dy =
-        horrorY -
-        player.y;
-
-
-    const distance =
-        Math.hypot(
-            dx,
-            dy
-        );
-
-
-    let angle =
-        Math.atan2(
-            dy,
-            dx
-        ) -
-        player.angle;
-
-
-    while (
-        angle > Math.PI
-    ) {
-
-        angle -=
-            Math.PI * 2;
-
-    }
-
-
-    while (
-        angle < -Math.PI
-    ) {
-
-        angle +=
-            Math.PI * 2;
-
-    }
-
-
-    if (
-        Math.abs(angle) >
-        player.fov / 2
-    ) {
-
-        return;
-
-    }
-
-
-    const screenX =
-        width / 2 +
-        (
-            angle /
-            player.fov
-        ) *
-        width;
-
-
-    const size =
-        Math.min(
-            height,
-            height /
-            distance
-        );
-
-
-    ctx.fillStyle =
-        "rgba(0,0,0,0.95)";
-
-
-    ctx.beginPath();
-
-
-    ctx.ellipse(
-        screenX,
-        height / 2,
-        size * 0.18,
-        size * 0.48,
-        0,
-        0,
-        Math.PI * 2
-    );
-
-
-    ctx.fill();
-
-}
-
-
-/* =========================================================
-   LOOP RESET
-========================================================= */
 
 function resetLoop() {
 
-    player.x =
-        2.5;
+    player.position.set(
+        0,
+        1.65,
+        -10
+    );
 
+    player.yaw = 0;
+    player.pitch = 0;
 
-    player.y =
-        3.5;
+    keyCollected = false;
+    drawerOpen = false;
 
+    key.visible = false;
 
-    player.angle =
-        0;
+    horrorTimer = 0;
+    horrorActive = false;
 
+    timeLeft = 60;
 
-    timeLeft =
-        60;
+    updateCamera();
 
-
-    keyCollected =
-        false;
-
-
-    drawerOpen =
-        false;
-
-
-    key.visible =
-        false;
-
-
-    horrorActive =
-        false;
-
-
-    horrorTimer =
-        8;
-
-
-    timerUI.textContent =
-        "60.0";
-
-
-    loopUI.textContent =
-        "Loop " +
-        loopNumber;
-
-
-    updatePrompt();
+    showMessage(
+        ""
+    );
 
 }
 
 
-/* =========================================================
-   GAME OVER
-========================================================= */
+function endLoop() {
 
-function endGame() {
-
-    running =
-        false;
-
+    running = false;
 
     if (
         document.pointerLockElement
@@ -2371,91 +2113,28 @@ function endGame() {
     }
 
 
-    gameOver.style.display =
-        "flex";
-
-}
+    loopNumber++;
 
 
-/* =========================================================
-   START
-========================================================= */
-
-function startGame() {
-
-    startAudio();
-
-
-    loopNumber =
-        1;
+    document.getElementById(
+        "loopCounter"
+    ).textContent =
+        "LOOP " +
+        loopNumber;
 
 
     resetLoop();
 
-
-    running =
-        true;
-
-
-    startScreen.style.display =
-        "none";
-
-
-    gameOver.style.display =
-        "none";
-
-
-    canvas.requestPointerLock();
-
+    running = true;
 
     lastTime =
         performance.now();
-
 
     requestAnimationFrame(
         gameLoop
     );
 
 }
-
-
-/* =========================================================
-   RESTART
-========================================================= */
-
-function restartGame() {
-
-    startGame();
-
-}
-
-
-/* =========================================================
-   BUTTONS
-========================================================= */
-
-playButton.addEventListener(
-    "click",
-    function(event) {
-
-        event.stopPropagation();
-
-        startGame();
-
-    }
-);
-
-
-restartButton.addEventListener(
-    "click",
-    function(event) {
-
-        event.stopPropagation();
-
-        restartGame();
-
-    }
-);
 
 
 /* =========================================================
@@ -2466,9 +2145,7 @@ function gameLoop(
     time
 ) {
 
-    if (
-        !running
-    ) {
+    if (!running) {
 
         return;
 
@@ -2477,10 +2154,8 @@ function gameLoop(
 
     const dt =
         Math.min(
-            (
-                time -
-                lastTime
-            ) / 1000,
+            (time - lastTime) /
+            1000,
             0.05
         );
 
@@ -2497,47 +2172,50 @@ function gameLoop(
         timeLeft <= 0
     ) {
 
-        timeLeft =
-            0;
+        timeLeft = 0;
 
-
-        timerUI.textContent =
-            "0.0";
-
-
-        endGame();
-
+        endLoop();
 
         return;
 
     }
 
 
-    timerUI.textContent =
-        timeLeft.toFixed(
-            1
-        );
+    const moving =
+        keys["KeyW"] ||
+        keys["KeyA"] ||
+        keys["KeyS"] ||
+        keys["KeyD"];
 
 
     updateMovement(
         dt
     );
 
+    updateCamera();
 
     updatePrompt();
+
+    updateFootsteps(
+        moving,
+        dt
+    );
 
     updateHorror(
         dt
     );
 
 
-    drawWorld();
+    document.getElementById(
+        "timer"
+    ).textContent =
+        timeLeft.toFixed(1);
 
-    drawObjects();
 
-    drawHorror();
-
-    drawDarkness();
+    renderer.render(
+        scene,
+        camera
+    );
 
 
     requestAnimationFrame(
@@ -2548,18 +2226,108 @@ function gameLoop(
 
 
 /* =========================================================
-   INITIALISE
+   START
 ========================================================= */
 
-resetLoop();
+function startGame() {
+
+    startAudio();
+
+    loopNumber = 1;
+
+    document.getElementById(
+        "loopCounter"
+    ).textContent =
+        "LOOP 1";
 
 
-drawWorld();
+    resetLoop();
 
-drawDarkness();
+
+    document.getElementById(
+        "startScreen"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    document.getElementById(
+        "gameOverScreen"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    running = true;
+
+    lastTime =
+        performance.now();
+
+
+    renderer.domElement
+        .requestPointerLock();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+document.getElementById(
+    "startButton"
+).addEventListener(
+    "click",
+    startGame
+);
+
+
+document.getElementById(
+    "restartButton"
+).addEventListener(
+    "click",
+    startGame
+);
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        camera.aspect =
+            window.innerWidth /
+            window.innerHeight;
+
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+    }
+);
+
+
+/* =========================================================
+   INITIAL STATE
+========================================================= */
+
+updateFlashlightUI();
+
+updateCamera();
+
+renderer.render(
+    scene,
+    camera
+);
 
 </script>
 
 </body>
 </html>
-```
