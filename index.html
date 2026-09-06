@@ -1,0 +1,2894 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>LOOP</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+
+    margin: 0;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    background: #050505;
+
+    font-family: Arial, sans-serif;
+
+    user-select: none;
+
+}
+
+canvas {
+
+    display: block;
+
+    width: 100vw;
+    height: 100vh;
+
+}
+
+
+/* =====================================================
+   UI
+===================================================== */
+
+#ui {
+
+    position: fixed;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    color: white;
+
+}
+
+
+/* TIMER */
+
+#timer {
+
+    position: absolute;
+
+    top: 18px;
+    left: 20px;
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    text-shadow:
+        0 2px 8px black;
+
+}
+
+
+/* LOOP NUMBER */
+
+#loopNumber {
+
+    position: absolute;
+
+    top: 55px;
+    left: 22px;
+
+    color: #aaa;
+
+    font-size: 15px;
+
+    text-shadow:
+        0 2px 5px black;
+
+}
+
+
+/* CROSSHAIR */
+
+#crosshair {
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    width: 7px;
+    height: 7px;
+
+    transform:
+        translate(-50%, -50%);
+
+    border:
+        2px solid white;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 5px black;
+
+}
+
+
+/* INTERACTION */
+
+#interaction {
+
+    position: absolute;
+
+    left: 50%;
+    bottom: 115px;
+
+    transform:
+        translateX(-50%);
+
+    padding:
+        8px 14px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(0, 0, 0, 0.65);
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.15s;
+
+}
+
+
+#interaction.visible {
+
+    opacity: 1;
+
+}
+
+
+/* MESSAGE */
+
+#message {
+
+    position: absolute;
+
+    left: 50%;
+    bottom: 65px;
+
+    transform:
+        translateX(-50%);
+
+    padding:
+        8px 15px;
+
+    border-radius: 8px;
+
+    background:
+        rgba(0, 0, 0, 0.55);
+
+    color: #ddd;
+
+    font-size: 14px;
+
+    text-align: center;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.2s;
+
+}
+
+
+#message.visible {
+
+    opacity: 1;
+
+}
+
+
+/* CLICK TO CAPTURE */
+
+#capture {
+
+    position: absolute;
+
+    left: 50%;
+    top: 50%;
+
+    transform:
+        translate(-50%, -50%);
+
+    padding:
+        15px 22px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(0, 0, 0, 0.75);
+
+    font-size: 16px;
+
+    display: none;
+
+}
+
+
+/* =====================================================
+   START SCREEN
+===================================================== */
+
+#startScreen {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+
+        radial-gradient(
+            circle,
+            #172033 0%,
+            #080a0f 55%,
+            #000000 100%
+        );
+
+}
+
+
+#startBox {
+
+    width:
+        min(550px, 90vw);
+
+    padding: 45px;
+
+    text-align: center;
+
+    border-radius: 20px;
+
+    background:
+        rgba(10, 14, 22, 0.95);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.1);
+
+    box-shadow:
+        0 20px 80px
+        rgba(0,0,0,0.65);
+
+}
+
+
+#startBox h1 {
+
+    margin: 0;
+
+    font-size: 72px;
+
+    letter-spacing: 15px;
+
+}
+
+
+#startBox p {
+
+    color: #aaa;
+
+    line-height: 1.6;
+
+}
+
+
+#startButton {
+
+    margin-top: 20px;
+
+    padding:
+        14px 30px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background:
+        #2563eb;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+#startButton:hover {
+
+    background:
+        #3b82f6;
+
+}
+
+
+/* =====================================================
+   LOOP FLASH
+===================================================== */
+
+#flash {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 20;
+
+    background: black;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.35s;
+
+}
+
+
+#flash.visible {
+
+    opacity: 1;
+
+}
+
+
+/* =====================================================
+   END
+===================================================== */
+
+#ending {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 30;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        rgba(0,0,0,0.94);
+
+    text-align: center;
+
+}
+
+
+#endingBox {
+
+    max-width: 600px;
+
+}
+
+
+#endingBox h1 {
+
+    font-size: 55px;
+
+    letter-spacing: 8px;
+
+}
+
+
+#endingBox p {
+
+    color: #aaa;
+
+    line-height: 1.7;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<canvas id="game"></canvas>
+
+
+<div id="ui">
+
+    <div id="timer">
+        60.0
+    </div>
+
+
+    <div id="loopNumber">
+        Loop 1
+    </div>
+
+
+    <div id="crosshair"></div>
+
+
+    <div id="interaction">
+        Press E
+    </div>
+
+
+    <div id="message"></div>
+
+
+    <div id="capture">
+        Click to capture mouse
+    </div>
+
+</div>
+
+
+<div id="flash"></div>
+
+
+<div id="startScreen">
+
+    <div id="startBox">
+
+        <h1>
+            LOOP
+        </h1>
+
+        <p>
+            You have 60 seconds.
+        </p>
+
+        <p>
+            Find the key.
+            <br>
+            Open the door.
+            <br>
+            Find out what is behind it.
+        </p>
+
+        <p>
+
+            <b>WASD</b> — Move
+            <br>
+
+            <b>Mouse</b> — Look
+            <br>
+
+            <b>E</b> — Interact
+            <br>
+
+            <b>ESC</b> — Release mouse
+
+        </p>
+
+        <button id="startButton">
+            ENTER THE LOOP
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="ending">
+
+    <div id="endingBox">
+
+        <h1>
+            ESCAPED
+        </h1>
+
+        <p>
+            Somehow, you broke the loop.
+        </p>
+
+        <p>
+            But you still don't know
+            why the room existed.
+        </p>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+
+/* =====================================================
+   THREE.JS
+===================================================== */
+
+import * as THREE from
+    "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+
+
+/* =====================================================
+   DOM
+===================================================== */
+
+const canvas =
+    document.getElementById("game");
+
+const timerElement =
+    document.getElementById("timer");
+
+const loopNumberElement =
+    document.getElementById("loopNumber");
+
+const interactionElement =
+    document.getElementById("interaction");
+
+const messageElement =
+    document.getElementById("message");
+
+const captureElement =
+    document.getElementById("capture");
+
+const startScreen =
+    document.getElementById("startScreen");
+
+const startButton =
+    document.getElementById("startButton");
+
+const flash =
+    document.getElementById("flash");
+
+const ending =
+    document.getElementById("ending");
+
+
+/* =====================================================
+   RENDERER
+===================================================== */
+
+const renderer =
+    new THREE.WebGLRenderer({
+
+        canvas: canvas,
+
+        antialias: true
+
+    });
+
+
+renderer.setPixelRatio(
+    Math.min(
+        window.devicePixelRatio,
+        2
+    )
+);
+
+
+renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+);
+
+
+renderer.shadowMap.enabled = true;
+
+
+/* =====================================================
+   SCENE
+===================================================== */
+
+const scene =
+    new THREE.Scene();
+
+
+scene.background =
+    new THREE.Color(
+        0x10141c
+    );
+
+
+scene.fog =
+    new THREE.Fog(
+        0x10141c,
+        1,
+        32
+    );
+
+
+/* =====================================================
+   CAMERA
+===================================================== */
+
+const camera =
+    new THREE.PerspectiveCamera(
+
+        75,
+
+        window.innerWidth /
+        window.innerHeight,
+
+        0.05,
+
+        100
+
+    );
+
+
+camera.rotation.order =
+    "YXZ";
+
+
+/* =====================================================
+   PLAYER
+===================================================== */
+
+const player = {
+
+    position:
+        new THREE.Vector3(
+            0,
+            1.7,
+            6
+        ),
+
+    yaw:
+        Math.PI,
+
+    pitch:
+        0,
+
+    speed:
+        4.5,
+
+    radius:
+        0.3
+
+};
+
+
+/* =====================================================
+   GAME STATE
+===================================================== */
+
+let running = false;
+
+let pointerLocked = false;
+
+let loopNumber = 1;
+
+let loopTime = 60;
+
+let currentRoom = 1;
+
+
+/* =====================================================
+   PERSISTENT MEMORY
+===================================================== */
+
+const memory = {
+
+    keyFound: false,
+
+    mazeEntered: false,
+
+    mazeKeyFound: false,
+
+    finalDoorOpened: false
+
+};
+
+
+/* =====================================================
+   INPUT
+===================================================== */
+
+const keys = {
+
+    w: false,
+    a: false,
+    s: false,
+    d: false
+
+};
+
+
+window.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "w" ||
+            event.key === "W"
+        ) {
+
+            keys.w = true;
+
+        }
+
+
+        if (
+            event.key === "a" ||
+            event.key === "A"
+        ) {
+
+            keys.a = true;
+
+        }
+
+
+        if (
+            event.key === "s" ||
+            event.key === "S"
+        ) {
+
+            keys.s = true;
+
+        }
+
+
+        if (
+            event.key === "d" ||
+            event.key === "D"
+        ) {
+
+            keys.d = true;
+
+        }
+
+
+        if (
+            (
+                event.key === "e" ||
+                event.key === "E"
+            ) &&
+            running
+        ) {
+
+            interact();
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    event => {
+
+        if (
+            event.key === "w" ||
+            event.key === "W"
+        ) {
+
+            keys.w = false;
+
+        }
+
+
+        if (
+            event.key === "a" ||
+            event.key === "A"
+        ) {
+
+            keys.a = false;
+
+        }
+
+
+        if (
+            event.key === "s" ||
+            event.key === "S"
+        ) {
+
+            keys.s = false;
+
+        }
+
+
+        if (
+            event.key === "d" ||
+            event.key === "D"
+        ) {
+
+            keys.d = false;
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   MOUSE LOOK
+===================================================== */
+
+document.addEventListener(
+    "mousemove",
+    event => {
+
+        if (
+            !running ||
+            !pointerLocked
+        ) {
+
+            return;
+
+        }
+
+
+        const sensitivity =
+            0.0025;
+
+
+        player.yaw -=
+            event.movementX *
+            sensitivity;
+
+
+        player.pitch -=
+            event.movementY *
+            sensitivity;
+
+
+        player.pitch =
+            THREE.MathUtils.clamp(
+
+                player.pitch,
+
+                -1.45,
+
+                1.45
+
+            );
+
+    }
+);
+
+
+/* =====================================================
+   POINTER LOCK
+===================================================== */
+
+document.addEventListener(
+    "pointerlockchange",
+    () => {
+
+        pointerLocked =
+            document.pointerLockElement ===
+            renderer.domElement;
+
+
+        if (
+            pointerLocked
+        ) {
+
+            captureElement.style.display =
+                "none";
+
+        }
+        else if (
+            running
+        ) {
+
+            captureElement.style.display =
+                "block";
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   CLICK TO RECAPTURE
+===================================================== */
+
+renderer.domElement.addEventListener(
+    "click",
+    () => {
+
+        if (
+            running &&
+            !pointerLocked
+        ) {
+
+            renderer.domElement.requestPointerLock();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   RESIZE
+===================================================== */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        camera.aspect =
+            window.innerWidth /
+            window.innerHeight;
+
+
+        camera.updateProjectionMatrix();
+
+
+        renderer.setSize(
+            window.innerWidth,
+            window.innerHeight
+        );
+
+    }
+);
+
+
+/* =====================================================
+   WORLD GROUPS
+===================================================== */
+
+const roomOne =
+    new THREE.Group();
+
+
+const roomTwo =
+    new THREE.Group();
+
+
+scene.add(
+    roomOne
+);
+
+
+scene.add(
+    roomTwo
+);
+
+
+/*
+    Room two is physically behind
+    the door of Room 1.
+*/
+
+roomTwo.position.z =
+    18;
+
+
+/* =====================================================
+   COLLISION WALLS
+===================================================== */
+
+const collisionWalls = [];
+
+
+/* =====================================================
+   MATERIAL
+===================================================== */
+
+function makeMaterial(
+    color
+) {
+
+    return new THREE.MeshStandardMaterial({
+
+        color: color,
+
+        roughness: 0.8
+
+    });
+
+}
+
+
+/* =====================================================
+   BOX
+===================================================== */
+
+function box(
+    width,
+    height,
+    depth,
+    color,
+    x,
+    y,
+    z,
+    parent,
+    collision = false
+) {
+
+    const mesh =
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+                width,
+                height,
+                depth
+            ),
+
+            makeMaterial(
+                color
+            )
+
+        );
+
+
+    mesh.position.set(
+        x,
+        y,
+        z
+    );
+
+
+    mesh.castShadow = true;
+
+    mesh.receiveShadow = true;
+
+
+    parent.add(
+        mesh
+    );
+
+
+    if (
+        collision
+    ) {
+
+        collisionWalls.push({
+
+            minX:
+                x -
+                width / 2,
+
+            maxX:
+                x +
+                width / 2,
+
+            minZ:
+                z +
+                parent.position.z -
+                depth / 2,
+
+            maxZ:
+                z +
+                parent.position.z +
+                depth / 2
+
+        });
+
+    }
+
+
+    return mesh;
+
+}
+
+
+/* =====================================================
+   FLOOR
+===================================================== */
+
+function floor(
+    width,
+    depth,
+    parent,
+    color
+) {
+
+    const mesh =
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+                width,
+                0.2,
+                depth
+            ),
+
+            makeMaterial(
+                color
+            )
+
+        );
+
+
+    mesh.position.y =
+        -0.1;
+
+
+    mesh.receiveShadow = true;
+
+
+    parent.add(
+        mesh
+    );
+
+}
+
+
+/* =====================================================
+   ROOM ONE
+===================================================== */
+
+function buildRoomOne() {
+
+    floor(
+        18,
+        16,
+        roomOne,
+        0x30353e
+    );
+
+
+    /*
+        Ceiling
+    */
+
+    box(
+        18,
+        0.2,
+        16,
+        0x14171c,
+        0,
+        4,
+        0,
+        roomOne
+    );
+
+
+    /*
+        Left wall
+    */
+
+    box(
+        0.3,
+        4,
+        16,
+        0x1c2027,
+        -9,
+        2,
+        0,
+        roomOne,
+        true
+    );
+
+
+    /*
+        Right wall
+    */
+
+    box(
+        0.3,
+        4,
+        16,
+        0x1c2027,
+        9,
+        2,
+        0,
+        roomOne,
+        true
+    );
+
+
+    /*
+        Back wall
+    */
+
+    box(
+        18,
+        4,
+        0.3,
+        0x1c2027,
+        0,
+        2,
+        -8,
+        roomOne,
+        true
+    );
+
+
+    /*
+        Front wall.
+
+        There is a gap in the
+        middle for the door.
+    */
+
+    box(
+        6,
+        4,
+        0.3,
+        0x1c2027,
+        -6,
+        2,
+        8,
+        roomOne,
+        true
+    );
+
+
+    box(
+        6,
+        4,
+        0.3,
+        0x1c2027,
+        6,
+        2,
+        8,
+        roomOne,
+        true
+    );
+
+
+    /*
+        Desk
+    */
+
+    box(
+        3,
+        0.3,
+        1.4,
+        0x5a3928,
+        -3,
+        1.1,
+        -1,
+        roomOne,
+        true
+    );
+
+
+    box(
+        0.2,
+        1.1,
+        0.2,
+        0x39251b,
+        -4.2,
+        0.55,
+        -1.5,
+        roomOne,
+        true
+    );
+
+
+    box(
+        0.2,
+        1.1,
+        0.2,
+        0x39251b,
+        -1.8,
+        0.55,
+        -1.5,
+        roomOne,
+        true
+    );
+
+
+    /*
+        Table
+    */
+
+    box(
+        2,
+        0.25,
+        1,
+        0x46322b,
+        4,
+        1.2,
+        2,
+        roomOne,
+        true
+    );
+
+
+    /*
+        Door
+    */
+
+    mainDoor =
+        box(
+            4,
+            3.7,
+            0.25,
+            0x3c424c,
+            0,
+            1.85,
+            7.8,
+            roomOne
+        );
+
+
+    /*
+        Key
+    */
+
+    keyObject =
+        createKey(
+            -3,
+            1.42,
+            -1,
+            roomOne,
+            0xffd45c
+        );
+
+}
+
+
+/* =====================================================
+   KEY
+===================================================== */
+
+function createKey(
+    x,
+    y,
+    z,
+    parent,
+    color
+) {
+
+    const group =
+        new THREE.Group();
+
+
+    const ring =
+        new THREE.Mesh(
+
+            new THREE.TorusGeometry(
+                0.18,
+                0.055,
+                10,
+                24
+            ),
+
+            makeMaterial(
+                color
+            )
+
+        );
+
+
+    ring.rotation.x =
+        Math.PI / 2;
+
+
+    group.add(
+        ring
+    );
+
+
+    const shaft =
+        new THREE.Mesh(
+
+            new THREE.BoxGeometry(
+                0.08,
+                0.08,
+                0.6
+            ),
+
+            makeMaterial(
+                color
+            )
+
+        );
+
+
+    shaft.position.z =
+        0.32;
+
+
+    group.add(
+        shaft
+    );
+
+
+    group.position.set(
+        x,
+        y,
+        z
+    );
+
+
+    parent.add(
+        group
+    );
+
+
+    return group;
+
+}
+
+
+/* =====================================================
+   MAZE
+===================================================== */
+
+/*
+    # = wall
+    . = floor
+    S = start
+    K = key
+*/
+
+const maze = [
+
+    "###############",
+    "#S............#",
+    "#.#####.#####.#",
+    "#.#...#.#.....#",
+    "#.#.#.#.#.###.#",
+    "#...#...#...#.#",
+    "###.#####.#.#.#",
+    "#...#.....#...#",
+    "#.###.#########",
+    "#.....#.......#",
+    "#.#####.#####.#",
+    "#.......#...K.#",
+    "###############"
+
+];
+
+
+/* =====================================================
+   BUILD MAZE
+===================================================== */
+
+function buildMaze() {
+
+    const cellSize =
+        2;
+
+
+    const wallHeight =
+        4;
+
+
+    const offsetX =
+        -maze[0].length *
+        cellSize /
+        2;
+
+
+    const offsetZ =
+        -maze.length *
+        cellSize /
+        2;
+
+
+    /*
+        Floor
+    */
+
+    floor(
+        maze[0].length *
+        cellSize,
+
+        maze.length *
+        cellSize,
+
+        roomTwo,
+
+        0x191d23
+    );
+
+
+    /*
+        Maze walls
+    */
+
+    for (
+        let row = 0;
+        row < maze.length;
+        row++
+    ) {
+
+        for (
+            let col = 0;
+            col < maze[row].length;
+            col++
+        ) {
+
+            const tile =
+                maze[row][col];
+
+
+            const x =
+                offsetX +
+                col *
+                cellSize +
+                cellSize / 2;
+
+
+            const z =
+                offsetZ +
+                row *
+                cellSize +
+                cellSize / 2;
+
+
+            if (
+                tile === "#"
+            ) {
+
+                box(
+                    cellSize,
+                    wallHeight,
+                    cellSize,
+                    0x292f38,
+                    x,
+                    wallHeight / 2,
+                    z,
+                    roomTwo,
+                    true
+                );
+
+            }
+
+
+            if (
+                tile === "K"
+            ) {
+
+                mazeKey =
+                    createKey(
+                        x,
+                        1.2,
+                        z,
+                        roomTwo,
+                        0x55ccff
+                    );
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   FINAL DOOR
+===================================================== */
+
+function buildFinalDoor() {
+
+    /*
+        Put the final door at the
+        end of the maze area.
+    */
+
+    finalDoor =
+        box(
+            3,
+            3.7,
+            0.3,
+            0x11151b,
+            0,
+            1.85,
+            11,
+            roomTwo
+        );
+
+
+}
+
+
+/* =====================================================
+   BUILD WORLD
+===================================================== */
+
+let mainDoor = null;
+
+let keyObject = null;
+
+let mazeKey = null;
+
+let finalDoor = null;
+
+
+buildRoomOne();
+
+buildMaze();
+
+buildFinalDoor();
+
+
+/* =====================================================
+   LIGHTING
+===================================================== */
+
+const ambient =
+    new THREE.AmbientLight(
+        0x9aa4b8,
+        0.5
+    );
+
+
+scene.add(
+    ambient
+);
+
+
+/*
+    Room 1 light
+*/
+
+const roomLight =
+    new THREE.PointLight(
+        0xffdcb0,
+        25,
+        22
+    );
+
+
+roomLight.position.set(
+    0,
+    3.2,
+    0
+);
+
+
+roomLight.castShadow =
+    true;
+
+
+roomOne.add(
+    roomLight
+);
+
+
+/*
+    Maze lights
+*/
+
+const mazeLights = [
+
+    [-8, 2, -8],
+    [6, 2, -6],
+    [-6, 2, 4],
+    [7, 2, 7]
+
+];
+
+
+for (
+    const position of mazeLights
+) {
+
+    const light =
+        new THREE.PointLight(
+            0x5577ff,
+            12,
+            10
+        );
+
+
+    light.position.set(
+        position[0],
+        3,
+        position[2]
+    );
+
+
+    light.castShadow =
+        true;
+
+
+    roomTwo.add(
+        light
+    );
+
+}
+
+
+/* =====================================================
+   COLLISION
+===================================================== */
+
+function collides(
+    position
+) {
+
+    const radius =
+        player.radius;
+
+
+    for (
+        const wall of collisionWalls
+    ) {
+
+        if (
+
+            position.x + radius >
+            wall.minX &&
+
+            position.x - radius <
+            wall.maxX &&
+
+            position.z + radius >
+            wall.minZ &&
+
+            position.z - radius <
+            wall.maxZ
+
+        ) {
+
+            return true;
+
+        }
+
+    }
+
+
+    return false;
+
+}
+
+
+/* =====================================================
+   PLAYER MOVEMENT
+===================================================== */
+
+function updateMovement(
+    delta
+) {
+
+    if (
+        !pointerLocked
+    ) {
+
+        return;
+
+    }
+
+
+    let forward = 0;
+
+    let strafe = 0;
+
+
+    if (
+        keys.w
+    ) {
+
+        forward += 1;
+
+    }
+
+
+    if (
+        keys.s
+    ) {
+
+        forward -= 1;
+
+    }
+
+
+    if (
+        keys.d
+    ) {
+
+        strafe += 1;
+
+    }
+
+
+    if (
+        keys.a
+    ) {
+
+        strafe -= 1;
+
+    }
+
+
+    if (
+        forward === 0 &&
+        strafe === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const forwardVector =
+        new THREE.Vector3(
+
+            -Math.sin(
+                player.yaw
+            ),
+
+            0,
+
+            -Math.cos(
+                player.yaw
+            )
+
+        );
+
+
+    const rightVector =
+        new THREE.Vector3(
+
+            Math.cos(
+                player.yaw
+            ),
+
+            0,
+
+            -Math.sin(
+                player.yaw
+            )
+
+        );
+
+
+    const movement =
+        new THREE.Vector3();
+
+
+    movement
+        .addScaledVector(
+            forwardVector,
+            forward
+        )
+        .addScaledVector(
+            rightVector,
+            strafe
+        );
+
+
+    movement.normalize();
+
+
+    movement.multiplyScalar(
+        player.speed *
+        delta
+    );
+
+
+    /*
+        X collision
+    */
+
+    const nextX =
+        player.position.clone();
+
+
+    nextX.x +=
+        movement.x;
+
+
+    if (
+        !collides(nextX)
+    ) {
+
+        player.position.x =
+            nextX.x;
+
+    }
+
+
+    /*
+        Z collision
+    */
+
+    const nextZ =
+        player.position.clone();
+
+
+    nextZ.z +=
+        movement.z;
+
+
+    if (
+        !collides(nextZ)
+    ) {
+
+        player.position.z =
+            nextZ.z;
+
+    }
+
+
+    /*
+        Keep player in general
+        world boundaries.
+    */
+
+    player.position.x =
+        THREE.MathUtils.clamp(
+            player.position.x,
+            -8.5,
+            8.5
+        );
+
+
+    player.position.z =
+        THREE.MathUtils.clamp(
+            player.position.z,
+            -7.5,
+            25
+        );
+
+}
+
+
+/* =====================================================
+   CAMERA
+===================================================== */
+
+function updateCamera() {
+
+    camera.position.copy(
+        player.position
+    );
+
+
+    camera.rotation.order =
+        "YXZ";
+
+
+    camera.rotation.y =
+        player.yaw;
+
+
+    camera.rotation.x =
+        player.pitch;
+
+}
+
+
+/* =====================================================
+   DISTANCE
+===================================================== */
+
+function distanceTo(
+    object
+) {
+
+    if (
+        !object ||
+        !object.visible
+    ) {
+
+        return Infinity;
+
+    }
+
+
+    const worldPosition =
+        new THREE.Vector3();
+
+
+    object.getWorldPosition(
+        worldPosition
+    );
+
+
+    return player.position.distanceTo(
+        worldPosition
+    );
+
+}
+
+
+/* =====================================================
+   INTERACTION
+===================================================== */
+
+let nearby =
+    null;
+
+
+function updateInteraction() {
+
+    nearby =
+        null;
+
+
+    let closest =
+        1.7;
+
+
+    /*
+        Normal key
+    */
+
+    if (
+        !memory.keyFound
+    ) {
+
+        const distance =
+            distanceTo(
+                keyObject
+            );
+
+
+        if (
+            distance <
+            closest
+        ) {
+
+            closest =
+                distance;
+
+            nearby =
+                "key";
+
+        }
+
+    }
+
+
+    /*
+        Main door
+    */
+
+    if (
+        currentRoom === 1
+    ) {
+
+        const distance =
+            distanceTo(
+                mainDoor
+            );
+
+
+        if (
+            distance <
+            closest
+        ) {
+
+            closest =
+                distance;
+
+            nearby =
+                "mainDoor";
+
+        }
+
+    }
+
+
+    /*
+        Maze key
+    */
+
+    if (
+        currentRoom === 2 &&
+        !memory.mazeKeyFound
+    ) {
+
+        const distance =
+            distanceTo(
+                mazeKey
+            );
+
+
+        if (
+            distance <
+            closest
+        ) {
+
+            closest =
+                distance;
+
+            nearby =
+                "mazeKey";
+
+        }
+
+    }
+
+
+    /*
+        Final door
+    */
+
+    if (
+        currentRoom === 2 &&
+        !memory.finalDoorOpened
+    ) {
+
+        const distance =
+            distanceTo(
+                finalDoor
+            );
+
+
+        if (
+            distance <
+            closest
+        ) {
+
+            closest =
+                distance;
+
+            nearby =
+                "finalDoor";
+
+        }
+
+    }
+
+
+    if (
+        nearby
+    ) {
+
+        interactionElement.classList.add(
+            "visible"
+        );
+
+
+        if (
+            nearby === "key"
+        ) {
+
+            interactionElement.textContent =
+                "E — Pick up key";
+
+        }
+
+
+        if (
+            nearby === "mainDoor"
+        ) {
+
+            interactionElement.textContent =
+                memory.keyFound
+                    ? "E — Open door"
+                    : "E — Locked";
+
+        }
+
+
+        if (
+            nearby === "mazeKey"
+        ) {
+
+            interactionElement.textContent =
+                "E — Pick up strange key";
+
+        }
+
+
+        if (
+            nearby === "finalDoor"
+        ) {
+
+            interactionElement.textContent =
+                memory.mazeKeyFound
+                    ? "E — Open final door"
+                    : "E — Locked";
+
+        }
+
+    }
+    else {
+
+        interactionElement.classList.remove(
+            "visible"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   INTERACT
+===================================================== */
+
+function interact() {
+
+    if (
+        !nearby
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        nearby === "key"
+    ) {
+
+        memory.keyFound =
+            true;
+
+
+        keyObject.visible =
+            false;
+
+
+        showMessage(
+            "You found the key. You won't forget it."
+        );
+
+
+        return;
+
+    }
+
+
+    if (
+        nearby === "mainDoor"
+    ) {
+
+        if (
+            !memory.keyFound
+        ) {
+
+            showMessage(
+                "The door is locked."
+            );
+
+            return;
+
+        }
+
+
+        openMainDoor();
+
+
+        return;
+
+    }
+
+
+    if (
+        nearby === "mazeKey"
+    ) {
+
+        memory.mazeKeyFound =
+            true;
+
+
+        mazeKey.visible =
+            false;
+
+
+        showMessage(
+            "You found another key."
+        );
+
+
+        return;
+
+    }
+
+
+    if (
+        nearby === "finalDoor"
+    ) {
+
+        if (
+            !memory.mazeKeyFound
+        ) {
+
+            showMessage(
+                "The door won't open."
+            );
+
+            return;
+
+        }
+
+
+        memory.finalDoorOpened =
+            true;
+
+
+        showMessage(
+            "The final door opens..."
+        );
+
+
+        setTimeout(
+            () => {
+
+                running =
+                    false;
+
+
+                ending.style.display =
+                    "flex";
+
+
+                if (
+                    document.pointerLockElement
+                ) {
+
+                    document.exitPointerLock();
+
+                }
+
+            },
+            1000
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   MAIN DOOR
+===================================================== */
+
+let mainDoorOpen =
+    false;
+
+
+function openMainDoor() {
+
+    if (
+        mainDoorOpen
+    ) {
+
+        return;
+
+    }
+
+
+    mainDoorOpen =
+        true;
+
+
+    const start =
+        mainDoor.position.y;
+
+
+    const startTime =
+        performance.now();
+
+
+    function animate(
+        time
+    ) {
+
+        const progress =
+            Math.min(
+                1,
+                (
+                    time -
+                    startTime
+                ) / 900
+            );
+
+
+        mainDoor.position.y =
+            start +
+            progress *
+            4;
+
+
+        if (
+            progress < 1
+        ) {
+
+            requestAnimationFrame(
+                animate
+            );
+
+        }
+
+    }
+
+
+    requestAnimationFrame(
+        animate
+    );
+
+
+    showMessage(
+        "Something is waiting behind the door."
+    );
+
+}
+
+
+/* =====================================================
+   ROOM DETECTION
+===================================================== */
+
+function updateRoom() {
+
+    /*
+        Door is at z = 8.
+
+        Room two begins after
+        z = 9.
+    */
+
+    if (
+        player.position.z >
+        9
+    ) {
+
+        if (
+            currentRoom !== 2
+        ) {
+
+            currentRoom =
+                2;
+
+
+            if (
+                !memory.mazeEntered
+            ) {
+
+                memory.mazeEntered =
+                    true;
+
+
+                showMessage(
+                    "This room shouldn't fit inside the building."
+                );
+
+            }
+
+        }
+
+    }
+    else {
+
+        currentRoom =
+            1;
+
+    }
+
+}
+
+
+/* =====================================================
+   MESSAGE
+===================================================== */
+
+let messageTimer =
+    null;
+
+
+function showMessage(
+    text
+) {
+
+    messageElement.textContent =
+        text;
+
+
+    messageElement.classList.add(
+        "visible"
+    );
+
+
+    clearTimeout(
+        messageTimer
+    );
+
+
+    messageTimer =
+        setTimeout(
+            () => {
+
+                messageElement.classList.remove(
+                    "visible"
+                );
+
+            },
+            3500
+        );
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+function resetWorld() {
+
+    /*
+        Player
+    */
+
+    player.position.set(
+        0,
+        1.7,
+        6
+    );
+
+
+    player.yaw =
+        Math.PI;
+
+
+    player.pitch =
+        0;
+
+
+    currentRoom =
+        1;
+
+
+    /*
+        Door
+    */
+
+    mainDoorOpen =
+        false;
+
+
+    mainDoor.position.y =
+        1.85;
+
+
+    /*
+        Persistent objects
+    */
+
+    keyObject.visible =
+        !memory.keyFound;
+
+
+    mazeKey.visible =
+        !memory.mazeKeyFound;
+
+
+    finalDoor.position.y =
+        1.85;
+
+}
+
+
+/* =====================================================
+   LOOP RESET
+===================================================== */
+
+function resetLoop() {
+
+    running =
+        false;
+
+
+    if (
+        document.pointerLockElement
+    ) {
+
+        document.exitPointerLock();
+
+    }
+
+
+    flash.classList.add(
+        "visible"
+    );
+
+
+    setTimeout(
+        () => {
+
+            loopNumber++;
+
+
+            loopNumberElement.textContent =
+                "Loop " +
+                loopNumber;
+
+
+            loopTime =
+                60;
+
+
+            resetWorld();
+
+
+            running =
+                true;
+
+
+            updateTimer();
+
+
+            if (
+                memory.mazeKeyFound
+            ) {
+
+                showMessage(
+                    "You remember the maze."
+                );
+
+            }
+            else if (
+                memory.keyFound
+            ) {
+
+                showMessage(
+                    "You remember where the key is."
+                );
+
+            }
+            else {
+
+                showMessage(
+                    "The loop begins again."
+                );
+
+            }
+
+
+            setTimeout(
+                () => {
+
+                    flash.classList.remove(
+                        "visible"
+                    );
+
+
+                    renderer.domElement.requestPointerLock();
+
+                },
+                400
+            );
+
+        },
+        800
+    );
+
+}
+
+
+/* =====================================================
+   TIMER
+===================================================== */
+
+function updateTimer() {
+
+    timerElement.textContent =
+        Math.max(
+            0,
+            loopTime
+        ).toFixed(1);
+
+
+    if (
+        loopTime <= 10
+    ) {
+
+        timerElement.style.color =
+            "#ff5555";
+
+    }
+    else {
+
+        timerElement.style.color =
+            "white";
+
+    }
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+function startGame() {
+
+    startScreen.style.display =
+        "none";
+
+
+    ending.style.display =
+        "none";
+
+
+    running =
+        true;
+
+
+    loopNumber =
+        1;
+
+
+    loopTime =
+        60;
+
+
+    memory.keyFound =
+        false;
+
+
+    memory.mazeEntered =
+        false;
+
+
+    memory.mazeKeyFound =
+        false;
+
+
+    memory.finalDoorOpened =
+        false;
+
+
+    resetWorld();
+
+
+    updateTimer();
+
+
+    showMessage(
+        "Find the key."
+    );
+
+
+    setTimeout(
+        () => {
+
+            renderer.domElement.requestPointerLock();
+
+        },
+        100
+    );
+
+}
+
+
+/* =====================================================
+   START BUTTON
+===================================================== */
+
+startButton.addEventListener(
+    "click",
+    startGame
+);
+
+
+/* =====================================================
+   GAME LOOP
+===================================================== */
+
+let lastTime =
+    performance.now();
+
+
+function gameLoop(
+    time
+) {
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+
+    const delta =
+        Math.min(
+            (
+                time -
+                lastTime
+            ) / 1000,
+            0.05
+        );
+
+
+    lastTime =
+        time;
+
+
+    if (
+        running
+    ) {
+
+        loopTime -=
+            delta;
+
+
+        if (
+            loopTime <= 0
+        ) {
+
+            loopTime =
+                0;
+
+
+            updateTimer();
+
+
+            resetLoop();
+
+        }
+        else {
+
+            updateTimer();
+
+        }
+
+
+        updateMovement(
+            delta
+        );
+
+
+        updateRoom();
+
+        updateCamera();
+
+        updateInteraction();
+
+    }
+
+
+    renderer.render(
+        scene,
+        camera
+    );
+
+}
+
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+
+resetWorld();
+
+updateCamera();
+
+updateTimer();
+
+
+/* =====================================================
+   START RENDERING
+===================================================== */
+
+requestAnimationFrame(
+    gameLoop
+);
+
+</script>
+
+</body>
+
+</html>
