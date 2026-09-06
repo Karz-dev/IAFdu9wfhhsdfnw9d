@@ -1,25 +1,4 @@
-window.addEventListener("keydown", event => {
-
-    const key = event.key.toLowerCase();
-
-    if (key === "w") keys.w = true;
-    if (key === "a") keys.a = true;
-    if (key === "s") keys.s = true;
-    if (key === "d") keys.d = true;
-
-});
-
-
-window.addEventListener("keyup", event => {
-
-    const key = event.key.toLowerCase();
-
-    if (key === "w") keys.w = false;
-    if (key === "a") keys.a = false;
-    if (key === "s") keys.s = false;
-    if (key === "d") keys.d = false;
-
-});<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -33,11 +12,13 @@ window.addEventListener("keyup", event => {
 
 <title>LOOP</title>
 
+
 <style>
 
 * {
     box-sizing: border-box;
 }
+
 
 html,
 body {
@@ -49,13 +30,16 @@ body {
 
     overflow: hidden;
 
-    background: #050505;
+    background: #05070d;
 
     font-family: Arial, sans-serif;
+
+    color: white;
 
     user-select: none;
 
 }
+
 
 canvas {
 
@@ -67,24 +51,127 @@ canvas {
 }
 
 
-/* =====================================================
-   UI
-===================================================== */
-
-#ui {
+#startScreen,
+#gameOverScreen {
 
     position: fixed;
 
     inset: 0;
 
-    pointer-events: none;
+    z-index: 20;
 
-    color: white;
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(35, 50, 85, 0.35),
+            rgba(3, 5, 10, 0.96)
+        );
 
 }
 
 
-/* TIMER */
+#gameOverScreen {
+
+    display: none;
+
+}
+
+
+.panel {
+
+    width: min(520px, 90vw);
+
+    padding: 36px;
+
+    text-align: center;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.12);
+
+    border-radius: 20px;
+
+    background:
+        rgba(10, 14, 25, 0.92);
+
+    box-shadow:
+        0 20px 80px rgba(0,0,0,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+
+}
+
+
+h1 {
+
+    margin: 0 0 10px;
+
+    font-size: 54px;
+
+    letter-spacing: 8px;
+
+}
+
+
+.subtitle {
+
+    margin: 0 0 28px;
+
+    color: #aebbd4;
+
+    line-height: 1.6;
+
+}
+
+
+button {
+
+    border: 0;
+
+    border-radius: 12px;
+
+    padding: 13px 28px;
+
+    background: #315de8;
+
+    color: white;
+
+    font-size: 17px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,0.3);
+
+}
+
+
+button:hover {
+
+    background: #4670f5;
+
+}
+
+
+#hud {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10;
+
+    pointer-events: none;
+
+}
+
 
 #timer {
 
@@ -93,7 +180,7 @@ canvas {
     top: 18px;
     left: 20px;
 
-    font-size: 28px;
+    font-size: 25px;
 
     font-weight: bold;
 
@@ -103,26 +190,39 @@ canvas {
 }
 
 
-/* LOOP NUMBER */
-
-#loopNumber {
+#loopCounter {
 
     position: absolute;
 
-    top: 55px;
-    left: 22px;
+    top: 52px;
+    left: 20px;
 
-    color: #aaa;
+    color: #aebbd4;
 
     font-size: 15px;
 
     text-shadow:
-        0 2px 5px black;
+        0 2px 8px black;
 
 }
 
 
-/* CROSSHAIR */
+#roomName {
+
+    position: absolute;
+
+    top: 18px;
+    right: 20px;
+
+    font-size: 15px;
+
+    color: #aebbd4;
+
+    text-shadow:
+        0 2px 8px black;
+
+}
+
 
 #crosshair {
 
@@ -131,314 +231,101 @@ canvas {
     left: 50%;
     top: 50%;
 
-    width: 7px;
-    height: 7px;
+    width: 12px;
+    height: 12px;
 
     transform:
         translate(-50%, -50%);
 
-    border:
-        2px solid white;
+}
 
-    border-radius: 50%;
 
-    box-shadow:
-        0 0 5px black;
+#crosshair::before,
+#crosshair::after {
+
+    content: "";
+
+    position: absolute;
+
+    background:
+        rgba(255,255,255,0.8);
 
 }
 
 
-/* INTERACTION */
+#crosshair::before {
 
-#interaction {
+    width: 12px;
+    height: 2px;
+
+    left: 0;
+    top: 5px;
+
+}
+
+
+#crosshair::after {
+
+    width: 2px;
+    height: 12px;
+
+    left: 5px;
+    top: 0;
+
+}
+
+
+#prompt {
 
     position: absolute;
 
     left: 50%;
-    bottom: 115px;
+    bottom: 80px;
 
     transform:
         translateX(-50%);
 
-    padding:
-        8px 14px;
+    padding: 9px 14px;
 
-    border-radius: 8px;
+    border-radius: 10px;
 
     background:
-        rgba(0, 0, 0, 0.65);
+        rgba(0,0,0,0.55);
+
+    color: white;
 
     font-size: 15px;
 
-    font-weight: bold;
-
-    opacity: 0;
-
-    transition:
-        opacity 0.15s;
-
 }
 
-
-#interaction.visible {
-
-    opacity: 1;
-
-}
-
-
-/* MESSAGE */
 
 #message {
 
     position: absolute;
 
     left: 50%;
-    bottom: 65px;
+    bottom: 30px;
 
     transform:
         translateX(-50%);
 
-    padding:
-        8px 15px;
-
-    border-radius: 8px;
-
-    background:
-        rgba(0, 0, 0, 0.55);
-
-    color: #ddd;
+    color: #b9c7e3;
 
     font-size: 14px;
 
-    text-align: center;
-
-    opacity: 0;
-
-    transition:
-        opacity 0.2s;
+    text-shadow:
+        0 2px 8px black;
 
 }
 
 
-#message.visible {
+#controls {
 
-    opacity: 1;
+    margin-top: 18px;
 
-}
+    color: #8e9ab0;
 
-
-/* CLICK TO CAPTURE */
-
-#capture {
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    transform:
-        translate(-50%, -50%);
-
-    padding:
-        15px 22px;
-
-    border-radius: 10px;
-
-    background:
-        rgba(0, 0, 0, 0.75);
-
-    font-size: 16px;
-
-    display: none;
-
-}
-
-
-/* =====================================================
-   START SCREEN
-===================================================== */
-
-#startScreen {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 10;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background:
-
-        radial-gradient(
-            circle,
-            #172033 0%,
-            #080a0f 55%,
-            #000000 100%
-        );
-
-}
-
-
-#startBox {
-
-    width:
-        min(550px, 90vw);
-
-    padding: 45px;
-
-    text-align: center;
-
-    border-radius: 20px;
-
-    background:
-        rgba(10, 14, 22, 0.95);
-
-    border:
-        1px solid
-        rgba(255,255,255,0.1);
-
-    box-shadow:
-        0 20px 80px
-        rgba(0,0,0,0.65);
-
-}
-
-
-#startBox h1 {
-
-    margin: 0;
-
-    font-size: 72px;
-
-    letter-spacing: 15px;
-
-}
-
-
-#startBox p {
-
-    color: #aaa;
-
-    line-height: 1.6;
-
-}
-
-
-#startButton {
-
-    margin-top: 20px;
-
-    padding:
-        14px 30px;
-
-    border: 0;
-
-    border-radius: 10px;
-
-    background:
-        #2563eb;
-
-    color: white;
-
-    font-size: 18px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-}
-
-
-#startButton:hover {
-
-    background:
-        #3b82f6;
-
-}
-
-
-/* =====================================================
-   LOOP FLASH
-===================================================== */
-
-#flash {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 20;
-
-    background: black;
-
-    pointer-events: none;
-
-    opacity: 0;
-
-    transition:
-        opacity 0.35s;
-
-}
-
-
-#flash.visible {
-
-    opacity: 1;
-
-}
-
-
-/* =====================================================
-   END
-===================================================== */
-
-#ending {
-
-    position: fixed;
-
-    inset: 0;
-
-    z-index: 30;
-
-    display: none;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background:
-        rgba(0,0,0,0.94);
-
-    text-align: center;
-
-}
-
-
-#endingBox {
-
-    max-width: 600px;
-
-}
-
-
-#endingBox h1 {
-
-    font-size: 55px;
-
-    letter-spacing: 8px;
-
-}
-
-
-#endingBox p {
-
-    color: #aaa;
+    font-size: 13px;
 
     line-height: 1.7;
 
@@ -455,99 +342,104 @@ canvas {
 <canvas id="game"></canvas>
 
 
-<div id="ui">
+<div id="hud">
 
     <div id="timer">
         60.0
     </div>
 
 
-    <div id="loopNumber">
+    <div id="loopCounter">
         Loop 1
+    </div>
+
+
+    <div id="roomName">
+        ROOM 1
     </div>
 
 
     <div id="crosshair"></div>
 
 
-    <div id="interaction">
-        Press E
-    </div>
+    <div id="prompt"></div>
 
 
-    <div id="message"></div>
-
-
-    <div id="capture">
-        Click to capture mouse
+    <div id="message">
+        Find the key.
     </div>
 
 </div>
 
 
-<div id="flash"></div>
-
-
 <div id="startScreen">
 
-    <div id="startBox">
+    <div class="panel">
 
         <h1>
             LOOP
         </h1>
 
-        <p>
-            You have 60 seconds.
-        </p>
 
-        <p>
-            Find the key.
-            <br>
-            Open the door.
-            <br>
-            Find out what is behind it.
-        </p>
+        <p class="subtitle">
 
-        <p>
+            You have 60 seconds.<br>
 
-            <b>WASD</b> — Move
-            <br>
-
-            <b>Mouse</b> — Look
-            <br>
-
-            <b>E</b> — Interact
-            <br>
-
-            <b>ESC</b> — Release mouse
+            Find the key, open the door,
+            and discover what waits beyond it.
 
         </p>
+
 
         <button id="startButton">
-            ENTER THE LOOP
+
+            START LOOP
+
         </button>
+
+
+        <div id="controls">
+
+            WASD — Move<br>
+
+            Mouse — Look around<br>
+
+            E — Interact<br>
+
+            ESC — Release mouse
+            (WASD still works)
+
+        </div>
 
     </div>
 
 </div>
 
 
-<div id="ending">
+<div id="gameOverScreen">
 
-    <div id="endingBox">
+    <div class="panel">
 
-        <h1>
-            ESCAPED
+        <h1 id="endingTitle">
+            LOOP
         </h1>
 
-        <p>
-            Somehow, you broke the loop.
+
+        <p
+            id="endingText"
+            class="subtitle"
+        >
+
+            Time ran out.
+
         </p>
 
-        <p>
-            But you still don't know
-            why the room existed.
-        </p>
+
+        <button id="restartButton">
+
+            RESTART
+
+        </button>
 
     </div>
 
@@ -557,52 +449,18 @@ canvas {
 <script type="module">
 
 
-/* =====================================================
-   THREE.JS
-===================================================== */
-
 import * as THREE from
     "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
 
 
-/* =====================================================
-   DOM
-===================================================== */
+/* =========================================================
+   RENDERER
+========================================================= */
+
 
 const canvas =
     document.getElementById("game");
 
-const timerElement =
-    document.getElementById("timer");
-
-const loopNumberElement =
-    document.getElementById("loopNumber");
-
-const interactionElement =
-    document.getElementById("interaction");
-
-const messageElement =
-    document.getElementById("message");
-
-const captureElement =
-    document.getElementById("capture");
-
-const startScreen =
-    document.getElementById("startScreen");
-
-const startButton =
-    document.getElementById("startButton");
-
-const flash =
-    document.getElementById("flash");
-
-const ending =
-    document.getElementById("ending");
-
-
-/* =====================================================
-   RENDERER
-===================================================== */
 
 const renderer =
     new THREE.WebGLRenderer({
@@ -631,9 +489,10 @@ renderer.setSize(
 renderer.shadowMap.enabled = true;
 
 
-/* =====================================================
+/* =========================================================
    SCENE
-===================================================== */
+========================================================= */
+
 
 const scene =
     new THREE.Scene();
@@ -641,21 +500,14 @@ const scene =
 
 scene.background =
     new THREE.Color(
-        0x10141c
+        0x05070d
     );
 
 
-scene.fog =
-    new THREE.Fog(
-        0x10141c,
-        1,
-        32
-    );
-
-
-/* =====================================================
+/* =========================================================
    CAMERA
-===================================================== */
+========================================================= */
+
 
 const camera =
     new THREE.PerspectiveCamera(
@@ -665,9 +517,9 @@ const camera =
         window.innerWidth /
         window.innerHeight,
 
-        0.05,
+        0.1,
 
-        100
+        200
 
     );
 
@@ -676,52 +528,34 @@ camera.rotation.order =
     "YXZ";
 
 
-/* =====================================================
-   PLAYER
-===================================================== */
-
-const player = {
-
-    position:
-        new THREE.Vector3(
-            0,
-            1.7,
-            6
-        ),
-
-    yaw:
-        Math.PI,
-
-    pitch:
-        0,
-
-    speed:
-        4.5,
-
-    radius:
-        0.3
-
-};
-
-
-/* =====================================================
+/* =========================================================
    GAME STATE
-===================================================== */
+========================================================= */
+
+
+const LOOP_LENGTH = 60;
+
 
 let running = false;
 
-let pointerLocked = false;
 
 let loopNumber = 1;
 
-let loopTime = 60;
 
-let currentRoom = 1;
+let loopTime =
+    LOOP_LENGTH;
 
 
-/* =====================================================
+let lastTime = 0;
+
+
+let pointerLocked = false;
+
+
+/* =========================================================
    PERSISTENT MEMORY
-===================================================== */
+========================================================= */
+
 
 const memory = {
 
@@ -736,56 +570,227 @@ const memory = {
 };
 
 
-/* =====================================================
-   INPUT
-===================================================== */
+/* =========================================================
+   PLAYER
+========================================================= */
+
+
+const player = {
+
+    position:
+        new THREE.Vector3(
+            0,
+            1.7,
+            0
+        ),
+
+    radius: 0.35,
+
+    speed: 5.2,
+
+    yaw: 0,
+
+    pitch: 0
+
+};
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
+
+/*
+   IMPORTANT:
+
+   WASD is completely independent
+   from pointer lock.
+
+   This means pressing ESC will NOT
+   stop the player from moving.
+*/
+
 
 const keys = {
 
     w: false,
+
     a: false,
+
     s: false,
+
     d: false
 
 };
 
 
-window.addEventListener("keydown", event => {
-
-    const key = event.key.toLowerCase();
-
-    if (key === "w") keys.w = true;
-    if (key === "a") keys.a = true;
-    if (key === "s") keys.s = true;
-    if (key === "d") keys.d = true;
-
-});
+window.addEventListener(
+    "keydown",
+    event => {
 
 
-window.addEventListener("keyup", event => {
+        if (
+            event.code ===
+            "KeyW"
+        ) {
 
-    const key = event.key.toLowerCase();
+            keys.w = true;
 
-    if (key === "w") keys.w = false;
-    if (key === "a") keys.a = false;
-    if (key === "s") keys.s = false;
-    if (key === "d") keys.d = false;
+            event.preventDefault();
 
-});
+        }
 
 
-/* =====================================================
+        if (
+            event.code ===
+            "KeyA"
+        ) {
+
+            keys.a = true;
+
+            event.preventDefault();
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyS"
+        ) {
+
+            keys.s = true;
+
+            event.preventDefault();
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyD"
+        ) {
+
+            keys.d = true;
+
+            event.preventDefault();
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyE"
+        ) {
+
+            interact();
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    event => {
+
+
+        if (
+            event.code ===
+            "KeyW"
+        ) {
+
+            keys.w = false;
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyA"
+        ) {
+
+            keys.a = false;
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyS"
+        ) {
+
+            keys.s = false;
+
+        }
+
+
+        if (
+            event.code ===
+            "KeyD"
+        ) {
+
+            keys.d = false;
+
+        }
+
+    }
+);
+
+
+/*
+   Prevent stuck keys if the
+   browser loses focus.
+*/
+
+
+window.addEventListener(
+    "blur",
+    () => {
+
+        keys.w = false;
+
+        keys.a = false;
+
+        keys.s = false;
+
+        keys.d = false;
+
+    }
+);
+
+
+/* =========================================================
    MOUSE LOOK
-===================================================== */
+========================================================= */
+
+
+document.addEventListener(
+    "pointerlockchange",
+    () => {
+
+        pointerLocked =
+            document.pointerLockElement ===
+            canvas;
+
+    }
+);
+
 
 document.addEventListener(
     "mousemove",
     event => {
 
-        if (
-            !running ||
-            !pointerLocked
-        ) {
+
+        /*
+           ONLY mouse look requires
+           pointer lock.
+
+           WASD does not.
+        */
+
+
+        if (!pointerLocked) {
 
             return;
 
@@ -793,7 +798,7 @@ document.addEventListener(
 
 
         const sensitivity =
-            0.0025;
+            0.0022;
 
 
         player.yaw -=
@@ -806,14 +811,20 @@ document.addEventListener(
             sensitivity;
 
 
+        const limit =
+            Math.PI / 2 -
+            0.05;
+
+
         player.pitch =
-            THREE.MathUtils.clamp(
+            Math.max(
 
-                player.pitch,
+                -limit,
 
-                -1.45,
-
-                1.45
+                Math.min(
+                    limit,
+                    player.pitch
+                )
 
             );
 
@@ -821,54 +832,26 @@ document.addEventListener(
 );
 
 
-/* =====================================================
-   POINTER LOCK
-===================================================== */
-
-document.addEventListener(
-    "pointerlockchange",
-    () => {
-
-        pointerLocked =
-            document.pointerLockElement ===
-            renderer.domElement;
+/*
+   Clicking the game captures
+   the mouse for looking around.
+*/
 
 
-        if (
-            pointerLocked
-        ) {
-
-            captureElement.style.display =
-                "none";
-
-        }
-        else if (
-            running
-        ) {
-
-            captureElement.style.display =
-                "block";
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   CLICK TO RECAPTURE
-===================================================== */
-
-renderer.domElement.addEventListener(
+canvas.addEventListener(
     "click",
     () => {
+
 
         if (
             running &&
             !pointerLocked
         ) {
 
-            renderer.domElement.requestPointerLock();
+            canvas.requestPointerLock()
+                .catch(
+                    () => {}
+                );
 
         }
 
@@ -876,124 +859,255 @@ renderer.domElement.addEventListener(
 );
 
 
-/* =====================================================
-   RESIZE
-===================================================== */
-
-window.addEventListener(
-    "resize",
-    () => {
-
-        camera.aspect =
-            window.innerWidth /
-            window.innerHeight;
+/* =========================================================
+   WORLD
+========================================================= */
 
 
-        camera.updateProjectionMatrix();
-
-
-        renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
-
-    }
-);
-
-
-/* =====================================================
-   WORLD GROUPS
-===================================================== */
-
-const roomOne =
-    new THREE.Group();
-
-
-const roomTwo =
+const worldGroup =
     new THREE.Group();
 
 
 scene.add(
-    roomOne
+    worldGroup
 );
 
 
-scene.add(
-    roomTwo
-);
+/* =========================================================
+   MAZE
+========================================================= */
+
+
+const maze = [
+
+    "###############",
+
+    "#S............#",
+
+    "#.#####.#####.#",
+
+    "#.#...#.#.....#",
+
+    "#.#.#.#.#.###.#",
+
+    "#...#...#...#.#",
+
+    "###.#####.#.#.#",
+
+    "#...#.....#...#",
+
+    "#.###.#########",
+
+    "#.....#.......#",
+
+    "#.#####.#####.#",
+
+    "#.......#...K.#",
+
+    "###############"
+
+];
+
+
+const CELL_SIZE = 2;
+
+
+const mazeWidth =
+    maze[0].length *
+    CELL_SIZE;
+
+
+const mazeHeight =
+    maze.length *
+    CELL_SIZE;
+
+
+const room2OffsetZ = 18;
 
 
 /*
-    Room two is physically behind
-    the door of Room 1.
+   These bounds cover the complete
+   maze instead of cutting it off.
 */
 
-roomTwo.position.z =
-    18;
+
+const worldMinX =
+    -mazeWidth / 2 - 1;
 
 
-/* =====================================================
-   COLLISION WALLS
-===================================================== */
-
-const collisionWalls = [];
+const worldMaxX =
+    mazeWidth / 2 + 1;
 
 
-/* =====================================================
-   MATERIAL
-===================================================== */
+const worldMinZ =
+    -8;
 
-function makeMaterial(
-    color
+
+const worldMaxZ =
+    room2OffsetZ +
+    mazeHeight +
+    1;
+
+
+/* =========================================================
+   MATERIALS
+========================================================= */
+
+
+const floorMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x151b29,
+
+        roughness: 0.9
+
+    });
+
+
+const wallMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x2a3448,
+
+        roughness: 0.85
+
+    });
+
+
+const ceilingMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x0d111b,
+
+        roughness: 1
+
+    });
+
+
+const doorMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0x4d5c79,
+
+        roughness: 0.7
+
+    });
+
+
+const keyMaterial =
+    new THREE.MeshStandardMaterial({
+
+        color: 0xffd54a,
+
+        emissive: 0x8a6200,
+
+        emissiveIntensity: 1.8,
+
+        metalness: 0.4,
+
+        roughness: 0.3
+
+    });
+
+
+/* =========================================================
+   COLLISION
+========================================================= */
+
+
+const collisionBoxes = [];
+
+
+function addCollisionBox(
+
+    x,
+    y,
+    z,
+    width,
+    height,
+    depth
+
 ) {
 
-    return new THREE.MeshStandardMaterial({
+    collisionBoxes.push({
 
-        color: color,
+        minX:
+            x -
+            width / 2,
 
-        roughness: 0.8
+        maxX:
+            x +
+            width / 2,
+
+        minY:
+            y -
+            height / 2,
+
+        maxY:
+            y +
+            height / 2,
+
+        minZ:
+            z -
+            depth / 2,
+
+        maxZ:
+            z +
+            depth / 2
 
     });
 
 }
 
 
-/* =====================================================
-   BOX
-===================================================== */
+/* =========================================================
+   CUBE
+========================================================= */
 
-function box(
-    width,
-    height,
-    depth,
-    color,
+
+function addCube(
+
     x,
     y,
     z,
-    parent,
-    collision = false
+
+    width,
+    height,
+    depth,
+
+    material,
+
+    collision = true
+
 ) {
+
+
+    const geometry =
+        new THREE.BoxGeometry(
+
+            width,
+            height,
+            depth
+
+        );
+
 
     const mesh =
         new THREE.Mesh(
 
-            new THREE.BoxGeometry(
-                width,
-                height,
-                depth
-            ),
+            geometry,
 
-            makeMaterial(
-                color
-            )
+            material
 
         );
 
 
     mesh.position.set(
+
         x,
         y,
         z
+
     );
 
 
@@ -1002,36 +1116,24 @@ function box(
     mesh.receiveShadow = true;
 
 
-    parent.add(
+    worldGroup.add(
         mesh
     );
 
 
-    if (
-        collision
-    ) {
+    if (collision) {
 
-        collisionWalls.push({
+        addCollisionBox(
 
-            minX:
-                x -
-                width / 2,
+            x,
+            y,
+            z,
 
-            maxX:
-                x +
-                width / 2,
+            width,
+            height,
+            depth
 
-            minZ:
-                z +
-                parent.position.z -
-                depth / 2,
-
-            maxZ:
-                z +
-                parent.position.z +
-                depth / 2
-
-        });
+        );
 
     }
 
@@ -1041,283 +1143,410 @@ function box(
 }
 
 
-/* =====================================================
-   FLOOR
-===================================================== */
-
-function floor(
-    width,
-    depth,
-    parent,
-    color
-) {
-
-    const mesh =
-        new THREE.Mesh(
-
-            new THREE.BoxGeometry(
-                width,
-                0.2,
-                depth
-            ),
-
-            makeMaterial(
-                color
-            )
-
-        );
+/* =========================================================
+   ROOM 1
+========================================================= */
 
 
-    mesh.position.y =
-        -0.1;
-
-
-    mesh.receiveShadow = true;
-
-
-    parent.add(
-        mesh
-    );
-
-}
-
-
-/* =====================================================
-   ROOM ONE
-===================================================== */
-
-function buildRoomOne() {
-
-    floor(
-        18,
-        16,
-        roomOne,
-        0x30353e
-    );
+function buildRoom1() {
 
 
     /*
-        Ceiling
+       Floor
     */
 
-    box(
-        18,
-        0.2,
+
+    addCube(
+
+        0,
+        -0.15,
+        0,
+
         16,
-        0x14171c,
-        0,
-        4,
-        0,
-        roomOne
-    );
-
-
-    /*
-        Left wall
-    */
-
-    box(
         0.3,
-        4,
         16,
-        0x1c2027,
-        -9,
-        2,
-        0,
-        roomOne,
-        true
+
+        floorMaterial,
+
+        false
+
     );
 
 
     /*
-        Right wall
+       Ceiling
     */
 
-    box(
-        0.3,
-        4,
-        16,
-        0x1c2027,
-        9,
-        2,
+
+    addCube(
+
         0,
-        roomOne,
-        true
+        4,
+        0,
+
+        16,
+        0.3,
+        16,
+
+        ceilingMaterial,
+
+        false
+
     );
 
 
     /*
-        Back wall
+       Back wall
     */
 
-    box(
-        18,
-        4,
-        0.3,
-        0x1c2027,
+
+    addCube(
+
         0,
         2,
         -8,
-        roomOne,
-        true
+
+        16,
+        4,
+        0.4,
+
+        wallMaterial
+
     );
 
 
     /*
-        Front wall.
-
-        There is a gap in the
-        middle for the door.
+       Left wall
     */
 
-    box(
-        6,
+
+    addCube(
+
+        -8,
+        2,
+        0,
+
+        0.4,
         4,
-        0.3,
-        0x1c2027,
+        16,
+
+        wallMaterial
+
+    );
+
+
+    /*
+       Right wall
+    */
+
+
+    addCube(
+
+        8,
+        2,
+        0,
+
+        0.4,
+        4,
+        16,
+
+        wallMaterial
+
+    );
+
+
+    /*
+       Front wall.
+
+       There is a doorway in the
+       centre.
+    */
+
+
+    addCube(
+
         -6,
         2,
         8,
-        roomOne,
-        true
+
+        4,
+        4,
+        0.4,
+
+        wallMaterial
+
     );
 
 
-    box(
-        6,
-        4,
-        0.3,
-        0x1c2027,
+    addCube(
+
         6,
         2,
         8,
-        roomOne,
-        true
-    );
 
-
-    /*
-        Desk
-    */
-
-    box(
-        3,
-        0.3,
-        1.4,
-        0x5a3928,
-        -3,
-        1.1,
-        -1,
-        roomOne,
-        true
-    );
-
-
-    box(
-        0.2,
-        1.1,
-        0.2,
-        0x39251b,
-        -4.2,
-        0.55,
-        -1.5,
-        roomOne,
-        true
-    );
-
-
-    box(
-        0.2,
-        1.1,
-        0.2,
-        0x39251b,
-        -1.8,
-        0.55,
-        -1.5,
-        roomOne,
-        true
-    );
-
-
-    /*
-        Table
-    */
-
-    box(
-        2,
-        0.25,
-        1,
-        0x46322b,
         4,
-        1.2,
-        2,
-        roomOne,
-        true
+        4,
+        0.4,
+
+        wallMaterial
+
     );
 
 
     /*
-        Door
+       Main door
     */
+
 
     mainDoor =
-        box(
-            4,
-            3.7,
-            0.25,
-            0x3c424c,
+        addCube(
+
             0,
-            1.85,
-            7.8,
-            roomOne
+            2,
+            8,
+
+            3.8,
+            4,
+            0.35,
+
+            doorMaterial,
+
+            false
+
         );
 
 
     /*
-        Key
+       Normal key
     */
 
-    keyObject =
+
+    normalKey =
         createKey(
-            -3,
-            1.42,
-            -1,
-            roomOne,
-            0xffd45c
+
+            -4.5,
+            1.1,
+            -2
+
         );
 
 }
 
 
-/* =====================================================
-   KEY
-===================================================== */
+/* =========================================================
+   MAZE
+========================================================= */
+
+
+function buildMaze() {
+
+
+    /*
+       Maze floor
+    */
+
+
+    addCube(
+
+        0,
+
+        -0.15,
+
+        room2OffsetZ +
+        mazeHeight / 2 -
+        CELL_SIZE / 2,
+
+        mazeWidth,
+
+        0.3,
+
+        mazeHeight,
+
+        floorMaterial,
+
+        false
+
+    );
+
+
+    /*
+       Maze ceiling
+    */
+
+
+    addCube(
+
+        0,
+
+        4,
+
+        room2OffsetZ +
+        mazeHeight / 2 -
+        CELL_SIZE / 2,
+
+        mazeWidth,
+
+        0.3,
+
+        mazeHeight,
+
+        ceilingMaterial,
+
+        false
+
+    );
+
+
+    const startX =
+        -mazeWidth / 2 +
+        CELL_SIZE / 2;
+
+
+    const startZ =
+        room2OffsetZ +
+        CELL_SIZE / 2;
+
+
+    for (
+        let row = 0;
+        row < maze.length;
+        row++
+    ) {
+
+
+        for (
+            let col = 0;
+            col < maze[row].length;
+            col++
+        ) {
+
+
+            const cell =
+                maze[row][col];
+
+
+            const x =
+                startX +
+                col *
+                CELL_SIZE;
+
+
+            const z =
+                startZ +
+                row *
+                CELL_SIZE;
+
+
+            if (
+                cell === "#"
+            ) {
+
+                addCube(
+
+                    x,
+                    2,
+                    z,
+
+                    CELL_SIZE,
+                    4,
+                    CELL_SIZE,
+
+                    wallMaterial
+
+                );
+
+            }
+
+
+            if (
+                cell === "K"
+            ) {
+
+                mazeKey =
+                    createKey(
+
+                        x,
+                        1.1,
+                        z
+
+                    );
+
+            }
+
+        }
+
+    }
+
+
+    /*
+       Final door at the end
+       of the maze.
+    */
+
+
+    finalDoor =
+        addCube(
+
+            0,
+            2,
+
+            room2OffsetZ +
+            mazeHeight -
+            CELL_SIZE,
+
+            3.5,
+            4,
+            0.35,
+
+            doorMaterial,
+
+            false
+
+        );
+
+}
+
+
+/* =========================================================
+   KEYS
+========================================================= */
+
 
 function createKey(
+
     x,
     y,
-    z,
-    parent,
-    color
+    z
+
 ) {
+
 
     const group =
         new THREE.Group();
+
+
+    group.position.set(
+
+        x,
+        y,
+        z
+
+    );
 
 
     const ring =
         new THREE.Mesh(
 
             new THREE.TorusGeometry(
-                0.18,
-                0.055,
-                10,
+
+                0.28,
+                0.08,
+                12,
                 24
+
             ),
 
-            makeMaterial(
-                color
-            )
+            keyMaterial
 
         );
 
@@ -1331,39 +1560,49 @@ function createKey(
     );
 
 
-    const shaft =
+    const stem =
         new THREE.Mesh(
 
             new THREE.BoxGeometry(
-                0.08,
-                0.08,
-                0.6
+
+                0.12,
+                0.55,
+                0.12
+
             ),
 
-            makeMaterial(
-                color
-            )
+            keyMaterial
 
         );
 
 
-    shaft.position.z =
-        0.32;
+    stem.position.y =
+        -0.2;
 
 
     group.add(
-        shaft
+        stem
     );
 
 
-    group.position.set(
-        x,
-        y,
-        z
+    const light =
+        new THREE.PointLight(
+
+            0xffd54a,
+
+            1.5,
+
+            5
+
+        );
+
+
+    group.add(
+        light
     );
 
 
-    parent.add(
+    worldGroup.add(
         group
     );
 
@@ -1373,146 +1612,454 @@ function createKey(
 }
 
 
-/* =====================================================
-   MAZE
-===================================================== */
-
-/*
-    # = wall
-    . = floor
-    S = start
-    K = key
-*/
-
-const maze = [
-
-    "###############",
-    "#S............#",
-    "#.#####.#####.#",
-    "#.#...#.#.....#",
-    "#.#.#.#.#.###.#",
-    "#...#...#...#.#",
-    "###.#####.#.#.#",
-    "#...#.....#...#",
-    "#.###.#########",
-    "#.....#.......#",
-    "#.#####.#####.#",
-    "#.......#...K.#",
-    "###############"
-
-];
+/* =========================================================
+   OBJECT VARIABLES
+========================================================= */
 
 
-/* =====================================================
-   BUILD MAZE
-===================================================== */
+let mainDoor = null;
 
-function buildMaze() {
-
-    const cellSize =
-        2;
+let finalDoor = null;
 
 
-    const wallHeight =
-        4;
+let mainDoorOpen = false;
+
+let finalDoorOpen = false;
 
 
-    const offsetX =
-        -maze[0].length *
-        cellSize /
-        2;
+let normalKey = null;
+
+let mazeKey = null;
 
 
-    const offsetZ =
-        -maze.length *
-        cellSize /
-        2;
+/* =========================================================
+   LIGHTING
+========================================================= */
 
 
-    /*
-        Floor
-    */
+const ambientLight =
+    new THREE.AmbientLight(
 
-    floor(
-        maze[0].length *
-        cellSize,
+        0x7180a0,
 
-        maze.length *
-        cellSize,
+        0.35
 
-        roomTwo,
-
-        0x191d23
     );
 
 
+scene.add(
+    ambientLight
+);
+
+
+const mainLight =
+    new THREE.PointLight(
+
+        0x9db7ff,
+
+        30,
+
+        25
+
+    );
+
+
+mainLight.position.set(
+
+    0,
+    3.5,
+    0
+
+);
+
+
+mainLight.castShadow = true;
+
+
+scene.add(
+    mainLight
+);
+
+
+const mazeLight =
+    new THREE.PointLight(
+
+        0x6075a8,
+
+        25,
+
+        30
+
+    );
+
+
+mazeLight.position.set(
+
+    0,
+    3.5,
+
+    room2OffsetZ +
+    mazeHeight / 2
+
+);
+
+
+mazeLight.castShadow = true;
+
+
+scene.add(
+    mazeLight
+);
+
+
+/* =========================================================
+   BUILD
+========================================================= */
+
+
+buildRoom1();
+
+buildMaze();
+
+
+/* =========================================================
+   DISTANCE
+========================================================= */
+
+
+function distanceToPlayer(
+    object
+) {
+
+
+    if (!object) {
+
+        return Infinity;
+
+    }
+
+
+    return player.position.distanceTo(
+
+        object.position
+
+    );
+
+}
+
+
+/* =========================================================
+   INTERACT
+========================================================= */
+
+
+function interact() {
+
+
+    if (!running) {
+
+        return;
+
+    }
+
+
     /*
-        Maze walls
+       First key
     */
 
-    for (
-        let row = 0;
-        row < maze.length;
-        row++
+
+    if (
+
+        normalKey &&
+
+        normalKey.visible &&
+
+        distanceToPlayer(
+            normalKey
+        ) < 2.2
+
     ) {
 
-        for (
-            let col = 0;
-            col < maze[row].length;
-            col++
+
+        memory.keyFound =
+            true;
+
+
+        normalKey.visible =
+            false;
+
+
+        showMessage(
+
+            "You found the key. The door can be opened."
+
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       Main door
+    */
+
+
+    if (
+
+        mainDoor &&
+
+        distanceToPlayer(
+            mainDoor
+        ) < 3
+
+    ) {
+
+
+        if (
+            !memory.keyFound
         ) {
 
-            const tile =
-                maze[row][col];
+            showMessage(
+
+                "The door is locked."
+
+            );
+
+            return;
+
+        }
 
 
-            const x =
-                offsetX +
-                col *
-                cellSize +
-                cellSize / 2;
+        openMainDoor();
+
+        return;
+
+    }
 
 
-            const z =
-                offsetZ +
-                row *
-                cellSize +
-                cellSize / 2;
+    /*
+       Maze key
+    */
 
 
-            if (
-                tile === "#"
-            ) {
+    if (
 
-                box(
-                    cellSize,
-                    wallHeight,
-                    cellSize,
-                    0x292f38,
-                    x,
-                    wallHeight / 2,
-                    z,
-                    roomTwo,
-                    true
-                );
+        mazeKey &&
 
-            }
+        mazeKey.visible &&
+
+        distanceToPlayer(
+            mazeKey
+        ) < 2.2
+
+    ) {
 
 
-            if (
-                tile === "K"
-            ) {
+        memory.mazeKeyFound =
+            true;
 
-                mazeKey =
-                    createKey(
-                        x,
-                        1.2,
-                        z,
-                        roomTwo,
-                        0x55ccff
-                    );
 
-            }
+        mazeKey.visible =
+            false;
+
+
+        showMessage(
+
+            "You found the second key."
+
+        );
+
+
+        return;
+
+    }
+
+
+    /*
+       Final door
+    */
+
+
+    if (
+
+        finalDoor &&
+
+        distanceToPlayer(
+            finalDoor
+        ) < 3
+
+    ) {
+
+
+        if (
+            !memory.mazeKeyFound
+        ) {
+
+            showMessage(
+
+                "This door needs another key."
+
+            );
+
+            return;
+
+        }
+
+
+        openFinalDoor();
+
+    }
+
+}
+
+
+/* =========================================================
+   MAIN DOOR
+========================================================= */
+
+
+function openMainDoor() {
+
+
+    if (
+        mainDoorOpen
+    ) {
+
+        return;
+
+    }
+
+
+    mainDoorOpen =
+        true;
+
+
+    memory.mazeEntered =
+        true;
+
+
+    mainDoor.userData.opening =
+        true;
+
+
+    showMessage(
+
+        "The door opens."
+
+    );
+
+}
+
+
+/* =========================================================
+   FINAL DOOR
+========================================================= */
+
+
+function openFinalDoor() {
+
+
+    if (
+        finalDoorOpen
+    ) {
+
+        return;
+
+    }
+
+
+    finalDoorOpen =
+        true;
+
+
+    memory.finalDoorOpened =
+        true;
+
+
+    finalDoor.userData.opening =
+        true;
+
+
+    showMessage(
+
+        "You escaped the loop."
+
+    );
+
+
+    setTimeout(
+
+        () => {
+
+            endGame(
+                true
+            );
+
+        },
+
+        900
+
+    );
+
+}
+
+
+/* =========================================================
+   DOOR ANIMATION
+========================================================= */
+
+
+function updateDoors(
+    delta
+) {
+
+
+    if (
+
+        mainDoor &&
+
+        mainDoor.userData.opening
+
+    ) {
+
+
+        mainDoor.position.y +=
+            delta * 5;
+
+
+        if (
+            mainDoor.position.y > 7
+        ) {
+
+            mainDoor.position.y =
+                7;
+
+        }
+
+    }
+
+
+    if (
+
+        finalDoor &&
+
+        finalDoor.userData.opening
+
+    ) {
+
+
+        finalDoor.position.y +=
+            delta * 5;
+
+
+        if (
+            finalDoor.position.y > 7
+        ) {
+
+            finalDoor.position.y =
+                7;
 
         }
 
@@ -1521,172 +2068,65 @@ function buildMaze() {
 }
 
 
-/* =====================================================
-   FINAL DOOR
-===================================================== */
-
-function buildFinalDoor() {
-
-    /*
-        Put the final door at the
-        end of the maze area.
-    */
-
-    finalDoor =
-        box(
-            3,
-            3.7,
-            0.3,
-            0x11151b,
-            0,
-            1.85,
-            11,
-            roomTwo
-        );
-
-
-}
-
-
-/* =====================================================
-   BUILD WORLD
-===================================================== */
-
-let mainDoor = null;
-
-let keyObject = null;
-
-let mazeKey = null;
-
-let finalDoor = null;
-
-
-buildRoomOne();
-
-buildMaze();
-
-buildFinalDoor();
-
-
-/* =====================================================
-   LIGHTING
-===================================================== */
-
-const ambient =
-    new THREE.AmbientLight(
-        0x9aa4b8,
-        0.5
-    );
-
-
-scene.add(
-    ambient
-);
-
-
-/*
-    Room 1 light
-*/
-
-const roomLight =
-    new THREE.PointLight(
-        0xffdcb0,
-        25,
-        22
-    );
-
-
-roomLight.position.set(
-    0,
-    3.2,
-    0
-);
-
-
-roomLight.castShadow =
-    true;
-
-
-roomOne.add(
-    roomLight
-);
-
-
-/*
-    Maze lights
-*/
-
-const mazeLights = [
-
-    [-8, 2, -8],
-    [6, 2, -6],
-    [-6, 2, 4],
-    [7, 2, 7]
-
-];
-
-
-for (
-    const position of mazeLights
-) {
-
-    const light =
-        new THREE.PointLight(
-            0x5577ff,
-            12,
-            10
-        );
-
-
-    light.position.set(
-        position[0],
-        3,
-        position[2]
-    );
-
-
-    light.castShadow =
-        true;
-
-
-    roomTwo.add(
-        light
-    );
-
-}
-
-
-/* =====================================================
+/* =========================================================
    COLLISION
-===================================================== */
+========================================================= */
 
-function collides(
-    position
+
+function collidesAt(
+    x,
+    z
 ) {
 
-    const radius =
+
+    const r =
         player.radius;
 
 
     for (
-        const wall of collisionWalls
+        const box of collisionBoxes
     ) {
+
 
         if (
 
-            position.x + radius >
-            wall.minX &&
+            x + r > box.minX &&
 
-            position.x - radius <
-            wall.maxX &&
+            x - r < box.maxX &&
 
-            position.z + radius >
-            wall.minZ &&
+            z + r > box.minZ &&
 
-            position.z - radius <
-            wall.maxZ
+            z - r < box.maxZ
 
         ) {
+
+
+            /*
+               Main door has no collision
+               when it is open.
+            */
+
+
+            if (
+
+                mainDoor &&
+
+                !mainDoorOpen &&
+
+                boxBelongsToDoor(
+
+                    box,
+
+                    mainDoor
+
+                )
+
+            ) {
+
+                continue;
+
+            }
+
 
             return true;
 
@@ -1700,21 +2140,65 @@ function collides(
 }
 
 
-/* =====================================================
-   PLAYER MOVEMENT
-===================================================== */
+function boxBelongsToDoor(
+    box,
+    door
+) {
+
+
+    return (
+
+        Math.abs(
+
+            (
+                box.minX +
+                box.maxX
+            ) / 2 -
+
+            door.position.x
+
+        ) < 0.1
+
+        &&
+
+        Math.abs(
+
+            (
+                box.minZ +
+                box.maxZ
+            ) / 2 -
+
+            door.position.z
+
+        ) < 0.1
+
+    );
+
+}
+
+
+/* =========================================================
+   MOVEMENT
+========================================================= */
+
+
+/*
+   THIS IS THE IMPORTANT PART.
+
+   There is NO:
+
+       if (!pointerLocked) return;
+
+   here.
+
+   Therefore WASD works whether the
+   mouse is captured or not.
+*/
+
 
 function updateMovement(
     delta
 ) {
-
-    if (
-        !pointerLocked
-    ) {
-
-        return;
-
-    }
 
 
     let forward = 0;
@@ -1722,36 +2206,28 @@ function updateMovement(
     let strafe = 0;
 
 
-    if (
-        keys.w
-    ) {
+    if (keys.w) {
 
         forward += 1;
 
     }
 
 
-    if (
-        keys.s
-    ) {
+    if (keys.s) {
 
         forward -= 1;
 
     }
 
 
-    if (
-        keys.d
-    ) {
+    if (keys.d) {
 
         strafe += 1;
 
     }
 
 
-    if (
-        keys.a
-    ) {
+    if (keys.a) {
 
         strafe -= 1;
 
@@ -1759,8 +2235,11 @@ function updateMovement(
 
 
     if (
+
         forward === 0 &&
+
         strafe === 0
+
     ) {
 
         return;
@@ -1768,134 +2247,201 @@ function updateMovement(
     }
 
 
-    const forwardVector =
-        new THREE.Vector3(
-
-            -Math.sin(
-                player.yaw
-            ),
-
-            0,
-
-            -Math.cos(
-                player.yaw
-            )
-
-        );
+    /*
+       Stop diagonal movement from
+       being faster.
+    */
 
 
-    const rightVector =
-        new THREE.Vector3(
+    const length =
+        Math.hypot(
 
-            Math.cos(
-                player.yaw
-            ),
-
-            0,
-
-            -Math.sin(
-                player.yaw
-            )
-
-        );
-
-
-    const movement =
-        new THREE.Vector3();
-
-
-    movement
-        .addScaledVector(
-            forwardVector,
-            forward
-        )
-        .addScaledVector(
-            rightVector,
+            forward,
             strafe
+
         );
 
 
-    movement.normalize();
+    forward /=
+        length;
 
 
-    movement.multiplyScalar(
-        player.speed *
-        delta
-    );
+    strafe /=
+        length;
 
 
     /*
-        X collision
+       Movement direction is based
+       on camera yaw.
     */
 
+
+    const forwardX =
+        -Math.sin(
+            player.yaw
+        );
+
+
+    const forwardZ =
+        -Math.cos(
+            player.yaw
+        );
+
+
+    const rightX =
+        Math.cos(
+            player.yaw
+        );
+
+
+    const rightZ =
+        -Math.sin(
+            player.yaw
+        );
+
+
+    const moveX =
+
+        (
+
+            forwardX *
+            forward +
+
+            rightX *
+            strafe
+
+        )
+
+        *
+
+        player.speed
+
+        *
+
+        delta;
+
+
+    const moveZ =
+
+        (
+
+            forwardZ *
+            forward +
+
+            rightZ *
+            strafe
+
+        )
+
+        *
+
+        player.speed
+
+        *
+
+        delta;
+
+
+    /*
+       X collision
+    */
+
+
     const nextX =
-        player.position.clone();
-
-
-    nextX.x +=
-        movement.x;
+        player.position.x +
+        moveX;
 
 
     if (
-        !collides(nextX)
+
+        !collidesAt(
+
+            nextX,
+
+            player.position.z
+
+        )
+
     ) {
 
         player.position.x =
-            nextX.x;
+            nextX;
 
     }
 
 
     /*
-        Z collision
+       Z collision
     */
 
+
     const nextZ =
-        player.position.clone();
-
-
-    nextZ.z +=
-        movement.z;
+        player.position.z +
+        moveZ;
 
 
     if (
-        !collides(nextZ)
+
+        !collidesAt(
+
+            player.position.x,
+
+            nextZ
+
+        )
+
     ) {
 
         player.position.z =
-            nextZ.z;
+            nextZ;
 
     }
 
 
     /*
-        Keep player in general
-        world boundaries.
+       Full world bounds.
+
+       These now cover the maze.
     */
+
 
     player.position.x =
         THREE.MathUtils.clamp(
+
             player.position.x,
-            -8.5,
-            8.5
+
+            worldMinX +
+            player.radius,
+
+            worldMaxX -
+            player.radius
+
         );
 
 
     player.position.z =
         THREE.MathUtils.clamp(
+
             player.position.z,
-            -7.5,
-            25
+
+            worldMinZ +
+            player.radius,
+
+            worldMaxZ -
+            player.radius
+
         );
 
 }
 
 
-/* =====================================================
+/* =========================================================
    CAMERA
-===================================================== */
+========================================================= */
+
 
 function updateCamera() {
+
 
     camera.position.copy(
         player.position
@@ -1916,530 +2462,176 @@ function updateCamera() {
 }
 
 
-/* =====================================================
-   DISTANCE
-===================================================== */
-
-function distanceTo(
-    object
-) {
-
-    if (
-        !object ||
-        !object.visible
-    ) {
-
-        return Infinity;
-
-    }
+/* =========================================================
+   ROOM NAME
+========================================================= */
 
 
-    const worldPosition =
-        new THREE.Vector3();
+function updateRoomName() {
 
 
-    object.getWorldPosition(
-        worldPosition
-    );
-
-
-    return player.position.distanceTo(
-        worldPosition
-    );
-
-}
-
-
-/* =====================================================
-   INTERACTION
-===================================================== */
-
-let nearby =
-    null;
-
-
-function updateInteraction() {
-
-    nearby =
-        null;
-
-
-    let closest =
-        1.7;
-
-
-    /*
-        Normal key
-    */
-
-    if (
-        !memory.keyFound
-    ) {
-
-        const distance =
-            distanceTo(
-                keyObject
-            );
-
-
-        if (
-            distance <
-            closest
-        ) {
-
-            closest =
-                distance;
-
-            nearby =
-                "key";
-
-        }
-
-    }
-
-
-    /*
-        Main door
-    */
-
-    if (
-        currentRoom === 1
-    ) {
-
-        const distance =
-            distanceTo(
-                mainDoor
-            );
-
-
-        if (
-            distance <
-            closest
-        ) {
-
-            closest =
-                distance;
-
-            nearby =
-                "mainDoor";
-
-        }
-
-    }
-
-
-    /*
-        Maze key
-    */
-
-    if (
-        currentRoom === 2 &&
-        !memory.mazeKeyFound
-    ) {
-
-        const distance =
-            distanceTo(
-                mazeKey
-            );
-
-
-        if (
-            distance <
-            closest
-        ) {
-
-            closest =
-                distance;
-
-            nearby =
-                "mazeKey";
-
-        }
-
-    }
-
-
-    /*
-        Final door
-    */
-
-    if (
-        currentRoom === 2 &&
-        !memory.finalDoorOpened
-    ) {
-
-        const distance =
-            distanceTo(
-                finalDoor
-            );
-
-
-        if (
-            distance <
-            closest
-        ) {
-
-            closest =
-                distance;
-
-            nearby =
-                "finalDoor";
-
-        }
-
-    }
-
-
-    if (
-        nearby
-    ) {
-
-        interactionElement.classList.add(
-            "visible"
+    const roomName =
+        document.getElementById(
+            "roomName"
         );
 
 
-        if (
-            nearby === "key"
-        ) {
-
-            interactionElement.textContent =
-                "E — Pick up key";
-
-        }
-
-
-        if (
-            nearby === "mainDoor"
-        ) {
-
-            interactionElement.textContent =
-                memory.keyFound
-                    ? "E — Open door"
-                    : "E — Locked";
-
-        }
-
-
-        if (
-            nearby === "mazeKey"
-        ) {
-
-            interactionElement.textContent =
-                "E — Pick up strange key";
-
-        }
-
-
-        if (
-            nearby === "finalDoor"
-        ) {
-
-            interactionElement.textContent =
-                memory.mazeKeyFound
-                    ? "E — Open final door"
-                    : "E — Locked";
-
-        }
-
-    }
-    else {
-
-        interactionElement.classList.remove(
-            "visible"
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   INTERACT
-===================================================== */
-
-function interact() {
-
     if (
-        !nearby
-    ) {
 
-        return;
-
-    }
-
-
-    if (
-        nearby === "key"
-    ) {
-
-        memory.keyFound =
-            true;
-
-
-        keyObject.visible =
-            false;
-
-
-        showMessage(
-            "You found the key. You won't forget it."
-        );
-
-
-        return;
-
-    }
-
-
-    if (
-        nearby === "mainDoor"
-    ) {
-
-        if (
-            !memory.keyFound
-        ) {
-
-            showMessage(
-                "The door is locked."
-            );
-
-            return;
-
-        }
-
-
-        openMainDoor();
-
-
-        return;
-
-    }
-
-
-    if (
-        nearby === "mazeKey"
-    ) {
-
-        memory.mazeKeyFound =
-            true;
-
-
-        mazeKey.visible =
-            false;
-
-
-        showMessage(
-            "You found another key."
-        );
-
-
-        return;
-
-    }
-
-
-    if (
-        nearby === "finalDoor"
-    ) {
-
-        if (
-            !memory.mazeKeyFound
-        ) {
-
-            showMessage(
-                "The door won't open."
-            );
-
-            return;
-
-        }
-
-
-        memory.finalDoorOpened =
-            true;
-
-
-        showMessage(
-            "The final door opens..."
-        );
-
-
-        setTimeout(
-            () => {
-
-                running =
-                    false;
-
-
-                ending.style.display =
-                    "flex";
-
-
-                if (
-                    document.pointerLockElement
-                ) {
-
-                    document.exitPointerLock();
-
-                }
-
-            },
-            1000
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   MAIN DOOR
-===================================================== */
-
-let mainDoorOpen =
-    false;
-
-
-function openMainDoor() {
-
-    if (
-        mainDoorOpen
-    ) {
-
-        return;
-
-    }
-
-
-    mainDoorOpen =
-        true;
-
-
-    const start =
-        mainDoor.position.y;
-
-
-    const startTime =
-        performance.now();
-
-
-    function animate(
-        time
-    ) {
-
-        const progress =
-            Math.min(
-                1,
-                (
-                    time -
-                    startTime
-                ) / 900
-            );
-
-
-        mainDoor.position.y =
-            start +
-            progress *
-            4;
-
-
-        if (
-            progress < 1
-        ) {
-
-            requestAnimationFrame(
-                animate
-            );
-
-        }
-
-    }
-
-
-    requestAnimationFrame(
-        animate
-    );
-
-
-    showMessage(
-        "Something is waiting behind the door."
-    );
-
-}
-
-
-/* =====================================================
-   ROOM DETECTION
-===================================================== */
-
-function updateRoom() {
-
-    /*
-        Door is at z = 8.
-
-        Room two begins after
-        z = 9.
-    */
-
-    if (
         player.position.z >
         9
+
     ) {
 
-        if (
-            currentRoom !== 2
-        ) {
+        roomName.textContent =
+            "ROOM 2 — MAZE";
 
-            currentRoom =
-                2;
+    } else {
 
-
-            if (
-                !memory.mazeEntered
-            ) {
-
-                memory.mazeEntered =
-                    true;
-
-
-                showMessage(
-                    "This room shouldn't fit inside the building."
-                );
-
-            }
-
-        }
-
-    }
-    else {
-
-        currentRoom =
-            1;
+        roomName.textContent =
+            "ROOM 1";
 
     }
 
 }
 
 
-/* =====================================================
-   MESSAGE
-===================================================== */
+/* =========================================================
+   PROMPT
+========================================================= */
 
-let messageTimer =
-    null;
+
+function updatePrompt() {
+
+
+    const prompt =
+        document.getElementById(
+            "prompt"
+        );
+
+
+    let text = "";
+
+
+    if (
+
+        normalKey &&
+
+        normalKey.visible &&
+
+        distanceToPlayer(
+            normalKey
+        ) < 2.2
+
+    ) {
+
+        text =
+            "Press E — Pick up key";
+
+    }
+
+
+    if (
+
+        mainDoor &&
+
+        distanceToPlayer(
+            mainDoor
+        ) < 3
+
+    ) {
+
+
+        if (
+            memory.keyFound
+        ) {
+
+            text =
+                "Press E — Open door";
+
+        } else {
+
+            text =
+                "Locked door";
+
+        }
+
+    }
+
+
+    if (
+
+        mazeKey &&
+
+        mazeKey.visible &&
+
+        distanceToPlayer(
+            mazeKey
+        ) < 2.2
+
+    ) {
+
+        text =
+            "Press E — Pick up key";
+
+    }
+
+
+    if (
+
+        finalDoor &&
+
+        distanceToPlayer(
+            finalDoor
+        ) < 3
+
+    ) {
+
+
+        if (
+            memory.mazeKeyFound
+        ) {
+
+            text =
+                "Press E — Open final door";
+
+        } else {
+
+            text =
+                "The final door is locked";
+
+        }
+
+    }
+
+
+    prompt.textContent =
+        text;
+
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+
+let messageTimer = null;
 
 
 function showMessage(
     text
 ) {
 
-    messageElement.textContent =
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    message.textContent =
         text;
-
-
-    messageElement.classList.add(
-        "visible"
-    );
 
 
     clearTimeout(
@@ -2449,83 +2641,236 @@ function showMessage(
 
     messageTimer =
         setTimeout(
+
             () => {
 
-                messageElement.classList.remove(
-                    "visible"
-                );
+                message.textContent =
+                    "";
 
             },
-            3500
+
+            3000
+
         );
 
 }
 
 
-/* =====================================================
-   RESET
-===================================================== */
+/* =========================================================
+   RESET LOOP
+========================================================= */
 
-function resetWorld() {
+
+function resetLoop() {
+
 
     /*
-        Player
+       Player reset
     */
 
+
     player.position.set(
+
         0,
         1.7,
-        6
+        0
+
     );
 
 
-    player.yaw =
-        Math.PI;
+    player.yaw = 0;
 
-
-    player.pitch =
-        0;
-
-
-    currentRoom =
-        1;
+    player.pitch = 0;
 
 
     /*
-        Door
+       Keys remain remembered.
     */
+
+
+    if (normalKey) {
+
+        normalKey.visible =
+            !memory.keyFound;
+
+    }
+
+
+    if (mazeKey) {
+
+        mazeKey.visible =
+            !memory.mazeKeyFound;
+
+    }
+
+
+    /*
+       Reset doors.
+    */
+
 
     mainDoorOpen =
         false;
 
 
-    mainDoor.position.y =
-        1.85;
+    finalDoorOpen =
+        false;
+
+
+    if (mainDoor) {
+
+        mainDoor.position.y =
+            2;
+
+        mainDoor.userData.opening =
+            false;
+
+    }
+
+
+    if (finalDoor) {
+
+        finalDoor.position.y =
+            2;
+
+        finalDoor.userData.opening =
+            false;
+
+    }
 
 
     /*
-        Persistent objects
+       Remembered first key means
+       the main door stays open.
     */
 
-    keyObject.visible =
-        !memory.keyFound;
+
+    if (
+        memory.keyFound
+    ) {
+
+        mainDoorOpen =
+            true;
+
+        mainDoor.position.y =
+            7;
+
+    }
 
 
-    mazeKey.visible =
-        !memory.mazeKeyFound;
+    /*
+       Remembered maze key means
+       final door stays open.
+    */
 
 
-    finalDoor.position.y =
-        1.85;
+    if (
+        memory.mazeKeyFound
+    ) {
+
+        finalDoorOpen =
+            true;
+
+        finalDoor.position.y =
+            7;
+
+    }
+
+
+    loopTime =
+        LOOP_LENGTH;
+
+
+    document.getElementById(
+        "loopCounter"
+    ).textContent =
+
+        "Loop " +
+        loopNumber;
+
+
+    showMessage(
+
+        memory.mazeEntered
+
+            ? "You remember what lies beyond the door."
+
+            : "Find the key."
+
+    );
+
+
+    updateCamera();
 
 }
 
 
-/* =====================================================
-   LOOP RESET
-===================================================== */
+/* =========================================================
+   TIMER
+========================================================= */
 
-function resetLoop() {
+
+function updateTimer(
+    delta
+) {
+
+
+    loopTime -=
+        delta;
+
+
+    if (
+        loopTime <= 0
+    ) {
+
+
+        loopTime =
+            0;
+
+
+        updateTimerDisplay();
+
+
+        loopNumber++;
+
+
+        resetLoop();
+
+
+        return;
+
+    }
+
+
+    updateTimerDisplay();
+
+}
+
+
+function updateTimerDisplay() {
+
+
+    const timer =
+        document.getElementById(
+            "timer"
+        );
+
+
+    timer.textContent =
+        loopTime.toFixed(1);
+
+}
+
+
+/* =========================================================
+   END GAME
+========================================================= */
+
+
+function endGame(
+    won
+) {
+
 
     running =
         false;
@@ -2540,139 +2885,109 @@ function resetLoop() {
     }
 
 
-    flash.classList.add(
-        "visible"
-    );
+    const screen =
+        document.getElementById(
+            "gameOverScreen"
+        );
 
 
-    setTimeout(
-        () => {
-
-            loopNumber++;
-
-
-            loopNumberElement.textContent =
-                "Loop " +
-                loopNumber;
+    const title =
+        document.getElementById(
+            "endingTitle"
+        );
 
 
-            loopTime =
-                60;
+    const text =
+        document.getElementById(
+            "endingText"
+        );
 
 
-            resetWorld();
+    if (won) {
 
 
-            running =
-                true;
+        title.textContent =
+            "YOU ESCAPED";
 
 
-            updateTimer();
+        text.textContent =
+            "You broke the loop.";
 
+    }
 
-            if (
-                memory.mazeKeyFound
-            ) {
-
-                showMessage(
-                    "You remember the maze."
-                );
-
-            }
-            else if (
-                memory.keyFound
-            ) {
-
-                showMessage(
-                    "You remember where the key is."
-                );
-
-            }
-            else {
-
-                showMessage(
-                    "The loop begins again."
-                );
-
-            }
-
-
-            setTimeout(
-                () => {
-
-                    flash.classList.remove(
-                        "visible"
-                    );
-
-
-                    renderer.domElement.requestPointerLock();
-
-                },
-                400
-            );
-
-        },
-        800
-    );
 
 }
 
 
-/* =====================================================
-   TIMER
-===================================================== */
+/* =========================================================
+   START GAME
+========================================================= */
 
-function updateTimer() {
-
-    timerElement.textContent =
-        Math.max(
-            0,
-            loopTime
-        ).toFixed(1);
-
-
-    if (
-        loopTime <= 10
-    ) {
-
-        timerElement.style.color =
-            "#ff5555";
-
-    }
-    else {
-
-        timerElement.style.color =
-            "white";
-
-    }
-
-}
-
-
-/* =====================================================
-   START
-===================================================== */
 
 function startGame() {
 
-    startScreen.style.display =
+
+    document.getElementById(
+        "startScreen"
+    ).style.display =
         "none";
 
 
-    ending.style.display =
+    document.getElementById(
+        "gameOverScreen"
+    ).style.display =
         "none";
-
-
-    running =
-        true;
 
 
     loopNumber =
         1;
 
 
-    loopTime =
-        60;
+    running =
+        true;
+
+
+    /*
+       WASD works immediately.
+
+       Pointer lock is optional.
+    */
+
+
+    resetLoop();
+
+
+    lastTime =
+        performance.now();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+
+    /*
+       Try to capture mouse.
+
+       If the browser refuses,
+       WASD still works.
+    */
+
+
+    canvas.requestPointerLock()
+        .catch(
+            () => {}
+        );
+
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+
+function restartGame() {
 
 
     memory.keyFound =
@@ -2691,63 +3006,96 @@ function startGame() {
         false;
 
 
-    resetWorld();
-
-
-    updateTimer();
-
-
-    showMessage(
-        "Find the key."
-    );
-
-
-    setTimeout(
-        () => {
-
-            renderer.domElement.requestPointerLock();
-
-        },
-        100
-    );
+    startGame();
 
 }
 
 
-/* =====================================================
-   START BUTTON
-===================================================== */
+/* =========================================================
+   BUTTONS
+========================================================= */
 
-startButton.addEventListener(
+
+document.getElementById(
+    "startButton"
+).addEventListener(
+
     "click",
+
     startGame
+
 );
 
 
-/* =====================================================
-   GAME LOOP
-===================================================== */
+document.getElementById(
+    "restartButton"
+).addEventListener(
 
-let lastTime =
-    performance.now();
+    "click",
+
+    restartGame
+
+);
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+
+window.addEventListener(
+    "resize",
+    () => {
+
+
+        camera.aspect =
+
+            window.innerWidth /
+            window.innerHeight;
+
+
+        camera.updateProjectionMatrix();
+
+
+        renderer.setSize(
+
+            window.innerWidth,
+            window.innerHeight
+
+        );
+
+    }
+);
+
+
+/* =========================================================
+   MAIN GAME LOOP
+========================================================= */
 
 
 function gameLoop(
     time
 ) {
 
-    requestAnimationFrame(
-        gameLoop
-    );
+
+    if (!running) {
+
+        return;
+
+    }
 
 
     const delta =
+
         Math.min(
+
             (
                 time -
                 lastTime
             ) / 1000,
+
             0.05
+
         );
 
 
@@ -2755,74 +3103,66 @@ function gameLoop(
         time;
 
 
-    if (
-        running
-    ) {
-
-        loopTime -=
-            delta;
+    updateMovement(
+        delta
+    );
 
 
-        if (
-            loopTime <= 0
-        ) {
-
-            loopTime =
-                0;
+    updateDoors(
+        delta
+    );
 
 
-            updateTimer();
+    updateTimer(
+        delta
+    );
 
 
-            resetLoop();
-
-        }
-        else {
-
-            updateTimer();
-
-        }
+    updateCamera();
 
 
-        updateMovement(
-            delta
-        );
+    updateRoomName();
 
 
-        updateRoom();
-
-        updateCamera();
-
-        updateInteraction();
-
-    }
+    updatePrompt();
 
 
     renderer.render(
+
         scene,
+
         camera
+
+    );
+
+
+    requestAnimationFrame(
+        gameLoop
     );
 
 }
 
 
-/* =====================================================
-   INITIALIZE
-===================================================== */
+/* =========================================================
+   INITIAL DRAW
+========================================================= */
 
-resetWorld();
+
+resetLoop();
+
 
 updateCamera();
 
-updateTimer();
+
+updateTimerDisplay();
 
 
-/* =====================================================
-   START RENDERING
-===================================================== */
+renderer.render(
 
-requestAnimationFrame(
-    gameLoop
+    scene,
+
+    camera
+
 );
 
 </script>
